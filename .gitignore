@@ -1,0 +1,4 @@
+*.dia~
+.cproject
+.settings
+.project
