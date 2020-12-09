@@ -1,0 +1,7 @@
+https://cdn.sparkfun.com/assets/learn_tutorials/6/7/6/PiZerov2.pdf
+https://www.raspberrypi.org/documentation/hardware/raspberrypi/gpio/README.md
+https://www.raspberrypi.org/documentation/usage/gpio/README.md
+http://abyz.me.uk/rpi/pigpio/
+http://abyz.me.uk/rpi/pigpio/cif.html#i2cOpen
+https://pinout.xyz/?source=:em:nw:mt::RC_WWMK200429P00043:NSL400076643
+http://www.mosaic-industries.com/embedded-systems/microcontroller-projects/raspberry-pi/gpio-pin-electrical-specifications

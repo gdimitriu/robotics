@@ -1,0 +1,35 @@
+CC = arm-linux-gnueabihf-gcc
+CXX = arm-linux-gnueabihf-g++
+AR = arm-linux-gnueabihf-ar
+
+INCLUDES = -I$(PREFIX_GPIO) -I$(PREFIX_DRIVERS)/include -I../include
+OBJECTS = CSettingLoading.o
+HEADERS = CSettingLoading.h
+EXECUTABLES =  libsettings.so
+FLAGS = -std=gnu++11
+
+all: $(EXECUTABLES)
+	
+libsettings.so: $(OBJECTS)
+	$(CXX) -shared -fPIC -o libsettings.so $(OBJECTS)
+	cp libsettings.so ../lib
+
+CSettingLoading.o:CSettingLoading.cpp CSettingLoading.h
+	$(CXX) -fPIC -o CSettingLoading.o -c CSettingLoading.cpp $(INCLUDES) $(FLAGS)
+	cp CSettingLoading.h ../include
+			
+clean:
+	for object in $(EXECUTABLES);\
+	do \
+		if [ -f $$object ]; then rm $$object; fi; \
+	done
+	for object in $(OBJECTS);\
+	do \
+		if [ -f $$object ]; then rm $$object; fi; \
+	done
+	for object in $(HEADERS);\
+	do \
+		if [ -f ../include/$$object ]; then rm ../include/$$object; fi; \
+	done
+	if [ -f ../lib/libsettings.so ]; then rm ../lib/libsettings.so; fi;
+	

@@ -1,0 +1,3 @@
+HC-05 docs:
+https://www.electrodragon.com/w/AT_Commands
+https://www.itead.cc/wiki/Serial_Port_Bluetooth_Module_(Master/Slave)_:_HC-05#14._Set.2FCheck_connect_mode:

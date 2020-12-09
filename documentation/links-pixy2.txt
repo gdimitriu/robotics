@@ -1,0 +1,5 @@
+https://docs.pixycam.com/wiki/doku.php?id=wiki:v2:general_api
+https://docs.pixycam.com/wiki/doku.php?id=wiki:v2:line_api
+https://docs.pixycam.com/wiki/doku.php?id=wiki:v2:line_tracking
+https://github.com/kd8bxp/find_distance_with_pixycam/blob/master/distance_using_pixycam.ino
+https://github.com/charmedlabs/pixy2
