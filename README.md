@@ -18,8 +18,3 @@ x wheel drive droid using Raspberry PI zero [droid_framework](framework/raspberr
 - This could have multiple configuration for any kind of droid
 - It has configuration files that configure the droid using factories
 
-
-## NOTE:
-Where is L298N micro is in fact MX1508 motor driver.
-I did not change all arduino names after I have look on the chip.
- 
