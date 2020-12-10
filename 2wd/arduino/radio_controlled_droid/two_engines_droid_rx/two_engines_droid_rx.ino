@@ -2,20 +2,20 @@
 Radio Controlled Droid
 Copyright 2020 Gabriel Dimitriu
 
-This file is part of Radio Controlled Droid.
+This file is part of Robotics.
 Two engine controlled by radio using joystick the receiver part.
 Thi use L298N micro driver for engines (the one with two wires).
 
-Radio Controlled Droid is free software; you can redistribute it and/or modify
+Robotics is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation; either version 2 of the License, or
 (at your option) any later version.
-Radio Controlled Droid is distributed in the hope that it will be useful,
+Robotics is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
-along with Radio Controlled Droid; if not, write to the Free Software
+along with Robotics; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
 */
 #include <VirtualWire.h>

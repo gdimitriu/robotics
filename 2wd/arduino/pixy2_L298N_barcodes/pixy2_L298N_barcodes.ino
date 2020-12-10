@@ -1,4 +1,21 @@
+/*
+  Droid which recognize barcodes and move accordingly.
+  Copyright 2019 Gabriel Dimitriu
 
+  This file is part of Robotics
+
+  Robotics is free software; you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation; either version 2 of the License, or
+  (at your option) any later version.
+  Robotics is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+  You should have received a copy of the GNU General Public License
+  along with Robotics; if not, write to the Free Software
+  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
+*/
 
 #include <Pixy2.h>
 
@@ -6,24 +23,7 @@
 #define LEFT_MOTOR_PIN2 5
 #define LEFT_MOTOR_SPEED 4
 #define RIGHT_MOTOR_PIN1 7
-/*
-  Droid which recognize barcodes and move accordingly.
-  Copyright 2019 Gabriel Dimitriu
 
-  This file is part of Pixy2 Robotics
-
-  Pixy2 Robotics is free software; you can redistribute it and/or modify
-  it under the terms of the GNU General Public License as published by
-  the Free Software Foundation; either version 2 of the License, or
-  (at your option) any later version.
-  Pixy2 Robotics is distributed in the hope that it will be useful,
-  but WITHOUT ANY WARRANTY; without even the implied warranty of
-  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  GNU General Public License for more details.
-  You should have received a copy of the GNU General Public License
-  along with Pixy2 Robotics; if not, write to the Free Software
-  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
-*/
 #define RIGHT_MOTOR_PIN2 8
 #define RIGHT_MOTOR_SPEED 9
 #define MAX_POWER_ENGINE 255
