@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<cdtprojectproperties>
+<section name="org.eclipse.cdt.internal.ui.wizards.settingswizards.IncludePaths">
+<language name="holder for library settings">
+
+</language>
+<language name="Assembly">
+<includepath workspace_path="true">/drivers/include</includepath>
+<includepath>/home/onion/build/i2c-exp-driver/include</includepath>
+<includepath>/home/onion/build/source/staging_dir/toolchain-mipsel_24kc_gcc-7.3.0_musl/include</includepath>
+<includepath>/home/onion/build/onionOmega/fast-gpio/include</includepath>
+
+</language>
+<language name="GNU C++">
+<includepath workspace_path="true">/drivers/include</includepath>
+<includepath>/home/onion/build/source/staging_dir/toolchain-mipsel_24kc_gcc-7.3.0_musl/include</includepath>
+<includepath>/home/onion/build/onionOmega/fast-gpio/include</includepath>
+<includepath>/home/onion/build/onionOmega/i2c-exp-driver/include</includepath>
+<includepath/>
+
+</language>
+<language name="GNU C">
+<includepath workspace_path="true">/drivers/include</includepath>
+<includepath>/home/onion/build/i2c-exp-driver/include</includepath>
+<includepath>/home/onion/build/source/staging_dir/toolchain-mipsel_24kc_gcc-7.3.0_musl/include</includepath>
+<includepath>/home/onion/build/onionOmega/fast-gpio/include</includepath>
+
+</language>
+</section>
+<section name="org.eclipse.cdt.internal.ui.wizards.settingswizards.Macros">
+<language name="holder for library settings">
+
+</language>
+<language name="Assembly">
+
+</language>
+<language name="GNU C++">
+
+</language>
+<language name="GNU C">
+
+</language>
+</section>
+</cdtprojectproperties>

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<cdtprojectproperties>
+<section name="org.eclipse.cdt.internal.ui.wizards.settingswizards.IncludePaths">
+<language name="C Source File">
+<includepath>/home/onion/raspberrypi/tools/arm-bcm2708/arm-rpi-4.9.3-linux-gnueabihf/arm-linux-gnueabihf/include</includepath>
+<includepath>/home/onion/raspberrypi/tools/arm-bcm2708/arm-linux-gnueabihf/arm-linux-gnueabihf/sysroot/usr/include</includepath>
+<includepath>/home/onion/raspberrypi/tools/arm-bcm2708/arm-linux-gnueabihf/arm-linux-gnueabihf/sysroot/usr/include/linux</includepath>
+<includepath>/home/onion/raspberrypi/libs/pgpio</includepath>
+<includepath>/home/onion/robotics/drivers/raspberrypi/include</includepath>
+<includepath>/home/onion/robotics/framework/raspberrypi/include</includepath>
+</language>
+<language name="C++ Source File">
+<includepath>/home/onion/raspberrypi/tools/arm-bcm2708/arm-rpi-4.9.3-linux-gnueabihf/arm-linux-gnueabihf/include/c++/4.9.3</includepath>
+<includepath>/home/onion/raspberrypi/tools/arm-bcm2708/arm-linux-gnueabihf/arm-linux-gnueabihf/sysroot/usr/include</includepath>
+<includepath>/home/onion/raspberrypi/libs/pigpio</includepath>
+<includepath>/home/onion/raspberrypi/tools/arm-bcm2708/arm-linux-gnueabihf/arm-linux-gnueabihf/sysroot/usr/include/linux</includepath>
+<includepath>/home/onion/raspberrypi/tools/arm-bcm2708/arm-rpi-4.9.3-linux-gnueabihf/arm-linux-gnueabihf/include/c++/4.9.3/bits</includepath>
+<includepath>/home/onion/robotics/drivers/raspberrypi/include</includepath>
+<includepath>/home/onion/robotics/framework/raspberrypi/include</includepath>
+
+</language>
+<language name="Object File">
+
+</language>
+<language name="Assembly Source File">
+
+</language>
+</section>
+<section name="org.eclipse.cdt.internal.ui.wizards.settingswizards.Macros">
+<language name="C Source File">
+<macro>
+<name>DEBUG_MODE</name><value>1</value>
+</macro>
+
+</language>
+<language name="C++ Source File">
+<macro>
+<name>DEBUG_MODE</name><value>1</value>
+</macro>
+
+</language>
+<language name="Object File">
+
+</language>
+<language name="Assembly Source File">
+
+</language>
+</section>
+</cdtprojectproperties>
