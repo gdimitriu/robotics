@@ -1,0 +1,34 @@
+//stepper
+https://www.instructables.com/id/BYJ48-Stepper-Motor/
+https://ardushop.ro/ro/electronica/92-motor-pas-cu-pas-5v-dc-28byj-48-cu-reductie.html
+http://robocraft.ru/files/datasheet/28BYJ-48.pdf
+https://www.schmalzhaus.com/EasyDriver/
+https://knowledge.ni.com/KnowledgeArticleDetails?id=kA00Z000000P7kCSAS
+
+//i2c
+https://electronics.stackexchange.com/questions/25278/how-to-connect-multiple-i2c-interface-devices-into-a-single-pin-a4-sda-and-a5
+https://electronics.stackexchange.com/questions/106265/maximum-i2c-bus-length
+http://www.mosaic-industries.com/embedded-systems/sbc-single-board-computers/freescale-hcs12-9s12-c-language/instrument-control/i2c-bus-specifications
+https://www.raspberrypi.org/forums/viewtopic.php?t=82049
+https://forum.arduino.cc/index.php?topic=57604.0
+https://www.i2c-bus.org/multimaster/
+https://learn.sparkfun.com/tutorials/i2c
+
+//servo
+https://www.quora.com/Why-do-servo-motors-need-PWM-pins-in-Arduino-and-what-does-pulse-width-modulation-really-mean
+https://www.reddit.com/r/arduino/comments/3gx9z1/do_servos_need_to_be_connected_to_the_pwm/
+
+//moving with encoder
+https://github.com/GreyGnome/EnableInterrupt
+http://www.circuitstoday.com/measuring-wheel-using-arduino-rotary-encoder
+https://www.dynapar.com/knowledge/applications/encoder-linear-measurement/
+https://www.linearmotiontips.com/how-to-calculate-encoder-resolution/
+https://www.linearmotiontips.com/how-encoder-resolution-is-determined/
+http://www.ni.com/tutorial/7109/en/
+https://www.machinedesign.com/sensors/basics-rotary-encoders-overview-and-new-technologies-0
+https://www.cui.com/blog/what-is-encoder-ppr-cpr-and-lpr
+
+//docs adruino
+https://arduino-info.wikispaces.com/MegaQuickRef
+https://store.arduino.cc/arduino-mega-2560-rev3
+https://www.arduino.cc/en/Products.Compare

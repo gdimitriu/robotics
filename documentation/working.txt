@@ -1,0 +1,61 @@
+//daily based:
+https://onion.io/docs/
+https://github.com/OnionIoT/Onion-Docs
+https://github.com/OnionIoT/Onion-Docs/tree/master/Omega2/Documentation
+https://docs.onion.io/omega2-docs/connecting-to-wifi-networks-command-line.html
+https://docs.onion.io/omega2-docs/connecting-to-the-omega-terminal.html
+https://docs.onion.io/omega2-docs/developing-using-the-console.html
+
+//gcc on onion
+https://docs.onion.io/omega2-docs/c-compiler-on-omega.html
+
+//upgrading -- settings
+https://docs.onion.io/omega2-docs/first-time-setup.html
+https://docs.onion.io/omega2-docs/using-the-omega-updating.html
+https://docs.onion.io/omega2-docs/boot-from-external-storage.html
+https://github.com/OnionIoT/Onion-Docs/blob/master/Omega2/Documentation/Doing-Stuff/Installing-Software/Installing-and-Using-Python.md
+https://github.com/OnionIoT/Onion-Docs/blob/master/Omega2/Documentation/Doing-Stuff/Connectivity/Connect-to-enterprise-wifi.md
+
+//cross-compiling
+https://github.com/OnionIoT/Onion-Docs/blob/master/Omega2/Documentation/Doing-Stuff/Advanced/Cross-Compile.md
+
+//pins gpio etc
+http://community.onion.io/topic/1851/gpio-groups/4
+https://docs.onion.io/omega2-docs/using-gpios.html
+https://github.com/OnionIoT/fast-gpio
+https://github.com/OnionIoT/gpioIrq
+https://github.com/OnionIoT/gpioIrqTrigger
+
+//serial
+https://docs.onion.io/omega2-docs/uart1.html
+https://stackoverflow.com/questions/6947413/how-to-open-read-and-write-from-serial-port-in-c
+http://community.onion.io/topic/2495/programming-serial-uart-in-c-or-c/8
+
+//tests
+https://docs.onion.io/omega2-project-book-vol1/led-traffic-light.html
+https://github.com/OnionIoT/starter-traffic-light
+
+//i2c
+https://github.com/OnionIoT/i2c-exp-driver
+https://kernel.googlesource.com/pub/scm/utils/i2c-tools/i2c-tools/+/v3.1.2/tools/i2cdetect.c
+https://community.onion.io/topic/2312/i2c-detect-slave-method/6
+https://docs.onion.io/omega2-docs/i2c-c-library.html
+http://community.onion.io/topic/1864/i2c-how-to-read-a-single-byte-without-register-address
+
+//onion arduino dock
+https://github.com/OnionIoT/arduino-dock
+https://github.com/OnionIoT/Onion-Arduino-Library
+https://docs.onion.io/omega2-docs/arduino-dock-2.html
+https://docs.onion.io/omega2-docs/flash-arduino-dock-wirelessly.html
+http://community.onion.io/topic/3252/arduino-dock-2-a5-a4-pins-spi/10
+http://community.onion.io/topic/2500/arduino-dock-2-analog-read-issue
+	install:
+		opkg install arduino-dock-2
+		//arduino ide settings
+		https://github.com/OnionIoT/Onion-Arduino-Boards/raw/master/IDE_Board_Manager/package_onion.io_index.json
+
+
+//docks
+https://docs.onion.io/omega2-docs/power-dock-2.html
+https://github.com/OnionIoT/OOS-App-Power-Dock-2
+https://github.com/OnionIoT/power-dock

@@ -1,0 +1,24 @@
+//IO multiplexers
+https://github.com/xreef/PCF8574_library
+	//not tested
+	https://www.instructables.com/id/PCF8574-GPIO-Extender-With-Arduino-and-NodeMCU/
+	https://github.com/ControlEverythingCommunity/PCF8574
+	https://github.com/skywodd/pcf8574_arduino_library
+	https://www.hackster.io/xreef/pcf8574-digital-i2c-i-o-expander-easy-lib-2-wires-for-all-230ce6
+
+//ADC/DAC
+https://github.com/xreef/PCF8591_library
+https://arduinodiy.wordpress.com/2016/10/17/adding-a-pcf-8591-adcdac-to-esp8266-01/
+http://henrysbench.capnfatz.com/henrys-bench/arduino-voltage-measurements/arduino-pcf8591-digital-to-analog-tutorial/
+http://arduinolearning.com/code/arduino-pcf8591-example.php
+http://tronixstuff.com/2013/06/17/tutorial-arduino-and-pcf8591-adc-dac-ic/
+https://www.aurel32.net/elec/pcf8591.pdf
+https://brainfyre.wordpress.com/2012/10/25/pcf8591-yl-40-ad-da-module-review/
+
+//sensors
+https://github.com/pololu/vl53l0x-arduino
+https://www.pololu.com/product/2490
+https://github.com/adafruit/Adafruit_VL53L0X
+https://github.com/bitbank2/VL53L0X
+https://github.com/pololu/vl53l0x-arduino
+https://www.st.com/en/imaging-and-photonics-solutions/vl53l0x.html
