@@ -54,6 +54,7 @@ CGenericSensor* CFactoryToFSweepPCA9685::createSensor() {
 	char *type;
 	int maxLeft;
 	int maxRight;
+	int relativePosition;
 	type = m_settingsLoader->getLine();
 	CLogger *logger;
 	if (strcmp("CLoggerStdout", type) == 0) {
@@ -61,8 +62,8 @@ CGenericSensor* CFactoryToFSweepPCA9685::createSensor() {
 	} else if (strcmp("CLoggerBleHC5", type) == 0) {
 		logger = new CLoggerBleHC5();
 	}
-	sscanf(m_settingsLoader->getLine(), "%d %d %d %d %d %d %d %d %d %d", &iChan, &iAddr,
-			&servoPin, &servoCenter, &servoLeft, &servoRight, &position, &isCollision, &maxLeft, &maxRight);
+	sscanf(m_settingsLoader->getLine(), "%d %d %d %d %d %d %d %d %d %d %d", &iChan, &iAddr,
+			&servoPin, &servoCenter, &servoLeft, &servoRight, &position, &isCollision, &maxLeft, &maxRight, &relativePosition);
 	return new CToFSweepPCA9685(iChan, iAddr, m_pwmDriver, servoPin,
-			servoCenter, servoLeft, servoRight, position, isCollision, logger, maxLeft, maxRight);
+			servoCenter, servoLeft, servoRight, position, isCollision, logger, maxLeft, maxRight, relativePosition);
 }

@@ -32,13 +32,12 @@ class CHCSR04SweepPCA9685: public CSweepPCA9685 {
 public:
 	CHCSR04SweepPCA9685(Adafruit_PWMServoDriver *pwmDriver, int servoPin, int servoCenter,
 			int servoLeft, int servoRight, int position, int isCollision,
-			CLogger *logger, int maxLeft, int maxRight, int echoPort, int trigPort);
+			CLogger *logger, int maxLeft, int maxRight, int echoPort, int trigPort,int relativePosition);
 	virtual ~CHCSR04SweepPCA9685();
 	virtual int getDistance();
 private:
 	int m_echoPort;
 	int m_trigPort;
-	pthread_mutex_t m_mutex;
 };
 
 #endif /* CONTROL_SENSORS_CHCSR04SWEEPPCA9685_H_ */

@@ -31,8 +31,8 @@
 CToFSweepPCA9685::CToFSweepPCA9685(int iChan, int iAddr,
 		Adafruit_PWMServoDriver *pwmDriver, int servoPin, int servoCenter,
 		int servoLeft, int servoRight, int position, int isCollision,
-		CLogger *logger, int maxLeft, int maxRight) :
-		CSweepPCA9685(pwmDriver, servoPin, servoCenter, servoLeft, servoRight, position, isCollision, logger, maxLeft, maxRight) {
+		CLogger *logger, int maxLeft, int maxRight, int relativePosition) :
+		CSweepPCA9685(pwmDriver, servoPin, servoCenter, servoLeft, servoRight, position, isCollision, logger, maxLeft, maxRight, relativePosition) {
 
 	if (m_logger != NULL && m_logger->isDebug() == 1) {
 		std::string message("CToFSweepPCA9685 channel=");
@@ -68,6 +68,17 @@ CToFSweepPCA9685::CToFSweepPCA9685(int iChan, int iAddr,
 		message += std::to_string(m_servoMaxLeft);
 		message += " servo max right=";
 		message += std::to_string(m_servoMaxRight);
+		switch (m_relativePosition) {
+		case -1:
+			message +=" in left relative";
+			break;
+		case 0:
+			message +=" in center relative";
+			break;
+		case 1:
+			message +=" in right relative";
+			break;
+		}
 		message += "\n";
 		m_logger->debug(message);
 	}

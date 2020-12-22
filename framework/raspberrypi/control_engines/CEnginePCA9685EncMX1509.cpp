@@ -68,6 +68,7 @@ CEnginePCA9685EncMX1509::CEnginePCA9685EncMX1509(unsigned int engineNr, unsigned
 	pthread_attr_setschedpolicy(&m_goThAttr, SCHED_FIFO);
 	m_goSchedParam.__sched_priority = sched_get_priority_max(SCHED_FIFO);
 	pthread_attr_setschedparam(&m_goThAttr, &m_goSchedParam);
+	m_stopped = 1;
 }
 
 void CEnginePCA9685EncMX1509::setMaxEnginePower(unsigned int newPower) {
@@ -107,13 +108,21 @@ unsigned int CEnginePCA9685EncMX1509::getEngineNr() {
 
 void CEnginePCA9685EncMX1509::startEncoder() {
 	m_encoderCount = 0;
+	m_stopped = 0;
 	gpioSetMode(m_encPort, PI_INPUT);
 	gpioSetPullUpDown(m_encPort, PI_PUD_UP);
 	gpioSetISRFuncEx(m_encPort, m_encEdge, -1, CEnginePCA9685EncMX1509::ISRMain, this);
 }
 
 void CEnginePCA9685EncMX1509::stopEncoder() {
+	pthread_mutex_lock(&m_isrMutex);
+	pthread_cond_signal(&m_isrCond);
+	pthread_mutex_unlock(&m_isrMutex);
+	if (m_stopped == 0) {
+		m_stopped  = 1;
+	}
 	gpioSetISRFuncEx(m_encPort, m_encEdge, -1, 0, this);
+	sched_yield();
 }
 
 void CEnginePCA9685EncMX1509::clearEncoder() {
@@ -147,20 +156,27 @@ void CEnginePCA9685EncMX1509::setEnginePower(unsigned int power) {
 	}
 }
 
+int CEnginePCA9685EncMX1509::isStopped() {
+	return m_stopped;
+}
+
 unsigned int CEnginePCA9685EncMX1509::getEnginePower() {
 	return m_enginePower;
 }
 
-void CEnginePCA9685EncMX1509::breakEngine() {
-	stopEncoder();
+void CEnginePCA9685EncMX1509::breakEngine(int type) {
 	m_pwmDriver->setPWM(m_enginePin1, 0, 4095);
 	m_pwmDriver->setPWM(m_enginePin2, 0, 4095);
+	if (type != 0) {
+		m_stopped  = 2;
+	}
+	stopEncoder();
 }
 
 void CEnginePCA9685EncMX1509::coastEngine() {
-	stopEncoder();
 	m_pwmDriver->setPWM(m_enginePin1, 0, 0);
 	m_pwmDriver->setPWM(m_enginePin2, 0, 0);
+	stopEncoder();
 }
 
 void CEnginePCA9685EncMX1509::setPPI(float ppi) {
@@ -216,16 +232,22 @@ void* CEnginePCA9685EncMX1509_moveDistance(void *engine) {
 	CEnginePCA9685EncMX1509 *currentEngine = (CEnginePCA9685EncMX1509*) engine;
 	currentEngine->startMoving();
 	while ((currentEngine->m_targetDistance - currentEngine->m_currentDistance)
-			> 0.2) {
+			> 0.2 && currentEngine->isStopped() == 0) {
 		pthread_mutex_lock(&(currentEngine->m_isrMutex));
 		pthread_cond_wait(&(currentEngine->m_isrCond), &(currentEngine->m_isrMutex));
 		pthread_mutex_unlock(&(currentEngine->m_isrMutex));
 		currentEngine->m_currentDistance = currentEngine->m_encoderCount
 				/ currentEngine->m_ppi;
 	}
-	currentEngine->breakEngine();
+	if (currentEngine->isStopped() == 0) {
+		currentEngine->breakEngine();
+	}
 	currentEngine->m_goTh = 0;
-	currentEngine->m_moveBarrier->sync();
+	if (currentEngine->isStopped() < 2) {
+		currentEngine->m_moveBarrier->sync();
+	} else if (currentEngine->isStopped() == 2) {
+		currentEngine->m_moveBarrier->reset();
+	}
 	return 0;
 }
 
@@ -258,12 +280,14 @@ void* CEnginePCA9685EncMX1509_moveEncoderNr(void *engine) {
 	pthread_setcanceltype(PTHREAD_CANCEL_ASYNCHRONOUS, 0);
 	CEnginePCA9685EncMX1509 *currentEngine = (CEnginePCA9685EncMX1509*) engine;
 	currentEngine->startMoving();
-	while (currentEngine->m_targetEncoder > currentEngine->m_encoderCount) {
+	while (currentEngine->m_targetEncoder > currentEngine->m_encoderCount && currentEngine->isStopped() == 0) {
 		pthread_mutex_lock(&(currentEngine->m_isrMutex));
 		pthread_cond_wait(&(currentEngine->m_isrCond), &(currentEngine->m_isrMutex));
 		pthread_mutex_unlock(&(currentEngine->m_isrMutex));
 	}
-	currentEngine->breakEngine();
+	if (currentEngine->isStopped() == 0) {
+		currentEngine->breakEngine();
+	}
 	currentEngine->m_goTh = 0;
 	currentEngine->m_moveBarrier->sync();
 	return 0;

@@ -49,7 +49,7 @@ public:
 	/* set the engine current power */
 	virtual void setEnginePower(unsigned int power);
 	virtual void dumpInfo();
-	virtual void breakEngines();
+	virtual void breakEngines(int type = 0);
 	void setMoveBarrier(CResetableBarrier *moveBarrier);
 	/*
 	 * encoderNr is positive for right and negative for left

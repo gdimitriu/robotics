@@ -52,8 +52,9 @@ CGenericSensor* CFactoryFixDigitalSensor::createSensor() {
 	int edge;
 	int position;
 	int isCollision;
-	sscanf(m_settingsLoader->getLine(), "%d %d %d %d", &pin, &edge, &position,
-			&isCollision);
-	return new CFixDigitalSensor(pin, edge, position, isCollision, logger);
+	int relativePosition;
+	sscanf(m_settingsLoader->getLine(), "%d %d %d %d %d", &pin, &edge, &position,
+			&isCollision, &relativePosition);
+	return new CFixDigitalSensor(pin, edge, position, isCollision, logger, relativePosition);
 }
 

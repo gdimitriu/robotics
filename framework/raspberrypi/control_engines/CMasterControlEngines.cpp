@@ -166,9 +166,9 @@ void CMasterControlEngines::dumpInfo() {
 	}
 }
 
-void CMasterControlEngines::breakEngines() {
+void CMasterControlEngines::breakEngines(int type) {
 	for (int i = 0; i < m_enginesNr; i++) {
-		m_engines[i]->breakEngine();
+		m_engines[i]->breakEngine(type);
 	}
 }
 

@@ -125,6 +125,7 @@ void CDroid::initialize() {
 		m_pwmDriver->setOscillatorFrequency(27000000);
 		m_pwmDriver->setPWMFreq(50.0);
 	}
+	m_pwmDriver->setPWM(7,0,350);//grabber at center hardcodded
 	//get the configuration of the engines
 	line = getLine();
 	m_controlEngines = new CMasterControlEngines(line, m_logger, m_pwmDriver);
@@ -187,13 +188,13 @@ void CDroid::mainCollisionCallback(void *instance, CGenericSensor *sensor) {
 }
 
 void CDroid::collisionCallback(CGenericSensor *sensor) {
-	m_controlEngines->breakEngines();
+	m_controlEngines->breakEngines(2);
 	m_logger->debug("stop as collision\n");
 	m_moveBarrier.reset();
 }
 
 void CDroid::fullStop() {
-	m_controlEngines->breakEngines();
+	m_controlEngines->breakEngines(2);
 	m_moveBarrier.reset();
 	if (m_moveThread > 0) {
 		pthread_cancel(m_moveThread);
@@ -344,7 +345,7 @@ void CDroid::internalMove() {
 }
 
 void CDroid::internalMoveLeft() {
-	int value = 3000; //max distance of TOF
+	int value = 4000; //max distance
 	/*
 	 * rotation where we could check directly the space
 	 * if the m_nextCheckRotate is on, the rotate could check
@@ -375,7 +376,7 @@ void CDroid::internalMoveLeft() {
 }
 
 void CDroid::internalMoveRight() {
-	int value = 3000; //max distance of TOF
+	int value = 4000; //max distance
 	/*
 	 * rotation where we could check directly the space
 	 * if the m_nextCheckRotate is on, the rotate could check

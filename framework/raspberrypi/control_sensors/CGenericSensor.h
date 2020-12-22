@@ -35,6 +35,8 @@ public:
 	virtual int isSweepSensor() = 0;
 	virtual void movePosition(int degree) = 0;
 	virtual int getPosition() = 0;
+	/* -1 left 0 center 1 right */
+	virtual int getRelativePosition() = 0;
 	virtual int getMaxLeftPosition() = 0;
 	virtual int getMaxRightPosition() = 0;
 	virtual int getCenterPosition() = 0;

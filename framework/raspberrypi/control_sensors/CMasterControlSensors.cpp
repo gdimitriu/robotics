@@ -98,12 +98,12 @@ CMasterControlSensors::~CMasterControlSensors() {
 
 int CMasterControlSensors::lookCenter(int position) {
 	if (m_forwardSensorsNr > 0) {
-		int minValue = 3000;//3m
+		int minValue = 4000;//4m
 		int currentValue;
 		for (int i = 0; i < m_forwardSensorsNr; i++) {
 			m_forwardSensors[i]->movePosition(0);
 			currentValue = m_forwardSensors[i]->getDistance();
-			if (currentValue < minValue) {
+			if (currentValue > 0 && currentValue < minValue) {
 				minValue = currentValue;
 			}
 		}
@@ -150,7 +150,7 @@ int CMasterControlSensors::unregisterCollisionCallback(int position) {
 }
 
 int CMasterControlSensors::lookLeft(int position) {
-	int minValue = 3000; //3 m
+	int minValue = 4000; //4 m
 	int value = 0;
 	if (position == 1) {
 		for (int i = 0; i <  m_forwardSensorsNr; i++) {
@@ -168,7 +168,7 @@ int CMasterControlSensors::lookLeft(int position) {
 }
 
 int CMasterControlSensors::lookRight(int position) {
-	int minValue = 3000; //3 m
+	int minValue = 4000; //4 m
 	int value = 0;
 	if (position == 1) {
 		for (int i = 0; i < m_forwardSensorsNr; i++) {

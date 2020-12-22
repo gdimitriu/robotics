@@ -32,11 +32,14 @@
 class CSweepPCA9685 : public CGenericSensor{
 public:
 	CSweepPCA9685(Adafruit_PWMServoDriver *pwmDriver, int servoPin , int servoCenter, int servoLeft, int servoRight, int position,
-			int isCollision, CLogger *logger, int maxLeft, int maxRight);
+			int isCollision, CLogger *logger, int maxLeft, int maxRight, int relativePosition);
 	virtual ~CSweepPCA9685();
 	virtual int isSweepSensor();
 	virtual void movePosition(int degree);
+	/* 0 front 180 back */
 	virtual int getPosition();
+	/* -1 left 0 center 1 right */
+	virtual int getRelativePosition();
 	virtual int getMaxLeftPosition();
 	virtual int getMaxRightPosition();
 	virtual int getCenterPosition();
@@ -53,6 +56,7 @@ protected:
 	int m_servoLeft;
 	int m_servoRight;
 	int m_position;
+	int m_relativePosition;
 	int m_servoMaxRight;
 	int m_servoMaxLeft;
 private:

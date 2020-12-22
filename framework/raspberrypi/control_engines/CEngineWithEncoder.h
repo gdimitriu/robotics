@@ -40,7 +40,7 @@ public:
 	/* coast the engine, engine will have no brake */
 	virtual void coastEngine() = 0;
 	/* break the engine */
-	virtual void breakEngine() = 0;
+	virtual void breakEngine(int type = 0) = 0;
 	/* set PPI for the encoder */
 	virtual void setPPI(float ppi) = 0;
 	/* get the encoder value */

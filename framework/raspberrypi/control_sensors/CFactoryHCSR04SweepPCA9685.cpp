@@ -50,6 +50,7 @@ CGenericSensor* CFactoryHCSR04SweepPCA9685::createSensor() {
 	int servoLeft;
 	int servoRight;
 	int position;
+	int relativePosition;
 	int isCollision;
 	char *type;
 	int maxLeft;
@@ -61,10 +62,10 @@ CGenericSensor* CFactoryHCSR04SweepPCA9685::createSensor() {
 	} else if (strcmp("CLoggerBleHC5", type) == 0) {
 		logger = new CLoggerBleHC5();
 	}
-	sscanf(m_settingsLoader->getLine(), "%d %d %d %d %d %d %d %d %d %d",
+	sscanf(m_settingsLoader->getLine(), "%d %d %d %d %d %d %d %d %d %d %d",
 			&echoPin, &trigPin, &servoPin, &servoCenter, &servoLeft,
-			&servoRight, &position, &isCollision, &maxLeft, &maxRight);
+			&servoRight, &position, &isCollision, &maxLeft, &maxRight,&relativePosition);
 	return new CHCSR04SweepPCA9685(m_pwmDriver, servoPin, servoCenter,
 			servoLeft, servoRight, position, isCollision, logger, maxLeft,
-			maxRight, echoPin, trigPin);
+			maxRight, echoPin, trigPin, relativePosition);
 }

@@ -32,7 +32,7 @@
 
 class CFixDigitalSensor: public CGenericSensor {
 public:
-	CFixDigitalSensor(unsigned int pin, unsigned int edge, int position, int isCollision, CLogger *logger);
+	CFixDigitalSensor(unsigned int pin, unsigned int edge, int position, int isCollision, CLogger *logger, int relativePosition);
 	static void ISRMain(int gpio, int level, uint32_t tick, void *holder);
 	virtual ~CFixDigitalSensor();
 	virtual int getDistance();
@@ -40,6 +40,7 @@ public:
 	virtual int isSweepSensor();
 	virtual void movePosition(int degree);
 	virtual int getPosition();
+	virtual int getRelativePosition();
 	virtual int isCollisionSensor();
 	virtual void registerCollisionCallback(int stopDistance, void (*callbackRoutine)(void*, CGenericSensor*), void *instance);
 	virtual void restartCollisionCallback();
@@ -51,6 +52,7 @@ public:
 private:
 	void collisionISR();
 	int m_position;
+	int m_relativePosition;
 	int m_isCollision;
 	pthread_t m_collisionTh;
 	pthread_attr_t m_collisionThAttr;
@@ -61,6 +63,8 @@ private:
 	pthread_mutex_t m_mutex;
 	pthread_cond_t m_condition;
 	unsigned int m_isDisabled;
+	struct sched_param m_goSchedParam;
+	pthread_mutexattr_t m_mutexAttr;
 };
 
 #endif /* CONTROL_SENSORS_CFIXDIGITALSENSOR_H_ */

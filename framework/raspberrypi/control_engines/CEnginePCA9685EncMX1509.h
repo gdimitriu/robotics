@@ -64,7 +64,7 @@ public:
 	/* coast the engine, engine will have no brake */
 	virtual void coastEngine();
 	/* break the engine */
-	virtual void breakEngine();
+	virtual void breakEngine(int type = 0);
 	/* set PPI for the encoder */
 	virtual void setPPI(float ppi);
 	/* get the encoder value */
@@ -127,6 +127,7 @@ protected:
 	/* clear/reset the encoder value */
 	virtual void clearEncoder();
 	virtual void startMoving();
+	int isStopped();
 private:
 	/* maximum power of the engine between 0 and 4095 */
 	static unsigned int maxEnginePower;
@@ -153,6 +154,7 @@ private:
 	float m_requestedDistance;
 	pthread_mutex_t m_isrMutex;
 	pthread_cond_t m_isrCond;
+	int m_stopped;
 };
 
 #endif /* CONTROLL_ENGINES_CEnginePCA9685EncMX1509_H_ */

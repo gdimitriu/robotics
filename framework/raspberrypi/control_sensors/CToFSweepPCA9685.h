@@ -32,7 +32,7 @@
 class CToFSweepPCA9685 : public CSweepPCA9685 {
 public:
 	CToFSweepPCA9685(int iChan, int iAddr, Adafruit_PWMServoDriver *pwmDriver, int servoPin , int servoCenter, int servoLeft, int servoRight, int position,
-			int isCollision, CLogger *logger, int maxLeft, int maxRight);
+			int isCollision, CLogger *logger, int maxLeft, int maxRight, int relativePosition);
 	virtual ~CToFSweepPCA9685();
 	virtual int getDistance();
 };

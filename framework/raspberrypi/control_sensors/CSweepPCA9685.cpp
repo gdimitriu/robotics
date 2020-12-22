@@ -26,7 +26,7 @@
 #include "CSweepPCA9685.h"
 
 CSweepPCA9685::CSweepPCA9685(Adafruit_PWMServoDriver *pwmDriver, int servoPin , int servoCenter, int servoLeft, int servoRight, int position,
-		int isCollision, CLogger *logger, int maxLeft, int maxRight) : CGenericSensor(logger){
+		int isCollision, CLogger *logger, int maxLeft, int maxRight, int relativePosition) : CGenericSensor(logger){
 	m_pwmDriver = pwmDriver;
 	m_servoPin = servoPin;
 	m_servoCenter = servoCenter;
@@ -41,6 +41,7 @@ CSweepPCA9685::CSweepPCA9685(Adafruit_PWMServoDriver *pwmDriver, int servoPin , 
 	m_stopDistance = -1;
 	m_callbackRoutine = 0;
 	m_callbackCaller = 0;
+	m_relativePosition = relativePosition;
 	struct sched_param goSchedParam;
 	pthread_attr_setschedpolicy(&m_collisionThAttr, SCHED_FIFO);
 	goSchedParam.__sched_priority = sched_get_priority_max(SCHED_FIFO);
@@ -73,6 +74,10 @@ int CSweepPCA9685::isSweepSensor() {
 
 int CSweepPCA9685::getPosition() {
 	return m_position;
+}
+
+int CSweepPCA9685::getRelativePosition() {
+	return m_relativePosition;
 }
 
 int CSweepPCA9685::getMaxLeftPosition() {

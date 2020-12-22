@@ -27,11 +27,13 @@
 #include <string>
 #include <pigpio.h>
 #include <pthread.h>
+#include <sched.h>
 
 CFixDigitalSensor::CFixDigitalSensor(unsigned int pin, unsigned int edge,
-		int position, int isCollision, CLogger *logger) :
+		int position, int isCollision, CLogger *logger, int relativePosition) :
 		CGenericSensor(logger) {
 	m_position = position;
+	m_relativePosition = relativePosition;
 	m_isCollision = isCollision;
 	m_callbackCaller = NULL;
 	m_callbackRoutine = NULL;
@@ -48,29 +50,44 @@ CFixDigitalSensor::CFixDigitalSensor(unsigned int pin, unsigned int edge,
 		}
 		switch (m_position) {
 		case 0:
-			message += " in front position\n";
+			message += " in front position";
 			break;
 		case 90:
-			message += " in right position\n";
+			message += " in right position";
 			break;
 		case 180:
-			message += " in back position\n";
+			message += " in back position";
 			break;
 		case 270:
-			message += " in left position\n";
+			message += " in left position";
+			break;
+		}
+		switch (m_relativePosition) {
+		case -1:
+			message +=" in left relative\n";
+			break;
+		case 0:
+			message +=" in center relative\n";
+			break;
+		case 1:
+			message +=" in right relative\n";
 			break;
 		}
 		m_logger->debug(message);
 	}
 	m_isDisabled = 1;
 	pthread_cond_init(&m_condition, NULL);
-	pthread_mutex_init(&m_mutex, NULL);
+	pthread_attr_init(&m_collisionThAttr);
+	pthread_mutexattr_init(&m_mutexAttr);
+	pthread_mutexattr_setprotocol(&m_mutexAttr, PTHREAD_PRIO_INHERIT);
+	pthread_mutex_init(&m_mutex, &m_mutexAttr);
+	pthread_attr_setschedpolicy(&m_collisionThAttr, SCHED_FIFO);
+	m_goSchedParam.__sched_priority = sched_get_priority_max(SCHED_FIFO);
+	pthread_attr_setschedparam(&m_collisionThAttr, &m_goSchedParam);
 	if (isCollision) {
 		gpioSetMode(m_pin, PI_INPUT);
 		gpioSetPullUpDown(m_pin, PI_PUD_UP);
-		gpioSetISRFuncEx(m_pin, m_edge, -1, CFixDigitalSensor::ISRMain, this);
 	}
-	pthread_attr_init(&m_collisionThAttr);
 }
 
 CFixDigitalSensor::~CFixDigitalSensor() {
@@ -84,6 +101,7 @@ CFixDigitalSensor::~CFixDigitalSensor() {
 	pthread_mutex_destroy(&m_mutex);
 	pthread_cond_destroy(&m_condition);
 	pthread_attr_destroy(&m_collisionThAttr);
+	pthread_mutexattr_destroy(&m_mutexAttr);
 	gpioSetPullUpDown(m_pin, PI_PUD_OFF);
 }
 
@@ -105,6 +123,10 @@ void CFixDigitalSensor::movePosition(int degree) {
 
 int CFixDigitalSensor::getPosition() {
 	return m_position;
+}
+
+int CFixDigitalSensor::getRelativePosition() {
+	return m_relativePosition;
 }
 
 int CFixDigitalSensor::getMaxLeftPosition() {
@@ -135,17 +157,22 @@ void *CFixDigitalSensor_collisionDetection(void *instance) {
 void CFixDigitalSensor::collisionCallback() {
 	pthread_mutex_lock(&m_mutex);
 	pthread_cond_wait(&m_condition, &m_mutex);
+	m_isDisabled = 1;
 	pthread_mutex_unlock(&m_mutex);
-	m_callbackRoutine(m_callbackCaller, this);
 	m_collisionTh = 0;
+	if (m_isCollision) {
+		gpioSetISRFuncEx(m_pin, m_edge, -1, NULL, this);
+	}
+	m_callbackRoutine(m_callbackCaller, this);
 }
 void CFixDigitalSensor::registerCollisionCallback(int stopDistance,
 		void (*callbackRoutine)(void*, CGenericSensor*), void *instance) {
+	if (m_collisionTh > 0)
+		pthread_cancel(m_collisionTh);
+	gpioSetISRFuncEx(m_pin, m_edge, -1, CFixDigitalSensor::ISRMain, this);
 	m_callbackCaller = instance;
 	m_callbackRoutine = callbackRoutine;
 	m_isDisabled = 0;
-	if (m_collisionTh > 0)
-		pthread_cancel(m_collisionTh);
 	pthread_create(&m_collisionTh, &m_collisionThAttr, CFixDigitalSensor_collisionDetection, this);
 }
 

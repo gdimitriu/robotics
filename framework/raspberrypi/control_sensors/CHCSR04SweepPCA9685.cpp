@@ -28,8 +28,8 @@
 
 CHCSR04SweepPCA9685::CHCSR04SweepPCA9685(Adafruit_PWMServoDriver *pwmDriver, int servoPin, int servoCenter,
 		int servoLeft, int servoRight, int position, int isCollision,
-		CLogger *logger, int maxLeft, int maxRight, int echoPort, int trigPort) :
-		CSweepPCA9685(pwmDriver, servoPin, servoCenter, servoLeft, servoRight, position, isCollision, logger, maxLeft, maxRight) {
+		CLogger *logger, int maxLeft, int maxRight, int echoPort, int trigPort, int relativePosition) :
+		CSweepPCA9685(pwmDriver, servoPin, servoCenter, servoLeft, servoRight, position, isCollision, logger, maxLeft, maxRight, relativePosition) {
 	m_trigPort = trigPort;
 	m_echoPort = echoPort;
 	if (m_logger != NULL && m_logger->isDebug() == 1) {
@@ -66,24 +66,32 @@ CHCSR04SweepPCA9685::CHCSR04SweepPCA9685(Adafruit_PWMServoDriver *pwmDriver, int
 		message += std::to_string(m_servoMaxLeft);
 		message += " servo max right=";
 		message += std::to_string(m_servoMaxRight);
+		switch (m_relativePosition) {
+		case -1:
+			message +=" in left relative";
+			break;
+		case 0:
+			message +=" in center relative";
+			break;
+		case 1:
+			message +=" in right relative";
+			break;
+		}
 		message += "\n";
 		m_logger->debug(message);
 	}
 	gpioSetMode(m_echoPort, PI_INPUT);
 	gpioSetPullUpDown(m_echoPort, PI_PUD_UP);
 	gpioSetMode(m_trigPort, PI_OUTPUT);
-	pthread_mutex_init(&m_mutex, 0);
 }
 
 CHCSR04SweepPCA9685::~CHCSR04SweepPCA9685() {
-	pthread_mutex_destroy(&m_mutex);
 }
 
 int CHCSR04SweepPCA9685::getDistance() {
 	std::chrono::microseconds timeout(26190); //450 cm ...
 	int currentDistance = 4500;
 	int timeoutOccured = 0;
-	pthread_mutex_lock(&m_mutex);
 	gpioWrite(m_trigPort,0);
 	usleep(2);
 	gpioWrite(m_trigPort,1);
@@ -99,8 +107,8 @@ int CHCSR04SweepPCA9685::getDistance() {
 	}
 	if (timeoutOccured == 0) {
 		auto finish = std::chrono::high_resolution_clock::now();
-		currentDistance = std::chrono::duration_cast<std::chrono::microseconds>(finish-start).count() * 10;
+		float microseconds = std::chrono::duration_cast<std::chrono::microseconds>(finish-start).count();
+		currentDistance = ((microseconds/2)/29.1) * 10; //cm * 10 to be mm
 	}
-	pthread_mutex_unlock(&m_mutex);
 	return currentDistance;
 }
