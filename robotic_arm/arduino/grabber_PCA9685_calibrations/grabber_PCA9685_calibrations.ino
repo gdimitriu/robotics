@@ -1,37 +1,43 @@
 /*
- * robot grabber calibration.
- * Copyright 2019 Gabriel Dimitriu
+ * robot grabber calibration using expander PCA9685.
+ * Copyright 2020 Gabriel Dimitriu
  *
- * This file is part of Robotics project.
+ * This file is part of Robotics
 
  * Robotics is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
- * 
+
  * Robotics is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+
  * You should have received a copy of the GNU General Public License
  * along with Robotics; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
 */
-#include <Servo.h>
 
-#define SERVO_PIN 10
+#include <Wire.h>
+#include <Adafruit_PWMServoDriver.h>
+
+#define SERVO_PIN 7
 
 //servo instance
-Servo myServo;
 bool isValidInput;
 char inData[20]; // Allocate some space for the string
 char inChar; // Where to store the character read
 byte index = 0; // Index into array; where to store the character
-
+Adafruit_PWMServoDriver pwmDriver = Adafruit_PWMServoDriver(0x40);
+int maxValue = 390;
+int minValue = 300;
 void setup() {
   Serial.begin(9600);
-  myServo.attach(SERVO_PIN);
+  pwmDriver.begin();
+  pwmDriver.setOscillatorFrequency(27000000);
+  pwmDriver.setPWMFreq(50.0);
+  Wire.setClock(400000);
 }
 
 
@@ -86,15 +92,15 @@ void loop()
     }
     if (strcmp(inData,"h") == 0) {
       Serial.println("stop");
-      myServo.write(15);
+      pwmDriver.setPWM(SERVO_PIN, 0, minValue);
       isValidInput = true;
     } else if (strcmp(inData,"c") == 0) {
       Serial.println("close full");
-      myServo.write(90);
+      pwmDriver.setPWM(SERVO_PIN, 0, maxValue);
       isValidInput = true;
     } else if (strcmp(inData,"o") == 0) {
       Serial.println("open full");
-      myServo.write(15);
+      pwmDriver.setPWM(SERVO_PIN, 0, minValue);
       isValidInput = true;
     } else if (strlen(inData) > 1) {
       if (inData[0] == 's') {
@@ -109,7 +115,7 @@ void loop()
         Serial.print("move servo ");
         Serial.print(atoi(inData));
         Serial.println("degree");
-        myServo.write(atoi(inData));
+        pwmDriver.setPWM(SERVO_PIN, 0, atoi(inData));
         isValidInput = true;
       } else {
         isValidInput = false;
