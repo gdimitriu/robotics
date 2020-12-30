@@ -7,6 +7,7 @@ EXECUTABLES = led_gpio detecti2c trigger_gpio ble_serial_receive ble_serial_sndr
 
 all: $(EXECUTABLES)
 	cd isr_cpp && make
+	cd camera && make
 
 led_gpio:led_gpio.c
 	$(CC) -fPIC -o led_gpio led_gpio.c $(LIBS) $(INCLUDES)
@@ -39,3 +40,4 @@ clean:
 		if [ -f $$object ]; then rm $$object; fi; \
 	done
 	cd isr_cpp && make clean
+	cd camera && make clean
