@@ -5,3 +5,25 @@ http://abyz.me.uk/rpi/pigpio/
 http://abyz.me.uk/rpi/pigpio/cif.html#i2cOpen
 https://pinout.xyz/?source=:em:nw:mt::RC_WWMK200429P00043:NSL400076643
 http://www.mosaic-industries.com/embedded-systems/microcontroller-projects/raspberry-pi/gpio-pin-electrical-specifications
+
+enable bluetooth
+https://www.raspberrypi.org/forums/viewtopic.php?t=214373
+https://www.raspberrypi.org/forums/viewtopic.php?p=947185#p947185
+
+wifi access point with wifi client still not working on 
+https://imti.co/iot-wifi/#iot-wifi-raspberry-pi-ap--client
+https://raspberrypi.stackexchange.com/questions/89803/access-point-as-wifi-router-repeater-optional-with-bridge/89804#89804
+https://www.raspberrypi.org/forums/viewtopic.php?t=190178
+https://www.raspberrypi.org/documentation/configuration/wireless/access-point-routed.md
+https://www.instructables.com/Using-a-Raspberry-PI-Zero-W-As-an-Access-Point-and/
+https://raspberrypi.stackexchange.com/questions/63841/rpi-zero-w-as-both-wifi-client-and-access-point
+https://www.raspberrypi.org/forums/viewtopic.php?t=95101
+https://unix.stackexchange.com/questions/49626/purpose-and-typical-usage-of-etc-rc-local
+https://wireless.wiki.kernel.org/en/users/documentation/iw
+https://wiki.archlinux.org/index.php/Software_access_point
+
+
+camera
+https://github.com/cedricve/raspicam
+https://projects.raspberrypi.org/en/projects/getting-started-with-picamera
+https://stackoverflow.com/questions/43244372/how-to-use-the-raspberry-pi-camera-as-video-input-in-c-opencv

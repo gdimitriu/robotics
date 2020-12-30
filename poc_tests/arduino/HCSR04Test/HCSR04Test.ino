@@ -18,8 +18,8 @@
  * License along with Robotics; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
-unsigned int EchoPin = 10;           // connect Pin 2(Arduino digital io) to Echo at US-020
-unsigned int TrigPin = 11;           // connect Pin 3(Arduino digital io) to Trig at US-020
+unsigned int EchoPin = 7;           // connect Pin 2(Arduino digital io) to Echo at US-020
+unsigned int TrigPin = 8;           // connect Pin 3(Arduino digital io) to Trig at US-020
 unsigned long Len_mm  = 0;
 void setup()
 {  //Initialize
