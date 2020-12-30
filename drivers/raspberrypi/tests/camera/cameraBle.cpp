@@ -1,12 +1,12 @@
 /*
- * ble_serial_receive.c
+ * cameraBle.cpp
  *
- *  Created on: Sep 26, 2020
+ * Raspberry Camera take a picture on c# command from ble
+ *  Created on: Dec 30, 2020
  *      Author: Gabriel Dimitriu
- * you have to add into /boot/config.txt at tag all
- * dtoverlay=disable-bt
- * enable_uart=1
  *
+ * You have to link the /dev/rfcomm0 to /dev/serialx and use as argument after connect to the ble.
+ * You have also to run before connecting to ble : /usr/bin/rfcomm watch hdi0
  * This file is part of Robotics project.
 
  * Robotics is free software; you can redistribute it and/or
