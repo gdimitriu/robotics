@@ -49,12 +49,16 @@ CDroid::CDroid(char *droidCfgFile, int isOnHost) {
 	m_moveThread = 0;
 	m_actualDistance = 0;
 	m_nextCheckRotate = 0;
+	m_grabberController = NULL;
 	initialize();
 }
 
 CDroid::~CDroid() {
 	if (m_controlEngines != 0) {
 		delete m_controlEngines;
+	}
+	if (m_grabberController != 0) {
+		delete m_grabberController;
 	}
 	if (m_controlSensors != 0) {
 		delete m_controlSensors;
@@ -125,13 +129,15 @@ void CDroid::initialize() {
 		m_pwmDriver->setOscillatorFrequency(27000000);
 		m_pwmDriver->setPWMFreq(50.0);
 	}
-	m_pwmDriver->setPWM(7,0,350);//grabber at center hardcodded
 	//get the configuration of the engines
 	line = getLine();
 	m_controlEngines = new CMasterControlEngines(line, m_logger, m_pwmDriver);
 	//get the configuration of the sensors
 	line = getLine();
 	m_controlSensors = new CMasterControlSensors(line, m_logger, m_pwmDriver);
+	//get the grabber configuration
+	line = getLine();
+	m_grabberController = new CGrabberController(line, m_logger, m_pwmDriver, m_controlSensors);
 	if (!m_pFile->eof()) {
 		sscanf(getLine(), "%u", &m_stopDistance);
 	} else {

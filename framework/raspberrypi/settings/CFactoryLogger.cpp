@@ -1,7 +1,7 @@
 /*
- * CFactoryFixDigitalSensor.cpp
+ * CLoggerFactory.cpp
  *
- *  Created on: Oct 16, 2020
+ *  Created on: Jan 2, 2021
  *      Author: Gabriel Dimitriu
  * Copyright (C) 2020 Gabriel Dimitriu
  * All rights reserved.
@@ -23,34 +23,27 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#include "CFactoryFixDigitalSensor.h"
-#include <CFixDigitalSensor.h>
-#include <string.h>
-#include <CLoggerStdout.h>
 #include <CLoggerBleHC5.h>
-#include <CFactoryLogger.h>
+#include <CLoggerStdout.h>
+#include <string.h>
+#include "CFactoryLogger.h"
 
-CFactoryFixDigitalSensor::CFactoryFixDigitalSensor(
-		CSettingLoading *settingsLoader, CLogger *logger) :
-		CFactorySensor(logger) {
-	m_settingsLoader = settingsLoader;
+CFactoryLogger::CFactoryLogger(CSettingLoading *settingsLoader) {
+	m_Loader = settingsLoader;
 }
 
-CFactoryFixDigitalSensor::~CFactoryFixDigitalSensor() {
+CFactoryLogger::~CFactoryLogger() {
 	// TODO Auto-generated destructor stub
 }
-
-CGenericSensor* CFactoryFixDigitalSensor::createSensor() {
-	CFactoryLogger *loggerFactory = new CFactoryLogger(m_settingsLoader);
-	CLogger *logger = loggerFactory->createLogger(m_logger);
-	delete loggerFactory;
-	int pin;
-	int edge;
-	int position;
-	int isCollision;
-	int relativePosition;
-	sscanf(m_settingsLoader->getLine(), "%d %d %d %d %d", &pin, &edge, &position,
-			&isCollision, &relativePosition);
-	return new CFixDigitalSensor(pin, edge, position, isCollision, logger, relativePosition);
+CLogger *CFactoryLogger::createLogger(CLogger *settingsLogger) {
+	CLogger *logger;
+	char *type = m_Loader->getLine();
+	if (strcmp("CLoggerStdout", type) == 0) {
+		logger = new CLoggerStdout();
+	} else if (strcmp("CLoggerBleHC5", type) == 0) {
+		logger = new CLoggerBleHC5();
+	} else {
+		logger = new CLoggerStdout();
+	}
+	return logger;
 }
-

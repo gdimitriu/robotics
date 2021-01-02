@@ -30,23 +30,17 @@
 #include <CLoggerStdout.h>
 #include <CLoggerBleHC5.h>
 #include <string.h>
+#include <CFactoryLogger.h>
 
 CMasterControlSensors::CMasterControlSensors(char *configFile,
 		CLogger *settingLogger, Adafruit_PWMServoDriver *pwmDriver) {
-	CSettingLoading *settings;
-	CFactorySensors *factory;
-	settings = new CSettingLoading(configFile, settingLogger);
-	char *type = settings->getLine();
-	if (strcmp("CLoggerStdout", type) == 0) {
-		m_logger = new CLoggerStdout();
-	} else if (strcmp("CLoggerBleHC5", type) == 0) {
-		m_logger = new CLoggerBleHC5();
-	} else {
-		m_logger = NULL;
-	}
-	factory = new CFactorySensors(settings, pwmDriver,m_logger);
+	CSettingLoading *settings = new CSettingLoading(configFile, settingLogger);
+	CFactoryLogger *loggerFactory = new CFactoryLogger(settings);
+	m_logger = loggerFactory->createLogger(settingLogger);
+	CFactorySensors *factory = new CFactorySensors(settings, pwmDriver,m_logger);
 	unsigned int sensorsNr;
 	CGenericSensor **sensors = factory->createSensors(sensorsNr);
+	delete loggerFactory;
 	delete factory;
 	delete settings;
 	m_forwardSensorsNr = 0;

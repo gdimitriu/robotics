@@ -2,7 +2,7 @@ CC = arm-linux-gnueabihf-gcc
 CXX = arm-linux-gnueabihf-g++
 AR = arm-linux-gnueabihf-ar
 
-LIBS = -lpthread -lpigpio -lrt -ldroiddrivers -lloggers -lsettings -ldroid -lsensors -ltof -lengines
+LIBS = -lpthread -lpigpio -lrt -ldroiddrivers -lloggers -lsettings -ldroid -lsensors -ltof -lengines -lgrabber
 LIB_DIRS = -L$(PREFIX_GPIO) -L$(PREFIX_DRIVERS)/lib -L$(PREFIX_FRAMEWORK)/lib
 INCLUDE_DIRS = -I$(PREFIX_GPIO) -I$(PREFIX_DRIVERS)/include  -I$(PREFIX_FRAMEWORK)/include -I../
 OBJECTS = ../CCommand.o ../CMoveCommand.o ../CSettingCommand.o ../CCommCommands.o ../CCommandStd.o ../CBLECommandHC05.o ../CManualDroid.o

@@ -33,7 +33,6 @@ CFactoryEnginePCA9685EncMX1509::CFactoryEnginePCA9685EncMX1509(CSettingLoading *
 }
 
 CFactoryEnginePCA9685EncMX1509::~CFactoryEnginePCA9685EncMX1509() {
-	delete m_settingLoader;
 }
 
 CEngineWithEncoder **CFactoryEnginePCA9685EncMX1509::createEngines(unsigned int &enginesNr) {

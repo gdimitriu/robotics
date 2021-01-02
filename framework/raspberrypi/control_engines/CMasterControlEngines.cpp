@@ -32,24 +32,25 @@
 #include <stdlib.h>
 #include <iostream>
 #include <unistd.h>
+#include <CFactoryLogger.h>
+#include <CSettingLoading.h>
 
 CMasterControlEngines::CMasterControlEngines(char *configFile,
 		CLogger *settingLogger, Adafruit_PWMServoDriver *pwmDriver) {
-	m_settings = new CSettingLoading(configFile, settingLogger);
-	char *type = m_settings->getLine();
-	if (strcmp("CLoggerStdout", type) == 0) {
-		m_logger = new CLoggerStdout();
-	} else if (strcmp("CLoggerBleHC5", type) == 0) {
-		m_logger = new CLoggerBleHC5();
-	}
-	type = m_settings->getLine();
+	CSettingLoading *settingsLoading = new CSettingLoading(configFile, settingLogger);
+	CFactoryLogger *loggerFactory = new CFactoryLogger(settingsLoading);
+	m_logger = loggerFactory->createLogger(settingLogger);
+	char *type = settingsLoading->getLine();
 	if (strcmp("CFactoryEnginePCA9685EncMX1509", type) == 0) {
-		m_factory = new CFactoryEnginePCA9685EncMX1509(m_settings, pwmDriver,
+		m_factory = new CFactoryEnginePCA9685EncMX1509(settingsLoading, pwmDriver,
 				m_logger);
+	} else {
+		m_factory = NULL;
+		return;
 	}
 	m_engines = m_factory->createEngines(m_enginesNr);
-	delete m_factory;
-	m_factory = NULL;
+	delete settingsLoading;
+	delete loggerFactory;
 	m_leftEnginesIndex = (int*) calloc(m_enginesNr / 2, sizeof(int));
 	m_rightEnginesIndex = (int*) calloc(m_enginesNr / 2, sizeof(int));
 	int left = 0;
@@ -78,8 +79,13 @@ CMasterControlEngines::~CMasterControlEngines() {
 		delete m_engines;
 	}
 	pthread_barrier_destroy(&m_startBarrier);
-	delete m_logger;
-	m_logger = NULL;
+	if (m_logger != NULL) {
+		delete m_logger;
+		m_logger = NULL;
+	}
+	if (m_factory != NULL) {
+		delete m_factory;
+	}
 }
 
 void CMasterControlEngines::setMoveBarrier(CResetableBarrier *moveBarrier) {

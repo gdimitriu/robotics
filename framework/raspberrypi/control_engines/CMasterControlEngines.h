@@ -27,7 +27,6 @@
 #define CONTROL_ENGINES_CMASTERCONTROLENGINES_H_
 
 #include <CFactoryEngine.h>
-#include <CSettingLoading.h>
 #include <CLogger.h>
 #include <Adafruit_PWMServoDriver.h>
 #include <pthread.h>
@@ -85,9 +84,8 @@ public:
 	void setLowPowerDistance(unsigned long distance);
 
 protected:
-	CSettingLoading *m_settings;
-	CFactoryEngine *m_factory;
 	CEngineWithEncoder **m_engines;
+	CFactoryEngine *m_factory;
 	unsigned int m_enginesNr;
 	CLogger *m_logger;
 	int *m_leftEnginesIndex;

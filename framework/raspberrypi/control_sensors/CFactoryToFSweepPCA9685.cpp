@@ -29,6 +29,7 @@
 #include <CLoggerStdout.h>
 #include <CLoggerBleHC5.h>
 #include <string.h>
+#include <CFactoryLogger.h>
 
 CFactoryToFSweepPCA9685::CFactoryToFSweepPCA9685(
 		CSettingLoading *settingsLoader, Adafruit_PWMServoDriver *pwmDriver,
@@ -51,17 +52,12 @@ CGenericSensor* CFactoryToFSweepPCA9685::createSensor() {
 	int servoRight;
 	int position;
 	int isCollision;
-	char *type;
 	int maxLeft;
 	int maxRight;
 	int relativePosition;
-	type = m_settingsLoader->getLine();
-	CLogger *logger;
-	if (strcmp("CLoggerStdout", type) == 0) {
-		logger = new CLoggerStdout();
-	} else if (strcmp("CLoggerBleHC5", type) == 0) {
-		logger = new CLoggerBleHC5();
-	}
+	CFactoryLogger *loggerFactory = new CFactoryLogger(m_settingsLoader);
+	CLogger *logger = loggerFactory->createLogger(m_logger);
+	delete loggerFactory;
 	sscanf(m_settingsLoader->getLine(), "%d %d %d %d %d %d %d %d %d %d %d", &iChan, &iAddr,
 			&servoPin, &servoCenter, &servoLeft, &servoRight, &position, &isCollision, &maxLeft, &maxRight, &relativePosition);
 	return new CToFSweepPCA9685(iChan, iAddr, m_pwmDriver, servoPin,

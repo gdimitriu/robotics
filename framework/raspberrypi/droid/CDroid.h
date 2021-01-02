@@ -36,6 +36,7 @@
 #include <list>
 #include <CResetableBarrier.h>
 #include <pthread.h>
+#include <CGrabberController.h>
 
 class CDroid {
 public:
@@ -117,7 +118,7 @@ protected:
 	pthread_t m_moveThread;
 	pthread_attr_t m_moveThreadAttr;
 	float m_actualDistance;
-
+	CGrabberController *m_grabberController;
 };
 
 #endif /* DROID_CDROID_H_ */

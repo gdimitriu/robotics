@@ -3,8 +3,8 @@ CXX = arm-linux-gnueabihf-g++
 AR = arm-linux-gnueabihf-ar
 
 INCLUDES = -I$(PREFIX_GPIO) -I$(PREFIX_DRIVERS)/include -I../include
-OBJECTS = CSettingLoading.o
-HEADERS = CSettingLoading.h
+OBJECTS = CSettingLoading.o CFactoryLogger.o
+HEADERS = CSettingLoading.h CFactoryLogger.h
 EXECUTABLES =  libsettings.so
 FLAGS = -std=gnu++11
 
@@ -17,6 +17,10 @@ libsettings.so: $(OBJECTS)
 CSettingLoading.o:CSettingLoading.cpp CSettingLoading.h
 	$(CXX) -fPIC -o CSettingLoading.o -c CSettingLoading.cpp $(INCLUDES) $(FLAGS)
 	cp CSettingLoading.h ../include
+
+CFactoryLogger.o:CFactoryLogger.cpp CFactoryLogger.h CSettingLoading.o
+	$(CXX) -fPIC -o CFactoryLogger.o -c CFactoryLogger.cpp $(INCLUDES) $(FLAGS)
+	cp CFactoryLogger.h ../include
 			
 clean:
 	for object in $(EXECUTABLES);\

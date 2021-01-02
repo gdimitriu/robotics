@@ -29,6 +29,7 @@
 #include <CLoggerBleHC5.h>
 #include <string.h>
 #include <CHCSR04SweepPCA9685.h>
+#include <CFactoryLogger.h>
 
 CFactoryHCSR04SweepPCA9685::CFactoryHCSR04SweepPCA9685(
 		CSettingLoading *settingsLoader, Adafruit_PWMServoDriver *pwmDriver,
@@ -52,16 +53,11 @@ CGenericSensor* CFactoryHCSR04SweepPCA9685::createSensor() {
 	int position;
 	int relativePosition;
 	int isCollision;
-	char *type;
 	int maxLeft;
 	int maxRight;
-	type = m_settingsLoader->getLine();
-	CLogger *logger;
-	if (strcmp("CLoggerStdout", type) == 0) {
-		logger = new CLoggerStdout();
-	} else if (strcmp("CLoggerBleHC5", type) == 0) {
-		logger = new CLoggerBleHC5();
-	}
+	CFactoryLogger *loggerFactory = new CFactoryLogger(m_settingsLoader);
+	CLogger *logger = loggerFactory->createLogger(m_logger);
+	delete loggerFactory;
 	sscanf(m_settingsLoader->getLine(), "%d %d %d %d %d %d %d %d %d %d %d",
 			&echoPin, &trigPin, &servoPin, &servoCenter, &servoLeft,
 			&servoRight, &position, &isCollision, &maxLeft, &maxRight,&relativePosition);
