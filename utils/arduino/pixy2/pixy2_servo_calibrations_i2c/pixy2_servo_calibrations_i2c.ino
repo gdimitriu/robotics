@@ -1,9 +1,9 @@
 /*
- * robot grabber calibration.
+ * PIXY2 servo calibration on I2C.
  * Copyright 2019 Gabriel Dimitriu
  *
  * This file is part of Robotics project.
-
+  
  * Robotics is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -17,23 +17,25 @@
  * You should have received a copy of the GNU General Public License
  * along with Robotics; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
-*/
-#include <Servo.h>
+ */
+#include <Pixy2I2C.h>
 
-#define SERVO_PIN 10
-
-//servo instance
-Servo myServo;
 bool isValidInput;
 char inData[20]; // Allocate some space for the string
 char inChar; // Where to store the character read
 byte index = 0; // Index into array; where to store the character
+unsigned long hValue;
+unsigned long vValue;
+int lamp;
 
-void setup() {
-  Serial.begin(9600);
-  myServo.attach(SERVO_PIN);
+Pixy2I2C pixy;
+void printMenu() {
+    Serial.println( "MENU:" );
+    Serial.println( "c# center");
+    Serial.println( "vxxx# rotate vertical with absolute value");
+    Serial.println( "hxxx# rotate horizontal with absolute value");
+    Serial.println("l# turnon or off lamp");
 }
-
 
 boolean isValidNumber(char *data, int size)
 {
@@ -48,18 +50,33 @@ boolean isValidNumber(char *data, int size)
    return true;
 }
 
+void setup() 
+{
+  Serial.begin(115200);
+  Serial.print("Starting...\n");
+  Wire.setClock(400000); 
+  pixy.init();
+  isValidInput = false;
+  printMenu();
+  lamp = 0;
+  // Turn off both lamps, upper and lower for maximum exposure
+  if (pixy.setLamp(lamp, lamp) < 0) {
+    Serial.println("Could not set lamp");
+  }
+  // change to the line_tracking program.  Note, changeProg can use partial strings, so for example,
+  // you can change to the line_tracking program by calling changeProg("line") instead of the whole
+  // string changeProg("line_tracking")
+  //pixy.changeProg("line");
+  hValue = 500;
+  vValue = 500;
+  pixy.setServos(hValue,vValue);
+}
+
+
 void loop()
 {
-   Serial.println( "-----------------------------------------------------" );
-  Serial.println( "Calibration of robot grabber");
-  Serial.println( "-----------------------------------------------------" );
-  Serial.println( "MENU:" );
-  Serial.println( "h# Stop" );
-  Serial.println( "c# close full");
-  Serial.println( "o# open full");
-  Serial.println( "sxx# servo x degree");
-  Serial.println( "-----------------------------" );
-   do {
+  printMenu();
+  do {
     for (index = 0; index < 20; index++)
     {
        inData[index] = '\0';
@@ -84,21 +101,9 @@ void loop()
     if (index > 0) {
       inData[index-1] = '\0';
     }
-    if (strcmp(inData,"h") == 0) {
-      Serial.println("stop");
-      myServo.write(15);
-      isValidInput = true;
-    } else if (strcmp(inData,"c") == 0) {
-      Serial.println("close full");
-      myServo.write(90);
-      isValidInput = true;
-    } else if (strcmp(inData,"o") == 0) {
-      Serial.println("open full");
-      myServo.write(15);
-      isValidInput = true;
-    } else if (strlen(inData) > 1) {
-      if (inData[0] == 's') {
-        //remove s from command
+    if (strlen(inData) > 1) {
+      if (inData[0] == 'h') {
+        //remove h from command
         for (int i = 0 ; i < strlen(inData); i++) {
           inData[i]=inData[i+1];
         }
@@ -106,14 +111,43 @@ void loop()
           isValidInput = false;
           break;
         }
-        Serial.print("move servo ");
-        Serial.print(atoi(inData));
-        Serial.println("degree");
-        myServo.write(atoi(inData));
+        Serial.print("Moving horinzontally at ");
+        Serial.println(atol(inData));
+        hValue = atol(inData);
+        pixy.setServos(hValue,vValue);
+        isValidInput = true;
+      } else if (inData[0] == 'v') {
+        //remove m from command
+        for (int i = 0 ; i < strlen(inData); i++) {
+          inData[i]=inData[i+1];
+        }
+        if (!isValidNumber(inData, index - 2)) {
+          isValidInput = false;
+          break;
+        }
+        Serial.print("Moving vertically at ");
+        Serial.println(atol(inData));
+        vValue = atol(inData);
+        pixy.setServos(hValue,vValue);
         isValidInput = true;
       } else {
         isValidInput = false;
       }
+    } else if (inData[0] == 'c') {
+        Serial.println("Moving to center");
+        hValue = 500;
+        vValue = 500;
+        pixy.setServos(hValue,vValue);
+        isValidInput = true;
+    } else if (inData[0] == 'l') {
+        Serial.println("turn on / off lamp");
+        if (lamp == 0) {
+          lamp = 1;
+        } else {
+          lamp = 0;
+        }
+        pixy.setLamp(lamp,lamp);
+        isValidInput = true;
     } else {
       isValidInput = false;
     }
