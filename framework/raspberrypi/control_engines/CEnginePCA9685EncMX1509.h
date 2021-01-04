@@ -41,7 +41,7 @@ public:
 	CEnginePCA9685EncMX1509(unsigned int engineNr, unsigned int port, int edge,
 			unsigned int engPin1, unsigned int engPin2);
 	virtual ~CEnginePCA9685EncMX1509();
-	virtual void dumpInfo();
+	virtual void dumpInfo(CLogger *logger);
 	/*
 	 * set the pwm driver which generate PWM for engines and servo
 	 */
@@ -119,6 +119,10 @@ public:
 	 * set the low power distance
 	*/
 	virtual void setLowPowerDistance(unsigned long distance);
+	/*
+	 * get the debug information
+	 */
+	virtual std::string getDebugInformation();
 protected:
 	/* start encoder thread */
 	virtual void startEncoder();

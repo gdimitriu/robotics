@@ -42,8 +42,9 @@ int main(int argc, char **argv) {
 			perror("gpio init failed");
 			exit(1);
 	}
-	CMasterControlEngines *master = new CMasterControlEngines(argv[1], new CLoggerBleHC5(), NULL);
-	master->dumpInfo();
+	CLogger *logger = new CLoggerBleHC5();
+	CMasterControlEngines *master = new CMasterControlEngines(argv[1], logger, NULL);
+	master->dumpInfo(logger);
 	gpioTerminate();
 	exit(0);
 }

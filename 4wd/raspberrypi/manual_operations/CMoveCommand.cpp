@@ -44,7 +44,7 @@ void CMoveCommand::init() {
 	m_operations->insert('l');
 	m_operations->insert('r');
 	m_menu->append("b# (break) full stop\t;\n");
-	m_menu->append("mxxx,yyy# move (forward xxx > 0  xxx = 0 rotate or xxx < 0 bacward) cm and rotate before \n");
+	m_menu->append("mxxx,yyy# move (forward xxx > 0  xxx = 0 rotate or xxx < 0 backward) cm and rotate before \n");
 	m_menu->append("(-1 left, 0 center, 1 right) or (negative for left encoder and positive for right encoder)\t;\n");
 	m_menu->append("l# rotate left 45 degree and restore safe distance\t;\n");
 	m_menu->append(

@@ -61,7 +61,4 @@ void CLoggerStdout::error(std::string data) {
 	cout<<"ERROR:"<<data;
 }
 
-int CLoggerStdout::isDebug() {
-	return 1;
-}
 

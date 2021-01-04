@@ -3,8 +3,8 @@ CXX = arm-linux-gnueabihf-g++
 AR = arm-linux-gnueabihf-ar
 
 INCLUDES = -I$(PREFIX_GPIO) -I$(PREFIX_DRIVERS)/include -I../include
-OBJECTS = CLogger.o CLoggerStdout.o CLoggerBleHC5.o
-HEADERS = CLogger.h CLoggerStdout.h CLoggerBleHC5.h
+OBJECTS = CLogger.o CLoggerStdout.o CLoggerBle.o CLoggerBleHC5.o CLoggerFile.o
+HEADERS = CLogger.h CLoggerStdout.h CLoggerBle.h CLoggerBleHC5.h CLoggerFile.h
 EXECUTABLES =  libloggers.so
 FLAGS = -std=gnu++11 -DDEBUG_MODE
 
@@ -22,10 +22,18 @@ CLoggerStdout.o:CLoggerStdout.cpp CLoggerStdout.h CLogger.h
 	$(CXX) -fPIC -o CLoggerStdout.o -c CLoggerStdout.cpp $(INCLUDES) $(FLAGS)
 	cp CLoggerStdout.h ../include
 
-CLoggerBleHC5.o:CLoggerBleHC5.cpp CLoggerBleHC5.h CLogger.h
-	$(CXX) -fPIC -o CLoggerBleHC5.o -c CLoggerBleHC5.cpp $(INCLUDES) $(FLAGS) -fpermissive
+CLoggerBleHC5.o:CLoggerBleHC5.cpp CLoggerBleHC5.h CLoggerBle.o
+	$(CXX) -fPIC -o CLoggerBleHC5.o -c CLoggerBleHC5.cpp $(INCLUDES) $(FLAGS) -fpermissive -Wwrite-strings
 	cp CLoggerBleHC5.h ../include
-	
+
+CLoggerBle.o:CLoggerBle.cpp CLoggerBle.h CLogger.o
+	$(CXX) -fPIC -o CLoggerBle.o -c CLoggerBle.cpp $(INCLUDES) $(FLAGS) -fpermissive
+	cp CLoggerBle.h ../include
+
+CLoggerFile.o:CLoggerFile.cpp CLoggerFile.h CLogger.h
+	$(CXX) -fPIC -o CLoggerFile.o -c CLoggerFile.cpp $(INCLUDES) $(FLAGS)
+	cp CLoggerFile.h ../include
+		
 clean:
 	for object in $(EXECUTABLES);\
 	do \

@@ -39,7 +39,6 @@ public:
 	virtual void info(std::string data);
 	virtual void debug(std::string data);
 	virtual void error(std::string data);
-	virtual int isDebug();
 };
 
 #endif /* LOGGERS_CLOGGERSTDOUT_H_ */

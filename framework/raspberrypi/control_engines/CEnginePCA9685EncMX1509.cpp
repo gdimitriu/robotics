@@ -181,18 +181,27 @@ void CEnginePCA9685EncMX1509::coastEngine() {
 
 void CEnginePCA9685EncMX1509::setPPI(float ppi) {
 	m_ppi = ppi;
-	if (m_logger != NULL && m_logger->isDebug() == 1) {
-		std::string message("SetPPI ");
-		message +=std::to_string(ppi);
-		message +=" for engine ";
-		message +=std::to_string(m_engineNr);
-		message +='\n';
-		m_logger->debug(message);
-	}
 }
 
-void CEnginePCA9685EncMX1509::dumpInfo() {
-	if (m_logger != NULL) {
+std::string CEnginePCA9685EncMX1509::getDebugInformation() {
+	std::string message("EngineNR=");
+	message +=std::to_string(m_engineNr);
+	message +=" with encport=";
+	message +=std::to_string(m_encPort);
+	message +=" encEdge=";
+	message +=std::to_string(m_encEdge);
+	message +=" pin1=";
+	message +=std::to_string(m_enginePin1);
+	message +=" pin2=";
+	message +=std::to_string(m_enginePin2);
+	message +=" ppi=";
+	message +=std::to_string(m_ppi);
+	message +="\n";
+	return message;
+}
+
+void CEnginePCA9685EncMX1509::dumpInfo(CLogger *logger) {
+	if (logger != NULL) {
 		std::string message("EngineNR=");
 		message +=std::to_string(m_engineNr);
 		message +=" with encport=";
@@ -206,7 +215,7 @@ void CEnginePCA9685EncMX1509::dumpInfo() {
 		message +=" ppi=";
 		message +=std::to_string(m_ppi);
 		message +="\n";
-		m_logger->info(message);
+		logger->info(message);
 	}
 }
 

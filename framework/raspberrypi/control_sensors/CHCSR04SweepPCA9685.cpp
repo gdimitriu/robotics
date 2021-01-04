@@ -32,60 +32,61 @@ CHCSR04SweepPCA9685::CHCSR04SweepPCA9685(Adafruit_PWMServoDriver *pwmDriver, int
 		CSweepPCA9685(pwmDriver, servoPin, servoCenter, servoLeft, servoRight, position, isCollision, logger, maxLeft, maxRight, relativePosition) {
 	m_trigPort = trigPort;
 	m_echoPort = echoPort;
-	if (m_logger != NULL && m_logger->isDebug() == 1) {
-		std::string message("CHCSR04SweepPCA9685 echoPort=");
-		message += std::to_string(m_echoPort);
-		message += " trigPort=";
-		message += std::to_string(m_trigPort);
-		message += " servoPin=";
-		message += std::to_string(m_servoPin);
-		message += " servoCenter=";
-		message += std::to_string(m_servoCenter);
-		message += " servoLeft=";
-		message += std::to_string(m_servoLeft);
-		message += " servoRight=";
-		message += std::to_string(m_servoRight);
-		if (isCollision == 1) {
-			message += " is collision avoidance sensor ";
-		}
-		switch (m_position) {
-		case 0:
-			message += " in front position";
-			break;
-		case 90:
-			message += " in right position";
-			break;
-		case 180:
-			message += " in back position";
-			break;
-		case 270:
-			message += " in left position";
-			break;
-		}
-		message += " servo max left=";
-		message += std::to_string(m_servoMaxLeft);
-		message += " servo max right=";
-		message += std::to_string(m_servoMaxRight);
-		switch (m_relativePosition) {
-		case -1:
-			message +=" in left relative";
-			break;
-		case 0:
-			message +=" in center relative";
-			break;
-		case 1:
-			message +=" in right relative";
-			break;
-		}
-		message += "\n";
-		m_logger->debug(message);
-	}
 	gpioSetMode(m_echoPort, PI_INPUT);
 	gpioSetPullUpDown(m_echoPort, PI_PUD_UP);
 	gpioSetMode(m_trigPort, PI_OUTPUT);
 }
 
 CHCSR04SweepPCA9685::~CHCSR04SweepPCA9685() {
+}
+
+std::string CHCSR04SweepPCA9685::getDebugInformation() {
+	std::string message("CHCSR04SweepPCA9685 echoPort=");
+	message += std::to_string(m_echoPort);
+	message += " trigPort=";
+	message += std::to_string(m_trigPort);
+	message += " servoPin=";
+	message += std::to_string(m_servoPin);
+	message += " servoCenter=";
+	message += std::to_string(m_servoCenter);
+	message += " servoLeft=";
+	message += std::to_string(m_servoLeft);
+	message += " servoRight=";
+	message += std::to_string(m_servoRight);
+	if (m_isCollision == 1) {
+		message += " is collision avoidance sensor ";
+	}
+	switch (m_position) {
+	case 0:
+		message += " in front position";
+		break;
+	case 90:
+		message += " in right position";
+		break;
+	case 180:
+		message += " in back position";
+		break;
+	case 270:
+		message += " in left position";
+		break;
+	}
+	message += " servo max left=";
+	message += std::to_string(m_servoMaxLeft);
+	message += " servo max right=";
+	message += std::to_string(m_servoMaxRight);
+	switch (m_relativePosition) {
+	case -1:
+		message +=" in left relative";
+		break;
+	case 0:
+		message +=" in center relative";
+		break;
+	case 1:
+		message +=" in right relative";
+		break;
+	}
+	message += "\n";
+	return message;
 }
 
 int CHCSR04SweepPCA9685::getDistance() {

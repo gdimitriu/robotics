@@ -31,10 +31,9 @@
 #include <stdio.h>
 #include <string.h>
 
-CFactorySensors::CFactorySensors(CSettingLoading *settingsLoader, Adafruit_PWMServoDriver *pwmDriver, CLogger *logger) {
+CFactorySensors::CFactorySensors(CSettingLoading *settingsLoader, Adafruit_PWMServoDriver *pwmDriver) {
 	this->m_settingsLoader = settingsLoader;
 	this->m_pwmDriver = pwmDriver;
-	this->m_logger = logger;
 }
 
 CFactorySensors::~CFactorySensors() {
@@ -53,15 +52,19 @@ CGenericSensor **CFactorySensors::createSensors(unsigned int &sensorsNr) {
 		CFactorySensor *factorySensor;
 		type = m_settingsLoader->getLine();
 		if (strcmp("CFactoryToFSweepPCA9685", type) == 0) {
-			factorySensor = new CFactoryToFSweepPCA9685(m_settingsLoader, m_pwmDriver, m_logger);
+			factorySensor = new CFactoryToFSweepPCA9685(m_settingsLoader, m_pwmDriver, m_settingsLoader->getLogger());
 		} else if (strcmp("CFactoryFixDigitalSensor", type ) == 0) {
-			factorySensor = new CFactoryFixDigitalSensor(m_settingsLoader, m_logger);
+			factorySensor = new CFactoryFixDigitalSensor(m_settingsLoader, m_settingsLoader->getLogger());
 		} else if (strcmp("CFactoryHCSR04SweepPCA9685", type) == 0) {
-			factorySensor = new CFactoryHCSR04SweepPCA9685(m_settingsLoader, m_pwmDriver, m_logger);
+			factorySensor = new CFactoryHCSR04SweepPCA9685(m_settingsLoader, m_pwmDriver, m_settingsLoader->getLogger());
 		} else {
 			continue;
 		}
 		sensors[i] = factorySensor->createSensor();
+		CLogger *logger = m_settingsLoader->getLogger();
+		if (logger != NULL && logger->isInfo()) {
+			logger->info(sensors[i]->getDebugInformation());
+		}
 		delete factorySensor;
 	}
 	return sensors;

@@ -37,7 +37,7 @@ CMasterControlSensors::CMasterControlSensors(char *configFile,
 	CSettingLoading *settings = new CSettingLoading(configFile, settingLogger);
 	CFactoryLogger *loggerFactory = new CFactoryLogger(settings);
 	m_logger = loggerFactory->createLogger(settingLogger);
-	CFactorySensors *factory = new CFactorySensors(settings, pwmDriver,m_logger);
+	CFactorySensors *factory = new CFactorySensors(settings, pwmDriver);
 	unsigned int sensorsNr;
 	CGenericSensor **sensors = factory->createSensors(sensorsNr);
 	delete loggerFactory;

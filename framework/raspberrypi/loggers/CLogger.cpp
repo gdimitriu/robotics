@@ -26,11 +26,21 @@
 #include "CLogger.h"
 
 CLogger::CLogger() {
-	// TODO Auto-generated constructor stub
-
+	m_type = 0;
 }
 
 CLogger::~CLogger() {
 	// TODO Auto-generated destructor stub
 }
 
+int CLogger::isDebug() {
+	return m_type == 2;
+}
+
+int CLogger::isInfo() {
+	return m_type >= 1;
+}
+
+void CLogger::setType(int type) {
+	m_type = type;
+}

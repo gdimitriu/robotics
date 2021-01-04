@@ -3,7 +3,7 @@
  *
  *  Created on: Jan 2, 2021
  *      Author: Gabriel Dimitriu
- * Copyright (C) 2020 Gabriel Dimitriu
+ * Copyright (C) 2021 Gabriel Dimitriu
  * All rights reserved.
  *
  * This file is part of Robotics project.

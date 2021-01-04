@@ -3,7 +3,7 @@
  *
  *  Created on: Jan 2, 2021
  *      Author: Gabriel Dimitriu
- * Copyright (C) 2020 Gabriel Dimitriu
+ * Copyright (C) 2021 Gabriel Dimitriu
  * All rights reserved.
  *
  * This file is part of Robotics project.
@@ -25,6 +25,8 @@
 
 #include <CLoggerBleHC5.h>
 #include <CLoggerStdout.h>
+#include <CLoggerBle.h>
+#include <CLoggerFile.h>
 #include <string.h>
 #include "CFactoryLogger.h"
 
@@ -33,15 +35,37 @@ CFactoryLogger::CFactoryLogger(CSettingLoading *settingsLoader) {
 }
 
 CFactoryLogger::~CFactoryLogger() {
-	// TODO Auto-generated destructor stub
+
 }
+
 CLogger *CFactoryLogger::createLogger(CLogger *settingsLogger) {
 	CLogger *logger;
+	int debug;
 	char *type = m_Loader->getLine();
 	if (strcmp("CLoggerStdout", type) == 0) {
 		logger = new CLoggerStdout();
+		type = m_Loader->getLine();
+		sscanf(type,"%d",&debug);
+		logger->setType(debug);
 	} else if (strcmp("CLoggerBleHC5", type) == 0) {
 		logger = new CLoggerBleHC5();
+		type = m_Loader->getLine();
+		sscanf(type,"%d",&debug);
+		logger->setType(debug);
+	} else if (strcmp("CLoggerBle", type) == 0) {
+		char tty[255];
+		int boudRate;
+		type = m_Loader->getLine();
+		sscanf(type,"%d %s %d",&debug,&tty,&boudRate);
+		logger = new CLoggerBle(tty,boudRate);
+		logger->setType(debug);
+	} else if (strcmp("CLoggerFile", type) == 0) {
+		char fileName[255];
+		type = m_Loader->getLine();
+		char openType;
+		sscanf(type,"%d %s %c",&debug,&fileName,&openType);
+		logger = new CLoggerFile(fileName,openType);
+		logger->setType(debug);
 	} else {
 		logger = new CLoggerStdout();
 	}

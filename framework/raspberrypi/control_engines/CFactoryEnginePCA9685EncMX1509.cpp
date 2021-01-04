@@ -28,8 +28,8 @@
 
 CFactoryEnginePCA9685EncMX1509::CFactoryEnginePCA9685EncMX1509(CSettingLoading *settingsLoader, Adafruit_PWMServoDriver *pwmDriver, CLogger *logger)
 	: CFactoryEngine(logger){
-	this->m_settingLoader = settingsLoader;
-	this->m_pwmDriver = pwmDriver;
+	m_settingLoader = settingsLoader;
+	m_pwmDriver = pwmDriver;
 }
 
 CFactoryEnginePCA9685EncMX1509::~CFactoryEnginePCA9685EncMX1509() {
@@ -52,6 +52,10 @@ CEngineWithEncoder **CFactoryEnginePCA9685EncMX1509::createEngines(unsigned int 
 		engines[i]->setLogger(m_logger);
 		((CEnginePCA9685EncMX1509 *)engines[i])->setPWMDriver(m_pwmDriver);
 		((CEnginePCA9685EncMX1509 *)engines[i])->setPPI(ppi);
+		CLogger *logger = m_settingLoader->getLogger();
+		if (logger != NULL && logger->isInfo()) {
+			logger->info(engines[i]->getDebugInformation());
+		}
 	}
 	unsigned int intValue;
 	sscanf(m_settingLoader->getLine(), "%u", &intValue);

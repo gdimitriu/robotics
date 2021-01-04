@@ -119,6 +119,7 @@ protected:
 	pthread_attr_t m_moveThreadAttr;
 	float m_actualDistance;
 	CGrabberController *m_grabberController;
+	CLogger* m_settingLogger;
 };
 
 #endif /* DROID_CDROID_H_ */

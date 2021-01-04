@@ -59,12 +59,12 @@ protected:
 	int m_relativePosition;
 	int m_servoMaxRight;
 	int m_servoMaxLeft;
+	int m_isCollision;
+	int m_stopDistance;
 private:
 	friend void *CSweepPCA9685_collisionDetection(void *instance);
-	int m_isCollision;
 	pthread_t m_collisionTh;
 	pthread_attr_t m_collisionThAttr;
-	int m_stopDistance;
 	void *m_callbackCaller;
 	void (*m_callbackRoutine)(void *,CGenericSensor *);
 };

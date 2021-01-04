@@ -28,16 +28,31 @@
 #include <stdlib.h>
 #include <string.h>
 
-CSettingLoading::CSettingLoading(char *fileName,CLogger *logger) {
+CSettingLoading::CSettingLoading(char *fileName, CLogger *logger) {
 	m_pFile = new std::ifstream(fileName);
 	this->m_buffSize = 256;
 	this->m_buffer = (char *)calloc(m_buffSize, sizeof(char));
 	m_logger = logger;
+	m_isOpenHere = true;
+}
+
+CSettingLoading::CSettingLoading(std::ifstream *pFile, CLogger *logger) {
+	m_pFile = pFile;
+	this->m_buffSize = 256;
+	this->m_buffer = (char *)calloc(m_buffSize, sizeof(char));
+	m_logger = logger;
+	m_isOpenHere = false;
 }
 
 CSettingLoading::~CSettingLoading() {
-	delete (m_pFile);
+	if (m_isOpenHere) {
+		delete (m_pFile);
+	}
 	free(m_buffer);
+}
+
+CLogger *CSettingLoading::getLogger() {
+	return m_logger;
 }
 
 char *CSettingLoading::getLine() {

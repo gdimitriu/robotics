@@ -31,11 +31,11 @@
 #include <string.h>
 #include <CMasterControlSensors.h>
 #include <CFactoryLogger.h>
+#include <string>
 
 CGrabberController::CGrabberController(char *configFile,
 		CLogger *settingLogger, Adafruit_PWMServoDriver *pwmDriver, CMasterControlSensors *sensors) {
-	CSettingLoading *settings;
-	settings = new CSettingLoading(configFile, settingLogger);
+	CSettingLoading *settings = new CSettingLoading(configFile, settingLogger);
 	m_controlSensors = sensors;
 	CFactoryLogger *loggerFactory = new CFactoryLogger(settings);
 	CLogger *logger = loggerFactory->createLogger(settingLogger);
@@ -45,6 +45,9 @@ CGrabberController::CGrabberController(char *configFile,
 	int position;
 	sscanf(settings->getLine(), "%d %d %d %d",&pin,&closeGrabber,&openGrabber,&position);
 	m_grabber = new CGrabber(pwmDriver, position, pin, closeGrabber, openGrabber,logger);
+	if (settingLogger != NULL && settingLogger->isInfo()) {
+		settingLogger->info(m_grabber->getDebugInformation());
+	}
 	delete settings;
 	delete loggerFactory;
 }

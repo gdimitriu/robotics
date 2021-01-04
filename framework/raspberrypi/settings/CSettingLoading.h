@@ -32,14 +32,17 @@
 class CSettingLoading {
 public:
 	CSettingLoading(char *fileName, CLogger *logger);
+	CSettingLoading(std::ifstream *m_pFile, CLogger *logger);
 	virtual ~CSettingLoading();
 	char* getLine();
 	unsigned int getBuffSize();
+	CLogger *getLogger();
 private:
 	CLogger *m_logger;
 	std::ifstream *m_pFile;
 	char *m_buffer;
 	unsigned int m_buffSize;
+	bool m_isOpenHere;
 };
 
 #endif /* SETTINGS_CSETTINGLOADING_H_ */
