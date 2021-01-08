@@ -40,41 +40,7 @@ CFixDigitalSensor::CFixDigitalSensor(unsigned int pin, unsigned int edge,
 	m_collisionTh = 0;
 	m_pin = pin;
 	m_edge = edge;
-	if (m_logger != NULL && m_logger->isDebug() == 1) {
-		std::string message("CFixDigitalSensor pin=");
-		message += std::to_string(pin);
-		message += " edge=";
-		message += std::to_string(edge);
-		if (isCollision == 1) {
-			message += " is collision avoidance sensor ";
-		}
-		switch (m_position) {
-		case 0:
-			message += " in front position";
-			break;
-		case 90:
-			message += " in right position";
-			break;
-		case 180:
-			message += " in back position";
-			break;
-		case 270:
-			message += " in left position";
-			break;
-		}
-		switch (m_relativePosition) {
-		case -1:
-			message +=" in left relative\n";
-			break;
-		case 0:
-			message +=" in center relative\n";
-			break;
-		case 1:
-			message +=" in right relative\n";
-			break;
-		}
-		m_logger->debug(message);
-	}
+
 	m_isDisabled = 1;
 	pthread_cond_init(&m_condition, NULL);
 	pthread_attr_init(&m_collisionThAttr);
@@ -103,6 +69,42 @@ CFixDigitalSensor::~CFixDigitalSensor() {
 	pthread_attr_destroy(&m_collisionThAttr);
 	pthread_mutexattr_destroy(&m_mutexAttr);
 	gpioSetPullUpDown(m_pin, PI_PUD_OFF);
+}
+
+std::string CFixDigitalSensor::getDebugInformation() {
+	std::string message("CFixDigitalSensor pin=");
+	message += std::to_string(m_pin);
+	message += " edge=";
+	message += std::to_string(m_edge);
+	if (m_isCollision == 1) {
+		message += " is collision avoidance sensor ";
+	}
+	switch (m_position) {
+	case 0:
+		message += " in front position";
+		break;
+	case 90:
+		message += " in right position";
+			break;
+	case 180:
+		message += " in back position";
+		break;
+	case 270:
+		message += " in left position";
+		break;
+	}
+	switch (m_relativePosition) {
+	case -1:
+		message +=" in left relative\n";
+		break;
+	case 0:
+		message +=" in center relative\n";
+		break;
+	case 1:
+		message +=" in right relative\n";
+		break;
+	}
+	return message;
 }
 
 void CFixDigitalSensor::ISRMain(int gpio, int level, uint32_t tick, void *holder) {

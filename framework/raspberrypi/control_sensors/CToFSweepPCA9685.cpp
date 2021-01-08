@@ -33,55 +33,8 @@ CToFSweepPCA9685::CToFSweepPCA9685(int iChan, int iAddr,
 		int servoLeft, int servoRight, int position, int isCollision,
 		CLogger *logger, int maxLeft, int maxRight, int relativePosition) :
 		CSweepPCA9685(pwmDriver, servoPin, servoCenter, servoLeft, servoRight, position, isCollision, logger, maxLeft, maxRight, relativePosition) {
-
-	if (m_logger != NULL && m_logger->isDebug() == 1) {
-		std::string message("CToFSweepPCA9685 channel=");
-		message += std::to_string(iChan);
-		message += " Address=";
-		message += std::to_string(iAddr);
-		message += " servoPin=";
-		message += std::to_string(m_servoPin);
-		message += " servoCenter=";
-		message += std::to_string(m_servoCenter);
-		message += " servoLeft=";
-		message += std::to_string(m_servoLeft);
-		message += " servoRight=";
-		message += std::to_string(m_servoRight);
-		if (isCollision == 1) {
-			message += " is collision avoidance sensor ";
-		}
-		switch (m_position) {
-		case 0:
-			message += " in front position";
-			break;
-		case 90:
-			message += " in right position";
-			break;
-		case 180:
-			message += " in back position";
-			break;
-		case 270:
-			message += " in left position";
-			break;
-		}
-		message += " servo max left=";
-		message += std::to_string(m_servoMaxLeft);
-		message += " servo max right=";
-		message += std::to_string(m_servoMaxRight);
-		switch (m_relativePosition) {
-		case -1:
-			message +=" in left relative";
-			break;
-		case 0:
-			message +=" in center relative";
-			break;
-		case 1:
-			message +=" in right relative";
-			break;
-		}
-		message += "\n";
-		m_logger->debug(message);
-	}
+	m_i2cChannel = iChan;
+	m_i2cAddress = iAddr;
 	tofInit(iChan, iAddr, 1);
 }
 
@@ -89,6 +42,54 @@ CToFSweepPCA9685::~CToFSweepPCA9685() {
 
 }
 
+std::string CToFSweepPCA9685::getDebugInformation() {
+	std::string message("CToFSweepPCA9685 channel=");
+	message += std::to_string(m_i2cChannel);
+	message += " Address=";
+	message += std::to_string(m_i2cAddress);
+	message += " servoPin=";
+	message += std::to_string(m_servoPin);
+	message += " servoCenter=";
+	message += std::to_string(m_servoCenter);
+	message += " servoLeft=";
+	message += std::to_string(m_servoLeft);
+	message += " servoRight=";
+	message += std::to_string(m_servoRight);
+	if (m_isCollision == 1) {
+		message += " is collision avoidance sensor ";
+	}
+	switch (m_position) {
+	case 0:
+		message += " in front position";
+		break;
+	case 90:
+		message += " in right position";
+		break;
+	case 180:
+		message += " in back position";
+		break;
+	case 270:
+		message += " in left position";
+		break;
+	}
+	message += " servo max left=";
+	message += std::to_string(m_servoMaxLeft);
+	message += " servo max right=";
+	message += std::to_string(m_servoMaxRight);
+	switch (m_relativePosition) {
+	case -1:
+		message +=" in left relative";
+		break;
+	case 0:
+		message +=" in center relative";
+		break;
+	case 1:
+		message +=" in right relative";
+		break;
+	}
+	message += "\n";
+	return message;
+}
 int CToFSweepPCA9685::getDistance() {
 	return tofReadDistance();
 }

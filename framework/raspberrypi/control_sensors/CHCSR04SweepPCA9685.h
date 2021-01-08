@@ -35,6 +35,7 @@ public:
 			CLogger *logger, int maxLeft, int maxRight, int echoPort, int trigPort,int relativePosition);
 	virtual ~CHCSR04SweepPCA9685();
 	virtual int getDistance();
+	virtual std::string getDebugInformation();
 private:
 	int m_echoPort;
 	int m_trigPort;

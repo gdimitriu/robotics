@@ -32,30 +32,32 @@ CGrabber::CGrabber(Adafruit_PWMServoDriver *pwmDriver, int position, int pin, in
 	m_closePulse = closePulse;
 	m_openPulse = openPulse;
 	m_position = position;
-	if (m_logger != NULL && m_logger->isDebug() == 1) {
-		std::string message("Grabber");
-		switch(m_position) {
-		case 0:
-			message += " in front position";
-			break;
-		case 180:
-			message += " in back position";
-			break;
-		}
-		message += " with port ";
-		message += std::to_string(m_pin);
-		message += " with close pulse ";
-		message += std::to_string(m_closePulse);
-		message += " with open pulse ";
-		message += std::to_string(m_openPulse);
-		message +="\n";
-		m_logger->debug(message);
-	}
 	//put the grabber in half position
 	m_pwmDriver->setPWM(m_pin, 0, (m_closePulse + m_openPulse)/2);
 }
 
 CGrabber::~CGrabber() {
-	// TODO Auto-generated destructor stub
+	if (m_logger != NULL) {
+		delete m_logger;
+	}
 }
 
+std::string CGrabber::getDebugInformation() {
+	std::string message("Grabber");
+	switch(m_position) {
+	case 0:
+		message += " in front position";
+		break;
+	case 180:
+		message += " in back position";
+		break;
+	}
+	message += " with port ";
+	message += std::to_string(m_pin);
+	message += " with close pulse ";
+	message += std::to_string(m_closePulse);
+	message += " with open pulse ";
+	message += std::to_string(m_openPulse);
+	message +="\n";
+	return message;
+}

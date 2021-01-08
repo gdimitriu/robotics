@@ -49,6 +49,7 @@ public:
 	virtual int getMaxRightPosition();
 	virtual int getCenterPosition();
 	virtual void unregisterCollisionCallback();
+	virtual std::string getDebugInformation();
 private:
 	void collisionISR();
 	int m_position;

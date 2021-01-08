@@ -26,6 +26,8 @@
 #include "CDroid.h"
 #include <CLoggerStdout.h>
 #include <CLoggerBleHC5.h>
+#include <CFactoryLogger.h>
+#include <CSettingLoading.h>
 #include <stdlib.h>
 #include <pigpio.h>
 #include <string.h>
@@ -36,6 +38,7 @@ CDroid::CDroid(char *droidCfgFile, int isOnHost) {
 	m_droidCfgFile = droidCfgFile;
 	m_pFile = new std::ifstream(m_droidCfgFile);
 	m_logger = 0;
+	m_settingLogger = 0;
 	m_controlEngines = 0;
 	m_controlSensors = 0;
 	m_buffer = 0;
@@ -69,6 +72,9 @@ CDroid::~CDroid() {
 	if (m_logger != 0) {
 		delete m_logger;
 	}
+	if (m_settingLogger != 0) {
+		delete m_settingLogger;
+	}
 	if (m_isOnHost == 0) {
 		gpioTerminate();
 	}
@@ -88,11 +94,11 @@ char* CDroid::getLine() {
 	memset(m_buffer, 0, m_buffSize * sizeof(char));
 	if (m_pFile->is_open()) {
 		m_pFile->getline(m_buffer, m_buffSize, '\n');
-		if (m_logger != NULL && m_logger->isDebug() == 1) {
+		if (m_settingLogger != NULL && m_settingLogger->isDebug() == 1) {
 			std::string message("Reading line=");
 			message += m_buffer;
 			message += '\n';
-			m_logger->debug(message);
+			m_settingLogger->debug(message);
 		}
 		return m_buffer;
 	}
@@ -100,28 +106,30 @@ char* CDroid::getLine() {
 }
 
 void CDroid::dumpInfo() {
-	m_controlEngines->dumpInfo();
+	m_controlEngines->dumpInfo(m_settingLogger);
 }
 
 void CDroid::initialize() {
 	this->m_buffSize = 256;
 	this->m_buffer = (char*) calloc(m_buffSize, sizeof(char));
-	//get the logger
-	char *line = getLine();
 	if (m_isOnHost == 0) {
 		if (gpioInitialise() < 0) {
 			perror("gpio init failed");
 			exit(1);
 		}
 	}
-	if (m_logger == 0) {
-		if (strcmp("CLoggerStdout", line) == 0) {
-			m_logger = new CLoggerStdout();
-		} else if (strcmp("CLoggerBleHC5", line) == 0) {
-			m_logger = new CLoggerBleHC5();
-		}
-		line = getLine();
-	}
+
+	CLogger *tmpLogger = new CLoggerStdout();
+	CSettingLoading *settings = new CSettingLoading(m_pFile, tmpLogger);
+	CFactoryLogger *loggerFactory = new CFactoryLogger(settings);
+	//get the droid logger
+	m_logger = loggerFactory->createLogger(tmpLogger);
+	//get the settings logger
+	m_settingLogger = loggerFactory->createLogger(tmpLogger);
+	delete loggerFactory;
+	delete settings;
+	delete tmpLogger;
+	char *line = getLine();
 	if (strcmp("Adafruit_PWMServoDriver", line) == 0) {
 		m_pwmDriver = new Adafruit_PWMServoDriver();
 		m_pwmDriver->begin();
@@ -131,13 +139,13 @@ void CDroid::initialize() {
 	}
 	//get the configuration of the engines
 	line = getLine();
-	m_controlEngines = new CMasterControlEngines(line, m_logger, m_pwmDriver);
+	m_controlEngines = new CMasterControlEngines(line, m_settingLogger, m_pwmDriver);
 	//get the configuration of the sensors
 	line = getLine();
-	m_controlSensors = new CMasterControlSensors(line, m_logger, m_pwmDriver);
+	m_controlSensors = new CMasterControlSensors(line, m_settingLogger, m_pwmDriver);
 	//get the grabber configuration
 	line = getLine();
-	m_grabberController = new CGrabberController(line, m_logger, m_pwmDriver, m_controlSensors);
+	m_grabberController = new CGrabberController(line, m_settingLogger, m_pwmDriver, m_controlSensors);
 	if (!m_pFile->eof()) {
 		sscanf(getLine(), "%u", &m_stopDistance);
 	} else {

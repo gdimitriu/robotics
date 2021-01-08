@@ -44,6 +44,7 @@ public:
 	virtual void registerCollisionCallback(int stopDistance, void (*callbackRoutine)(void *,CGenericSensor *), void *instance) = 0;
 	virtual void unregisterCollisionCallback() = 0;
 	virtual void restartCollisionCallback() = 0;
+	virtual std::string getDebugInformation() = 0;
 protected:
 	CLogger *m_logger;
 };

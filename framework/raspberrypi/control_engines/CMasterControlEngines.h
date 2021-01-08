@@ -47,7 +47,7 @@ public:
 	virtual unsigned int getEnginePower();
 	/* set the engine current power */
 	virtual void setEnginePower(unsigned int power);
-	virtual void dumpInfo();
+	virtual void dumpInfo(CLogger *logger);
 	virtual void breakEngines(int type = 0);
 	void setMoveBarrier(CResetableBarrier *moveBarrier);
 	/*

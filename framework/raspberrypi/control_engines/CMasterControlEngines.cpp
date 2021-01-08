@@ -42,8 +42,7 @@ CMasterControlEngines::CMasterControlEngines(char *configFile,
 	m_logger = loggerFactory->createLogger(settingLogger);
 	char *type = settingsLoading->getLine();
 	if (strcmp("CFactoryEnginePCA9685EncMX1509", type) == 0) {
-		m_factory = new CFactoryEnginePCA9685EncMX1509(settingsLoading, pwmDriver,
-				m_logger);
+		m_factory = new CFactoryEnginePCA9685EncMX1509(settingsLoading, pwmDriver, m_logger);
 	} else {
 		m_factory = NULL;
 		return;
@@ -166,9 +165,9 @@ void CMasterControlEngines::moveDistance(float distance) {
 	}
 }
 
-void CMasterControlEngines::dumpInfo() {
+void CMasterControlEngines::dumpInfo(CLogger *logger) {
 	for (int i = 0; i < m_enginesNr; i++) {
-		m_engines[i]->dumpInfo();
+		m_engines[i]->dumpInfo(logger);
 	}
 }
 

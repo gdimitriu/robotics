@@ -26,21 +26,12 @@
 #ifndef LOGGERS_CLOGGERBLEHC5_H_
 #define LOGGERS_CLOGGERBLEHC5_H_
 
-#include "CLogger.h"
+#include "CLoggerBle.h"
 
-class CLoggerBleHC5: public CLogger {
+class CLoggerBleHC5: public CLoggerBle {
 public:
 	CLoggerBleHC5();
 	virtual ~CLoggerBleHC5();
-	virtual void info(const char *data);
-	virtual void debug(const char *data);
-	virtual void error(const char *data);
-	virtual void info(std::string data);
-	virtual void debug(std::string data);
-	virtual void error(std::string data);
-	virtual int isDebug();
-private:
-	int m_serialHandler;
 };
 
 #endif /* LOGGERS_CLOGGERBLEHC5_H_ */

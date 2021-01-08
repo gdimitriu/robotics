@@ -34,7 +34,7 @@ class CEngineWithEncoder {
 public:
 	CEngineWithEncoder();
 	virtual ~CEngineWithEncoder();
-	virtual void dumpInfo() = 0;
+	virtual void dumpInfo(CLogger *logger) = 0;
 	/* get the engine number */
 	virtual unsigned int getEngineNr() = 0;
 	/* coast the engine, engine will have no brake */
@@ -94,6 +94,10 @@ public:
 	 * behind is a static variable
 	*/
 	virtual void setLowPowerDistance(unsigned long distance) = 0;
+	/*
+	 * get the debug information
+	 */
+	virtual std::string getDebugInformation() = 0;
 protected:
 	CLogger *m_logger;
 	pthread_barrier_t *m_startBarrier;

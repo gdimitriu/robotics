@@ -25,41 +25,12 @@
 
 #include "CLoggerBleHC5.h"
 #include <pigpio.h>
-#include <string>
-#include <string.h>
-using namespace std;
 
 CLoggerBleHC5::CLoggerBleHC5() {
 	m_serialHandler = serOpen("/dev/ttyAMA0", 38400, 0);
 }
 
 CLoggerBleHC5::~CLoggerBleHC5() {
-	serClose(m_serialHandler);
+
 }
 
-void CLoggerBleHC5::info(const char *data) {
-	serWrite(m_serialHandler, (char *)data, strlen(data));
-}
-
-void CLoggerBleHC5::debug(const char *data) {
-	serWrite(m_serialHandler, (char *)data, strlen(data));
-}
-
-void CLoggerBleHC5::error(const char *data) {
-	serWrite(m_serialHandler, (char *)data, strlen(data));
-}
-
-void CLoggerBleHC5::info(string data) {
-	serWrite(m_serialHandler, (char *)data.c_str(),data.length());
-}
-
-void CLoggerBleHC5::debug(string data) {
-	serWrite(m_serialHandler, (char *)data.c_str(),data.length());
-}
-
-void CLoggerBleHC5::error(string data) {
-	serWrite(m_serialHandler, (char *)data.c_str(),data.length());
-}
-int CLoggerBleHC5::isDebug() {
-	return 1;
-}

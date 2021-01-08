@@ -37,7 +37,12 @@ public:
 	virtual void info(std::string data) = 0;
 	virtual void debug(std::string data) = 0;
 	virtual void error(std::string data) = 0;
-	virtual int isDebug() = 0;
+	virtual int isDebug();
+	virtual void setType(int flag);
+	virtual int isInfo();
+protected:
+	//0 error,2 debug, 1 info
+	int m_type;
 };
 
 #endif /* LOGGERS_CLOGGER_H_ */

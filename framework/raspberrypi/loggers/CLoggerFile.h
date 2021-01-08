@@ -1,9 +1,9 @@
 /*
- * CFactorySensors.h
+ * CLoggerFile.h
  *
- *  Created on: Oct 13, 2020
+ *  Created on: Jan 4, 2021
  *      Author: Gabriel Dimitriu
- * Copyright (C) 2020 Gabriel Dimitriu
+ * Copyright (C) 2021 Gabriel Dimitriu
  * All rights reserved.
  *
  * This file is part of Robotics project.
@@ -23,21 +23,25 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef CONTROL_SENSORS_CFACTORYSENSORS_H_
-#define CONTROL_SENSORS_CFACTORYSENSORS_H_
-#include <Adafruit_PWMServoDriver.h>
-#include <CSettingLoading.h>
-#include <CFactorySensor.h>
-#include <CGenericSensor.h>
+#ifndef LOGGERS_CLOGGERFILE_H_
+#define LOGGERS_CLOGGERFILE_H_
 
-class CFactorySensors {
+#include "CLogger.h"
+#include <fstream>
+
+class CLoggerFile: public CLogger {
 public:
-	CFactorySensors(CSettingLoading *settingsLoader, Adafruit_PWMServoDriver *pwmDriver);
-	virtual ~CFactorySensors();
-	virtual CGenericSensor **createSensors(unsigned int &sensorsNr);
-private:
-	CSettingLoading *m_settingsLoader;
-	Adafruit_PWMServoDriver *m_pwmDriver;
+	CLoggerFile(char *fileName, char append);
+	virtual ~CLoggerFile();
+	virtual void info(const char *data);
+	virtual void debug(const char *data);
+	virtual void error(const char *data);
+	virtual void info(std::string data);
+	virtual void debug(std::string data);
+	virtual void error(std::string data);
+protected:
+	char *m_fileName;
+	std::ofstream *m_pFile;
 };
 
-#endif /* CONTROL_SENSORS_CFACTORYSENSORS_H_ */
+#endif /* LOGGERS_CLOGGERFILE_H_ */

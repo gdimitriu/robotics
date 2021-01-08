@@ -35,7 +35,6 @@ CManualDroid::~CManualDroid() {
 }
 
 void CManualDroid::dumpInfo() {
-	CDroid::dumpInfo();
 	m_command->printMenu();
 }
 

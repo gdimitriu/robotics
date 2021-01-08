@@ -35,6 +35,10 @@ public:
 			int isCollision, CLogger *logger, int maxLeft, int maxRight, int relativePosition);
 	virtual ~CToFSweepPCA9685();
 	virtual int getDistance();
+	virtual std::string getDebugInformation();
+protected:
+	int m_i2cChannel;
+	int m_i2cAddress;
 };
 
 #endif /* CONTROL_SENSORS_CTOFSWEEPPCA9685_H_ */
