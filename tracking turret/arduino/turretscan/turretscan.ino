@@ -20,13 +20,13 @@
 */
 #include <Servo.h>
 #define DEBUG_SERIAL 1
-unsigned int RightEchoPin = 7;           // connect Pin 2(Arduino digital io) to Echo at US-020
-unsigned int RightTrigPin = 8;           // connect Pin 3(Arduino digital io) to Trig at US-020
-unsigned int LeftEchoPin = 9;           // connect Pin 2(Arduino digital io) to Echo at US-020
-unsigned int LeftTrigPin = 10;           // connect Pin 3(Arduino digital io) to Trig at US-020
+unsigned int RightEchoPin = 6;           // connect Pin 2(Arduino digital io) to Echo at US-020
+unsigned int RightTrigPin = 7;           // connect Pin 3(Arduino digital io) to Trig at US-020
+unsigned int LeftEchoPin = 8;           // connect Pin 2(Arduino digital io) to Echo at US-020
+unsigned int LeftTrigPin = 9;           // connect Pin 3(Arduino digital io) to Trig at US-020
 unsigned int horizServoPin = 5;
-unsigned int verticalServoPin = 6;
-unsigned int laserPin = 4;
+unsigned int verticalServoPin = 4;
+unsigned int laserPin = 3;
 Servo horizontalServo;
 Servo verticalServo;
 boolean hasBeenRun=false;
@@ -50,9 +50,9 @@ void setup()
 void loop()
 {
   if (hasBeenRun == false) {
-    for(int i = 90; i >= 0; i=i-5) {
+    for(int i = 90; i <= 160; i=i+5) {
       verticalServo.write(i);
-      for(int j = 0; j < 180; j++) {
+      for(int j = 0; j < 180; j=j+2) {
         uint16_t leftDistance;
         uint16_t rightDistance;
         horizontalServo.write(j);

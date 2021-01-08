@@ -21,7 +21,7 @@
 #include <Servo.h>
 
 #define SERVO1_PIN 4
-#define SERVO2_PIN 7
+#define SERVO2_PIN 5
 Servo firstServo;
 Servo secondServo;
 void setup() {
