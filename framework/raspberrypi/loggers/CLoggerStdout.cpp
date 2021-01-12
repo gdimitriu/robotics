@@ -39,26 +39,32 @@ CLoggerStdout::~CLoggerStdout() {
 
 void CLoggerStdout::info(const char *data) {
 	cout<<data;
+	cout<<flush;
 }
 
 void CLoggerStdout::debug(const char *data) {
 	cout<<"DEBUG:"<<data;
+	cout<<flush;
 }
 
 void CLoggerStdout::error(const char *data) {
 	cout<<"ERROR:"<<data;
+	cout<<flush;
 }
 
 void CLoggerStdout::info(std::string data) {
 	cout<<data;
+	cout<<flush;
 }
 
 void CLoggerStdout::debug(std::string data) {
 	cout<<"DEBUG:"<<data;
+	cout<<flush;
 }
 
 void CLoggerStdout::error(std::string data) {
 	cout<<"ERROR:"<<data;
+	cout<<flush;
 }
 
 

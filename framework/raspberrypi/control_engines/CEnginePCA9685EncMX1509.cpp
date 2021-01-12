@@ -235,10 +235,16 @@ void CEnginePCA9685EncMX1509::startMoving() {
 		m_pwmDriver->setPWM(m_enginePin2, 0, 0);
 	}
 }
+void CEnginePCA9685EncMX1509_moveCleanup(void *arg) {
+	pthread_mutex_t *mutex = (pthread_mutex_t *)arg;
+	pthread_mutex_unlock(mutex);
+}
 
 void* CEnginePCA9685EncMX1509_moveDistance(void *engine) {
+
 	pthread_setcanceltype(PTHREAD_CANCEL_ASYNCHRONOUS, 0);
 	CEnginePCA9685EncMX1509 *currentEngine = (CEnginePCA9685EncMX1509*) engine;
+	pthread_cleanup_push(CEnginePCA9685EncMX1509_moveCleanup, (void *)&(currentEngine->m_isrMutex));
 	currentEngine->startMoving();
 	while ((currentEngine->m_targetDistance - currentEngine->m_currentDistance)
 			> 0.2 && currentEngine->isStopped() == 0) {
@@ -257,6 +263,7 @@ void* CEnginePCA9685EncMX1509_moveDistance(void *engine) {
 	} else if (currentEngine->isStopped() == 2) {
 		currentEngine->m_moveBarrier->reset();
 	}
+	pthread_cleanup_pop(0);
 	return 0;
 }
 
@@ -288,6 +295,7 @@ void CEnginePCA9685EncMX1509::moveDistance(float distance) {
 void* CEnginePCA9685EncMX1509_moveEncoderNr(void *engine) {
 	pthread_setcanceltype(PTHREAD_CANCEL_ASYNCHRONOUS, 0);
 	CEnginePCA9685EncMX1509 *currentEngine = (CEnginePCA9685EncMX1509*) engine;
+	pthread_cleanup_push(CEnginePCA9685EncMX1509_moveCleanup, (void *)&(currentEngine->m_isrMutex));
 	currentEngine->startMoving();
 	while (currentEngine->m_targetEncoder > currentEngine->m_encoderCount && currentEngine->isStopped() == 0) {
 		pthread_mutex_lock(&(currentEngine->m_isrMutex));
@@ -299,6 +307,7 @@ void* CEnginePCA9685EncMX1509_moveEncoderNr(void *engine) {
 	}
 	currentEngine->m_goTh = 0;
 	currentEngine->m_moveBarrier->sync();
+	pthread_cleanup_pop(0);
 	return 0;
 }
 

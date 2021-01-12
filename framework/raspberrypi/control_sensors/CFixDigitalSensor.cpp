@@ -147,12 +147,20 @@ int CFixDigitalSensor::isCollisionSensor() {
 	return m_isCollision;
 }
 
+void CFixDigitalSensor_collisionCleanup(void *arg) {
+	pthread_mutex_t *pm = (pthread_mutex_t *)arg;
+	pthread_mutex_unlock(pm);
+}
+
 /*
  * collision mechanism with threads
  */
 void *CFixDigitalSensor_collisionDetection(void *instance) {
+	CFixDigitalSensor *sensor = (CFixDigitalSensor *)instance;
+	pthread_cleanup_push(CFixDigitalSensor_collisionCleanup, (void *)&(sensor->m_mutex));
 	pthread_setcanceltype(PTHREAD_CANCEL_ASYNCHRONOUS, 0);
-	((CFixDigitalSensor *)instance)->collisionCallback();
+	sensor->collisionCallback();
+	pthread_cleanup_pop(0);
 	return 0;
 }
 

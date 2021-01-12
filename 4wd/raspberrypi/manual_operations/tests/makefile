@@ -5,9 +5,9 @@ AR = arm-linux-gnueabihf-ar
 LIBS = -lpthread -lpigpio -lrt -ldroiddrivers -lloggers -lsettings -ldroid -lsensors -ltof -lengines -lgrabber
 LIB_DIRS = -L$(PREFIX_GPIO) -L$(PREFIX_DRIVERS)/lib -L$(PREFIX_FRAMEWORK)/lib
 INCLUDE_DIRS = -I$(PREFIX_GPIO) -I$(PREFIX_DRIVERS)/include  -I$(PREFIX_FRAMEWORK)/include -I../
-OBJECTS = ../CCommand.o ../CMoveCommand.o ../CSettingCommand.o ../CCommCommands.o ../CCommandStd.o ../CBLECommandHC05.o ../CManualDroid.o
+OBJECTS = ../CCommand.o ../CMoveCommand.o ../CSettingCommand.o ../CCommCommands.o ../CCommandStd.o ../CBLECommandHC05.o ../CManualDroid.o ../CBLECommand.o
 HEADERS = 
-EXECUTABLES = testMenuStdout testMenuBle moveManualDroidStd moveManualDroidBleHC05
+EXECUTABLES = testMenuStdout testMenuBle moveManualDroidStd moveManualDroidBleHC05 moveManualDroidBle
 FLAGS = -std=gnu++11 -ggdb
 
 all: $(EXECUTABLES)
@@ -23,6 +23,9 @@ moveManualDroidStd:moveManualDroidStd.cpp $(OBJECTS) ../CCommand.h ../CMoveComma
 
 moveManualDroidBleHC05:moveManualDroidBleHC05.cpp $(OBJECTS) ../CCommand.h ../CMoveCommand.h ../CSettingCommand.h
 	$(CXX) -fPIC -o moveManualDroidBleHC05 moveManualDroidBleHC05.cpp $(OBJECTS) $(LIB_DIRS) $(LIBS) $(INCLUDE_DIRS) $(FLAGS)
+
+moveManualDroidBle:moveManualDroidBle.cpp $(OBJECTS) ../CCommand.h ../CMoveCommand.h ../CSettingCommand.h
+	$(CXX) -fPIC -o moveManualDroidBle moveManualDroidBle.cpp $(OBJECTS) $(LIB_DIRS) $(LIBS) $(INCLUDE_DIRS) $(FLAGS) -Wno-write-strings
 
 clean:
 	for object in $(EXECUTABLES);\

@@ -42,7 +42,7 @@ class CDroid {
 public:
 	CDroid(char *droidCfgFile, int isOnHost);
 	virtual ~CDroid();
-	virtual void initialize(std::ifstream *pFile);
+//	virtual void initialize(std::ifstream *pFile);
 	virtual void dumpInfo();
 	/* rotate left(-1)/nothing(0)/right(1) and then move distance */
 	virtual void move(float distance, int rotation, int check);
@@ -80,6 +80,10 @@ public:
 	 * get the stop distance
 	 */
 	unsigned int getStopDistance();
+	/*
+	 * set blocking on nonblocking operation
+	 */
+	void setBlockingOperation(bool type);
 protected:
 	/*
 	 * nrEncoder + is right and - is left
@@ -120,6 +124,7 @@ protected:
 	float m_actualDistance;
 	CGrabberController *m_grabberController;
 	CLogger* m_settingLogger;
+	bool m_blockingOperation;
 };
 
 #endif /* DROID_CDROID_H_ */

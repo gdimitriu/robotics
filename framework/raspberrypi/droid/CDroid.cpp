@@ -53,6 +53,8 @@ CDroid::CDroid(char *droidCfgFile, int isOnHost) {
 	m_actualDistance = 0;
 	m_nextCheckRotate = 0;
 	m_grabberController = NULL;
+	m_blockingOperation = false;
+	pthread_attr_init(&m_moveThreadAttr);
 	initialize();
 }
 
@@ -80,16 +82,19 @@ CDroid::~CDroid() {
 	}
 }
 
+void CDroid::setBlockingOperation(bool type) {
+	m_blockingOperation = type;
+}
+
 CLogger* CDroid::getLogger() {
 	return m_logger;
 }
-
+/*
 void CDroid::initialize(std::ifstream *pFile) {
 	m_pFile = pFile;
-	pthread_attr_init(&m_moveThreadAttr);
 	initialize();
 }
-
+*/
 char* CDroid::getLine() {
 	memset(m_buffer, 0, m_buffSize * sizeof(char));
 	if (m_pFile->is_open()) {
@@ -326,14 +331,21 @@ void CDroid::move(float distance, int rotation, int check) {
 			message += "\n";
 		m_logger->debug(message);
 	}
-	if (m_moveThread == 0) {
+	if (!m_blockingOperation) {
+		if (m_moveThread == 0) {
+			m_nextDistance = distance;
+			m_nextRotation = rotation;
+			m_nextCheckRotate = check;
+			pthread_create(&m_moveThread, &m_moveThreadAttr,
+					CDroid_InternalMoveThread, this);
+		} else {
+			m_logger->error("Droid already in move\n");
+		}
+	} else {
 		m_nextDistance = distance;
 		m_nextRotation = rotation;
 		m_nextCheckRotate = check;
-		pthread_create(&m_moveThread, &m_moveThreadAttr,
-				CDroid_InternalMoveThread, this);
-	} else {
-		m_logger->error("Droid already in move\n");
+		internalMove();
 	}
 }
 
@@ -374,7 +386,7 @@ void CDroid::internalMoveLeft() {
 			message += "\n";
 			m_logger->debug(message);
 		}
-		if (value < m_stopDistance && m_nextDistance * 10 < m_stopDistance) {
+		if (value < m_nextDistance * 10) {
 			return;
 		}
 	}
@@ -405,7 +417,7 @@ void CDroid::internalMoveRight() {
 			message += "\n";
 			m_logger->debug(message);
 		}
-		if (value < m_stopDistance && m_nextDistance * 10 < m_stopDistance) {
+		if (value < m_nextDistance * 10) {
 			return;
 		}
 	}

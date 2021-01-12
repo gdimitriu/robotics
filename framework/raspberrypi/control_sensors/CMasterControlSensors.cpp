@@ -152,7 +152,7 @@ int CMasterControlSensors::lookLeft(int position) {
 				m_forwardSensors[i]->movePosition(m_forwardSensors[i]->getMaxLeftPosition());
 				value = m_forwardSensors[i]->getDistance();
 				m_forwardSensors[i]->movePosition(0);
-				if (value <  minValue) {
+				if (value > 0 && value < minValue) {
 					minValue = value;
 				}
 			}
@@ -170,7 +170,7 @@ int CMasterControlSensors::lookRight(int position) {
 				m_forwardSensors[i]->movePosition(m_forwardSensors[i]->getMaxRightPosition());
 				value = m_forwardSensors[i]->getDistance();
 				m_forwardSensors[i]->movePosition(0);
-				if (value <  minValue) {
+				if (value > 0 && value < minValue) {
 					minValue = value;
 				}
 			}

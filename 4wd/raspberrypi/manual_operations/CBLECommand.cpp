@@ -1,9 +1,9 @@
 /*
- * CBLECommandHC05.cpp
+ * CBLECommand.cpp
  *
- *  Created on: Oct 5, 2020
+ *  Created on: Jan 11, 2021
  *      Author: Gabriel Dimitriu
- * Copyright (C) 2020 Gabriel Dimitriu
+ * Copyright (C) 2021 Gabriel Dimitriu
  * All rights reserved.
  *
  * This file is part of Robotics project.
@@ -23,34 +23,45 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#include "CCommandStd.h"
-
+#include "CBLECommand.h"
+#include <pigpio.h>
+#include <string.h>
 #include <iostream>
-#include <string>
-using namespace std;
-CCommandStd::CCommandStd(CCommand *move, CCommand *setting) : CCommCommands(move, setting){
 
+CBLECommand::CBLECommand(CCommand *move, CCommand *setting) : CCommCommands(move,setting) {
+	m_port = "/dev/rfcomm0";
+	m_boudrate = 38400;
+	m_serialHandler = serOpen(m_port, m_boudrate, 0);
 }
 
-CCommandStd::~CCommandStd() {
+CBLECommand::~CBLECommand() {
+	serClose(m_serialHandler);
 }
 
-void CCommandStd::printMenu() {
-	std::cout<<"Menu\n";
+void CBLECommand::printMenu() {
+	serWrite(m_serialHandler,"Menu\n",7);
 	m_moveCommand->printMenu();
 	m_settingCommand->printMenu();
 	CCommCommands::printMenu();
 }
 
-void CCommandStd::startReceiving() {
+void CBLECommand::startReceiving() {
+	char buffer[255];
 	string str;
-	string exitCond = "exit#";
 	do {
-		cin>>str;
-		if (str == exitCond) {
-			break;
+		if (serDataAvailable(m_serialHandler) > 0) {
+			memset(buffer, 0, sizeof(buffer));
+			int readnr = serRead(m_serialHandler, buffer, 255);
+			for(int i = 0; i < readnr; i++) {
+				if (buffer[i] == '\n' || buffer[i] == '\r') {
+					buffer[i] = '\0';
+				}
+			}
+			if (strcmp(buffer,"exit#") == 0 ) {
+				break;
+			}
+			str.assign(buffer);
+			processInputData(&str);
 		}
-		processInputData(&str);
-
-	} while(str != exitCond);
+	} while(strcmp(buffer,"exit#") != 0);
 }

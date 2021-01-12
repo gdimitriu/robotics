@@ -1,12 +1,12 @@
 /*
- * CBLECommandHC05.cpp
+ * CBLECommand.h
  *
- *  Created on: Oct 5, 2020
+ *  Created on: Jan 11, 2021
  *      Author: Gabriel Dimitriu
- * Copyright (C) 2020 Gabriel Dimitriu
+ * Copyright (C) 2021 Gabriel Dimitriu
  * All rights reserved.
  *
- * This file is part of Robotics project.
+ * This file is part of the Robotics project.
 
  * Robotics is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -23,34 +23,22 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#include "CCommandStd.h"
-
-#include <iostream>
-#include <string>
+#ifndef MANUAL_OPERATIONS_CBLECOMMAND_H_
+#define MANUAL_OPERATIONS_CBLECOMMAND_H_
+#include <CCommCommands.h>
+#include "CCommand.h"
 using namespace std;
-CCommandStd::CCommandStd(CCommand *move, CCommand *setting) : CCommCommands(move, setting){
 
-}
+class CBLECommand : public CCommCommands {
+public:
+	CBLECommand(CCommand *move, CCommand *setting);
+	virtual ~CBLECommand();
+	virtual void printMenu();
+	virtual void startReceiving();
+private:
+	int m_serialHandler;
+	int m_boudrate;
+	char *m_port;
+};
 
-CCommandStd::~CCommandStd() {
-}
-
-void CCommandStd::printMenu() {
-	std::cout<<"Menu\n";
-	m_moveCommand->printMenu();
-	m_settingCommand->printMenu();
-	CCommCommands::printMenu();
-}
-
-void CCommandStd::startReceiving() {
-	string str;
-	string exitCond = "exit#";
-	do {
-		cin>>str;
-		if (str == exitCond) {
-			break;
-		}
-		processInputData(&str);
-
-	} while(str != exitCond);
-}
+#endif /* MANUAL_OPERATIONS_CBLECOMMANDHC05_H_ */

@@ -66,6 +66,7 @@ private:
 	unsigned int m_isDisabled;
 	struct sched_param m_goSchedParam;
 	pthread_mutexattr_t m_mutexAttr;
+	friend void *CFixDigitalSensor_collisionDetection(void *instance);
 };
 
 #endif /* CONTROL_SENSORS_CFIXDIGITALSENSOR_H_ */

@@ -27,6 +27,7 @@
 #define MANUAL_OPERATIONS_CMOVECOMMAND_H_
 #include "CCommand.h"
 #include <CDroid.h>
+
 class CMoveCommand : public CCommand {
 public:
 	CMoveCommand();

@@ -38,6 +38,7 @@ CMoveCommand::CMoveCommand(CLogger* logger) : CCommand(logger) {
 
 void CMoveCommand::init() {
 	m_operations = new set<char>();
+
 	m_menu = new string();
 	m_operations->insert('b');
 	m_operations->insert('m');

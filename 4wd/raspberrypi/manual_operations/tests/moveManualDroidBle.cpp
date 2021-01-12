@@ -1,7 +1,7 @@
 /*
- * CCommCommands.h
+ * moveDroidStdout.cpp
  *
- *  Created on: Oct 8, 2020
+ *  Created on: Nov 29, 2020
  *      Author: Gabriel Dimitriu
  * Copyright (C) 2020 Gabriel Dimitriu
  * All rights reserved.
@@ -23,35 +23,31 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef MANUAL_OPERATIONS_CCOMMCOMMANDS_H_
-#define MANUAL_OPERATIONS_CCOMMCOMMANDS_H_
-#include "CCommand.h"
-#include <set>
-#include <list>
-#include <string>
-#include <CDroid.h>
 
-class CCommCommands {
-public:
-	CCommCommands(CCommand *move, CCommand *setting);
-	virtual ~CCommCommands();
-	virtual void startReceiving() = 0;
-	virtual void printMenu();
-	virtual void setDroid(CDroid *droid);
-	virtual int executeLocal(const char *operation);
-protected:
-	void processInputData(string *input);
-	set<char> *m_moveOperations;
-	set<char> *m_settingOperations;
-	set<char> m_localOperations;
-	CCommand *m_moveCommand;
-	CCommand *m_settingCommand;
-	CLogger* m_logger;
-	//list of recorded movement
-	list<string *> m_recordMovement;
-	bool m_isRecording;
-	string *m_menu;
-	CDroid *m_droid;
-};
+#include <iostream>
+#include <CManualDroid.h>
+#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
+#include <CBLECommand.h>
+#include <CMoveCommand.h>
+#include <CSettingCommand.h>
+#include <CLoggerBle.h>
 
-#endif /* MANUAL_OPERATIONS_CCOMMCOMMANDS_H_ */
+int main(int argc, char **argv) {
+	if (argc != 2) {
+		std::cerr<<"Usage="<<argv[0]<<" configFile\n";
+		exit(1);
+	}
+	if (gpioInitialise() < 0) {
+		perror("gpio init failed");
+		exit(1);
+	}
+	char buff[255];
+	CBLECommand *commStd = new CBLECommand(new CMoveCommand(new CLoggerBle("/dev/rfcomm0",38400)), new CSettingCommand(new CLoggerBle("/dev/rfcomm0",38400)));
+	CManualDroid *droid = new CManualDroid(argv[1], 0, commStd);
+	droid->dumpInfo();
+	droid->startReceiving();
+	delete droid;
+	gpioTerminate();
+}
