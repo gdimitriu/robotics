@@ -27,7 +27,7 @@
 #define MANUAL_OPERATIONS_CCOMMCOMMANDS_H_
 #include "CCommand.h"
 #include <set>
-#include <list>
+#include <vector>
 #include <string>
 #include <CDroid.h>
 
@@ -41,6 +41,7 @@ public:
 	virtual int executeLocal(const char *operation);
 protected:
 	void processInputData(string *input);
+	void removeCommandPrefix(char *operation);
 	set<char> *m_moveOperations;
 	set<char> *m_settingOperations;
 	set<char> m_localOperations;
@@ -48,7 +49,7 @@ protected:
 	CCommand *m_settingCommand;
 	CLogger* m_logger;
 	//list of recorded movement
-	list<string *> m_recordMovement;
+	vector<string *> m_recordMovement;
 	bool m_isRecording;
 	string *m_menu;
 	CDroid *m_droid;

@@ -27,6 +27,8 @@
 #include <iostream>
 #include <stdio.h>
 #include <string.h>
+#include <iostream>
+#include <fstream>
 
 CCommCommands::CCommCommands(CCommand *move, CCommand *setting) {
 	m_moveCommand = move;
@@ -39,9 +41,13 @@ CCommCommands::CCommCommands(CCommand *move, CCommand *setting) {
 	m_menu->append("Rc# continue old recording of movement\t;\n");
 	m_menu->append("RS# stop recording of movement\t;\n");
 	m_menu->append("P# play the record of movement\t;\n");
+	m_menu->append("S<filePath># save record as file\t;\n");
+	m_menu->append("L<filePath># load record as file\t;\n");
 	m_isRecording = false;
 	m_localOperations.insert('R'); //start/stop recording of movement
 	m_localOperations.insert('P'); //play the recording of movement
+	m_localOperations.insert('S'); //save record as file
+	m_localOperations.insert('L'); //load record file
 	m_droid = NULL;
 }
 
@@ -64,6 +70,15 @@ void CCommCommands::setDroid(CDroid *droid) {
 
 void CCommCommands::processInputData(string *input) {
 	int status;
+	if (input->empty() || input->size() == 1)
+		return;
+	if (input->back() != '#') {
+		char message[255];
+		memset(message,0,255);
+		sprintf(message,"Operation not known because is not end with # = %s\n", input->c_str());
+		m_logger->error(message);
+		return;
+	}
 	string *command;
 	if (m_moveOperations->find(input->at(0)) != m_moveOperations->end()) {
 		status = m_moveCommand->execute(input->c_str());
@@ -95,7 +110,7 @@ int CCommCommands::executeLocal(const char *operation) {
 	switch (operation[0]) {
 	case 'P':
 		m_droid->setBlockingOperation(true);
-		for (list<string *>::iterator in= m_recordMovement.begin(); in != m_recordMovement.end();in++) {
+		for (vector<string *>::iterator in= m_recordMovement.begin(); in != m_recordMovement.end();in++) {
 			processInputData(*in);
 		}
 		m_droid->setBlockingOperation(false);
@@ -107,7 +122,7 @@ int CCommCommands::executeLocal(const char *operation) {
 			return 1;
 		}
 		if (operation[1] == 's') {
-			for (list<string *>::iterator in= m_recordMovement.begin(); in != m_recordMovement.end();in++) {
+			for (vector<string *>::iterator in= m_recordMovement.begin(); in != m_recordMovement.end();in++) {
 				delete *in;
 			}
 			m_recordMovement.clear();
@@ -125,10 +140,69 @@ int CCommCommands::executeLocal(const char *operation) {
 		sprintf(message, "Invalid Command with data command = %s\n", operation);
 		m_logger->error(message);
 		return 1;
+	case 'S': {
+		cout<<"Receive S but ... "<<operation<<endl<<flush;
+		char * newOperation = (char *)calloc(strlen(operation) +1, sizeof(char));
+		strncpy(newOperation, operation, strlen(operation));
+		removeCommandPrefix(newOperation);
+		//clear the #
+		newOperation[strlen(newOperation) -1] = '\0';
+		std::ofstream *pFile = new std::ofstream(newOperation,std::ios::out | std::ios::app | std::ios::ate);
+		if (!pFile->good()) {
+			if (pFile->is_open())
+				pFile->close();
+			sprintf(message, "Invalid filename for saving = %s\n", newOperation);
+			m_logger->error(message);
+			return 1;
+		}
+		for (int i = 0; i < (m_recordMovement.size() - 1); i++) {
+			(*pFile)<<*m_recordMovement.at(i)<<std::endl<<flush;
+		}
+		(*pFile)<<*m_recordMovement.at(m_recordMovement.size() - 1)<<flush;
+		pFile->close();
+		free(newOperation);
+		delete pFile;
+		break;
+	}
+	case 'L': {
+		for (vector<string *>::iterator in= m_recordMovement.begin(); in != m_recordMovement.end();in++) {
+			delete *in;
+		}
+		m_recordMovement.clear();
+		char * newOperation = (char *)calloc(strlen(operation) +1, sizeof(char));
+		strcpy(newOperation, operation);
+		removeCommandPrefix(newOperation);
+		//clear the #
+		newOperation[strlen(newOperation) -1] = '\0';
+		char *buffer = (char *)calloc(256, sizeof(char));
+		std::ifstream *pFile = new std::ifstream(newOperation);
+		if (!pFile->good()) {
+			if (pFile->is_open())
+				pFile->close();
+			sprintf(message, "Invalid filename for loading = %s\n", newOperation);
+			m_logger->error(message);
+			return 1;
+		}
+		while(!pFile->eof()) {
+			pFile->getline(buffer, 256, '\n');
+			m_recordMovement.push_back(new string(buffer));
+		}
+		pFile->close();
+		free(newOperation);
+		break;
+	}
 	default:
 		sprintf(message, "Invalid Command with data command = %s\n", operation);
 		m_logger->error(message);
 		return 1;
 	}
 	return result;
+}
+
+void CCommCommands::removeCommandPrefix(char *operation) {
+	int size = strlen(operation);
+	for (int i = 0; i < size; i++) {
+		operation[i] = operation[i+1];
+	}
+	operation[size] = '\0';
 }
