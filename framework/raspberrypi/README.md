@@ -8,7 +8,7 @@ against objects in front and when it take left/right turn.
 Modify the settings.sh to match your build directory of :
 
 - PREFIX_GPIO to libs of https://github.com/joan2937/pigpio
-- PREFIX_DRIVERS to drivers from https://github.com/gdimitriu/raspberrypizero.git
+- PREFIX_DRIVERS to drivers from https://github.com/gdimitriu/robotics/tree/main/drivers/raspberrypi
 
 ## UML Diagram of the Droid engines and sensors without factories.
 
