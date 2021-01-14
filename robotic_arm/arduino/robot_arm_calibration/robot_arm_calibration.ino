@@ -24,19 +24,12 @@
  */
 #include<Arduino.h>
 #include<Servo.h>
-/*
-#include<Wire.h>
-#include<PCF8574.h>
-#include<VL53L0X.h>
-*/
-#define servoPin_Gripper 11
-#define servoPin_WristRoll 10
-#define servoPin_WristPitch 9
-#define servoPin_Elbow 6
-#define servoPin_Shoulder 5
-#define servoPin_Waist 4
-
-#define DEBUG 0
+#define servoPin_Gripper 12
+#define servoPin_WristRoll 11
+#define servoPin_WristPitch 10
+#define servoPin_Elbow 9
+#define servoPin_Shoulder 8
+#define servoPin_Waist 7
 
 Servo servo_Gripper;
 Servo servo_WristRoll;
@@ -44,36 +37,6 @@ Servo servo_WristPitch;
 Servo servo_Elbow;
 Servo servo_Shoulder;
 Servo servo_Waist;
-//VL53L0X sensorDistance;
-int servo_GripperOldPosition = 90;
-int servo_WristRollOldPosition = 90;
-int servo_WristPitchOldPosition = 90;
-int servo_ElbowOldPosition = 90;
-int servo_ShoulderOldPosition = 90;
-int servo_WaistOldPosition = 90;
-int delayMs = 0;
-
-void slowMoveServoToPosition(int *oldPosition, int newPosition, Servo *servo, int delayMs) {
-  /*
-   if(*oldPosition<newPosition) {
-    for (int i = *oldPosition; i <= newPosition; i++) {
-      servo->write(i);
-       if (delayMs > 0) {
-        delay(delayMs);
-      }
-    }
-  } else {
-    for (int i = *oldPosition; i >= newPosition; i--) {
-      servo->write(i);
-       if (delayMs > 0) {
-        delay(delayMs);
-      }
-    }
-  }
-  *oldPosition = newPosition;
-  */
-  servo->write(newPosition);
-}
 
 boolean isValidNumber(char *data, int size)
 {
@@ -89,34 +52,24 @@ boolean isValidNumber(char *data, int size)
 }
 
 void setup() {
-  #ifdef DEBUG
-    Serial.begin(9600);
-  #endif
+  Serial.begin(9600);
   servo_Gripper.attach(servoPin_Gripper);
   servo_WristRoll.attach(servoPin_WristRoll);
   servo_WristPitch.attach(servoPin_WristPitch);
   servo_Elbow.attach(servoPin_Elbow);
   servo_Shoulder.attach(servoPin_Shoulder);
   servo_Waist.attach(servoPin_Waist);
-//  Wire.begin();
-//  sensorDistance.init();
-  #ifdef DEBUG
-    Serial.println("after init");
-  #endif
-//  sensorDistance.startContinuous();
+  Serial.println("after init");
 }
 
 void loop() {
-  // put your main code here, to run repeatedly:
-  #ifdef DEBUG
-    serialCallibration();
-  #endif
+   serialCallibration();
 }
-#ifdef DEBUG
-  bool isValidInput;
-  char inData[20]; // Allocate some space for the string
-  char inChar; // Where to store the character read
-  byte index = 0; // Index into array; where to store the character
+
+bool isValidInput;
+char inData[20]; // Allocate some space for the string
+char inChar; // Where to store the character read
+byte index = 0; // Index into array; where to store the character
 
 void serialCallibration() {
   Serial.println( "-----------------------------------------------------" );
@@ -129,7 +82,6 @@ void serialCallibration() {
   Serial.println( "pxx# servo wrist pitch x degre");
   Serial.println( "rxx# servo wrist roll x degree");
   Serial.println( "gxx# gripper x degree");
-  Serial.println( "dxx# set the delay to ms between moving 1 degree");
   Serial.println( "-----------------------------" );
    do {
     for (index = 0; index < 20; index++)
@@ -169,7 +121,7 @@ void serialCallibration() {
         Serial.print("move servo waist ");
         Serial.print(atoi(inData));
         Serial.println("degree");
-        slowMoveServoToPosition(&servo_WaistOldPosition, atoi(inData), &servo_Waist, delayMs);
+        servo_Waist.write(atoi(inData));
         isValidInput = true;
       } else if (inData[0] == 's') {
         //remove s from command
@@ -183,7 +135,7 @@ void serialCallibration() {
         Serial.print("move servo shoulder ");
         Serial.print(atoi(inData));
         Serial.println("degree");
-        slowMoveServoToPosition(&servo_ShoulderOldPosition, 180-atoi(inData), &servo_Shoulder, delayMs);
+        servo_Shoulder.write(180-atoi(inData));
         isValidInput = true;
       } else if (inData[0] == 'e') {
         //remove e from command
@@ -197,7 +149,7 @@ void serialCallibration() {
         Serial.print("move servo elbow ");
         Serial.print(atoi(inData));
         Serial.println("degree");
-        slowMoveServoToPosition(&servo_ElbowOldPosition, atoi(inData), &servo_Elbow, delayMs);
+        servo_Elbow.write(atoi(inData));
         isValidInput = true;
       } else if (inData[0] == 'r') {
         //remove r from command
@@ -211,7 +163,7 @@ void serialCallibration() {
         Serial.print("move servo wrist roll ");
         Serial.print(atoi(inData));
         Serial.println("degree");
-        slowMoveServoToPosition(&servo_WristRollOldPosition, atoi(inData), &servo_WristRoll, delayMs);
+        servo_WristRoll.write(atoi(inData));
         isValidInput = true;
       } else if (inData[0] == 'p') {
         //remove p from command
@@ -225,7 +177,7 @@ void serialCallibration() {
         Serial.print("move servo wrist pitch ");
         Serial.print(atoi(inData));
         Serial.println("degree");
-        slowMoveServoToPosition(&servo_WristPitchOldPosition, 180- atoi(inData), &servo_WristPitch, delayMs);
+        servo_WristPitch.write(180-atoi(inData));
         isValidInput = true;
       } else if (inData[0] == 'g') {
         //remove g from command
@@ -239,25 +191,9 @@ void serialCallibration() {
         Serial.print("move servo grabber");
         Serial.print(atoi(inData));
         Serial.println("degree");
-        slowMoveServoToPosition(&servo_GripperOldPosition, atoi(inData), &servo_Gripper, delayMs);
+        servo_Gripper.write(atoi(inData));
         isValidInput = true;
-    } else if (inData[0] == 'd') {
-        //remove d from command
-        for (int i = 0 ; i < strlen(inData); i++) {
-          inData[i]=inData[i+1];
-        }
-        if (!isValidNumber(inData, index - 2)) {
-          isValidInput = false;
-          Serial.println("Is not a number");
-          Serial.println(inData);
-          break;
-        }
-        Serial.print("set dalay in ms for moving ");
-        Serial.print(atoi(inData));
-        Serial.println("ms");
-        delayMs = atoi(inData);
-        isValidInput = true;
-    }else {
+    } else {
       isValidInput = false;
     }
     } else {
@@ -265,5 +201,3 @@ void serialCallibration() {
     }
   } while( isValidInput == true );
 }
-
-#endif
