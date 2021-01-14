@@ -17,4 +17,4 @@ x wheel drive droid using Raspberry PI zero [droid_framework](framework/raspberr
 - This is the framework that is used into 4wd droid using Raspberry Pi (the 4wd droid using Arduino is the base chassy)
 - This could have multiple configuration for any kind of droid
 - It has configuration files that configure the droid using factories
-
+x wheel drive droid using Raspberry PI zero [droid_4wd](4wd/raspberrypi/README.md)
