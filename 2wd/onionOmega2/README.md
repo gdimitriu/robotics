@@ -20,6 +20,8 @@ The lessons learned from here will be apply to the forth generation of droid usi
 
 # Version with Onion Omega PWM Expansion
 
+![2wd onion droid](./docs/2wd_onion.jpg)
+
 ![Logical lines](./docs/MX1508PWMExp.jpeg)
 
 ## Build:
