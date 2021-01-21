@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<cdtprojectproperties>
+<section name="org.eclipse.cdt.internal.ui.wizards.settingswizards.IncludePaths">
+<language name="C++ Source File">
+<includepath>/home/onion/build/source/staging_dir/toolchain-mipsel_24kc_gcc-7.3.0_musl/include</includepath>
+<includepath>/home/onion/build/onionOmega/fast-gpio/include</includepath>
+<includepath>/home/onion/build/onionOmega/i2c-exp-driver/include</includepath>
+<includepath>/home/onion/OnionOmega2I2CExpanders/include</includepath>
+<includepath>./include</includepath>
+<includepath/>
+
+</language>
+<language name="C Source File">
+<includepath>/home/onion/build/i2c-exp-driver/include</includepath>
+<includepath>/home/onion/build/source/staging_dir/toolchain-mipsel_24kc_gcc-7.3.0_musl/include</includepath>
+<includepath>/home/onion/build/onionOmega/fast-gpio/include</includepath>
+<includepath>/home/onion/OnionOmega2I2CExpanders/include</includepath>
+<includepath>./include</includepath>
+</language>
+</section>
+
+</cdtprojectproperties>
