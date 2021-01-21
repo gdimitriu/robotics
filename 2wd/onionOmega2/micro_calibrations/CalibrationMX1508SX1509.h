@@ -22,7 +22,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #ifndef CALIBRATION_MX1508_SX1509_H_
 #define CALIBRATION_MX1508_SX1509_H_
 
-#include <EnginesWithEncoderMX1508SX1509.h>
+#include "EnginesWithEncoderMX1508SX1509.h"
 
 class CalibrationMX1508SX1509 {
 public:
