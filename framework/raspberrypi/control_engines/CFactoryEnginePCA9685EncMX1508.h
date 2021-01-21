@@ -1,5 +1,5 @@
 /*
- * CFactoryEnginePCA9685EncMX1509.h
+ * CFactoryEnginePCA9685EncMX1508.h
  *
  *  Created on: Oct 5, 2020
  *      Author: Gabriel Dimitriu
@@ -23,18 +23,18 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef CONTROL_ENGINES_CFACTORYENGINEPCA9685ENCMX1509_H_
-#define CONTROL_ENGINES_CFACTORYENGINEPCA9685ENCMX1509_H_
+#ifndef CONTROL_ENGINES_CFACTORYENGINEPCA9685ENCMX1508_H_
+#define CONTROL_ENGINES_CFACTORYENGINEPCA9685ENCMX1508_H_
 
-#include <CEnginePCA9685EncMX1509.h>
+#include <CEnginePCA9685EncMX1508.h>
 #include <CEngineWithEncoder.h>
 #include <CFactoryEngine.h>
 #include <CSettingLoading.h>
 
-class CFactoryEnginePCA9685EncMX1509 : public CFactoryEngine{
+class CFactoryEnginePCA9685EncMX1508 : public CFactoryEngine{
 public:
-	CFactoryEnginePCA9685EncMX1509(CSettingLoading *settingsLoader, Adafruit_PWMServoDriver *pwmDriver, CLogger *logger);
-	virtual ~CFactoryEnginePCA9685EncMX1509();
+	CFactoryEnginePCA9685EncMX1508(CSettingLoading *settingsLoader, Adafruit_PWMServoDriver *pwmDriver, CLogger *logger);
+	virtual ~CFactoryEnginePCA9685EncMX1508();
 	/* return an array of engines */
 	virtual CEngineWithEncoder **createEngines(unsigned int &sensorsNr);
 	/* return the pwm driver */
@@ -44,4 +44,4 @@ private:
 	Adafruit_PWMServoDriver *m_pwmDriver;
 };
 
-#endif /* CONTROL_ENGINES_CFACTORYENGINEPCA9685ENCMX1509_H_ */
+#endif /* CONTROL_ENGINES_CFACTORYENGINEPCA9685ENCMX1508_H_ */

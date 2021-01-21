@@ -6,8 +6,8 @@ INCLUDEPATHS = -I./ -I$(PREFIX_DRIVERS)/include -I$(PREFIX_I2C_EXP_DRIVER)/inclu
 #this is need by GPIO and PWM operations directly on omega2+ pins
 INCLUDE_GPIO = $(PREFIX_FAST_GPIO)/src/fastgpioomega2.cpp $(PREFIX_FAST_GPIO)/src/fastpwm.cpp $(PREFIX_FAST_GPIO)/src/module.cpp -I$(PREFIX_FAST_GPIO)/include
 
-OBJECTS = Engines.o EncoderObserver.o EnginesWithEncoder.o EnginesWithEncoderMX1509SX1509.o EnginesWithEncoderMX1509PCA9685.o EnginesWithEncoderMX1509.o EnginesWithEncoderMX1509PWMExp.o
-HEADERS = Engines.h EnginesWithEncoder.h EncoderObserver.h EnginesWithEncoderMX1509SX1509.h EnginesWithEncoderMX1509PCA9685.h EnginesWithEncoderMX1509.h EnginesWithEncoderMX1509PWMExp.h
+OBJECTS = Engines.o EncoderObserver.o EnginesWithEncoder.o EnginesWithEncoderMX1508SX1509.o EnginesWithEncoderMX1508PCA9685.o EnginesWithEncoderMX1508.o EnginesWithEncoderMX1508PWMExp.o
+HEADERS = Engines.h EnginesWithEncoder.h EncoderObserver.h EnginesWithEncoderMX1508SX1509.h EnginesWithEncoderMX1508PCA9685.h EnginesWithEncoderMX1508.h EnginesWithEncoderMX1508PWMExp.h
 
 all: engines
 	cd calibrations && make
@@ -26,17 +26,17 @@ EncoderObserver.o : EncoderObserver.cpp $(HEADERS)
 EnginesWithEncoder.o: EnginesWithEncoder.cpp $(HEADERS)
 	$(CC) -fPIC -c $(INCLUDEPATHS) $(INCLUDE_GPIO) EnginesWithEncoder.cpp
 
-EnginesWithEncoderMX1509PCA9685.o: EnginesWithEncoderMX1509PCA9685.cpp $(HEADERS)
-	$(CC) -fPIC -c $(INCLUDEPATHS) $(INCLUDE_GPIO) EnginesWithEncoderMX1509PCA9685.cpp
+EnginesWithEncoderMX1508PCA9685.o: EnginesWithEncoderMX1508PCA9685.cpp $(HEADERS)
+	$(CC) -fPIC -c $(INCLUDEPATHS) $(INCLUDE_GPIO) EnginesWithEncoderMX1508PCA9685.cpp
 
-EnginesWithEncoderMX1509.o: EnginesWithEncoderMX1509.cpp $(HEADERS)
-	$(CC) -fPIC -c $(INCLUDEPATHS) $(INCLUDE_GPIO) EnginesWithEncoderMX1509.cpp
+EnginesWithEncoderMX1508.o: EnginesWithEncoderMX1508.cpp $(HEADERS)
+	$(CC) -fPIC -c $(INCLUDEPATHS) $(INCLUDE_GPIO) EnginesWithEncoderMX1508.cpp
 
-EnginesWithEncoderMX1509SX1509.o: EnginesWithEncoderMX1509SX1509.cpp  $(HEADERS)
-	$(CC) -fPIC -c $(INCLUDEPATHS) $(INCLUDE_GPIO) EnginesWithEncoderMX1509SX1509.cpp
+EnginesWithEncoderMX1508SX1509.o: EnginesWithEncoderMX1508SX1509.cpp  $(HEADERS)
+	$(CC) -fPIC -c $(INCLUDEPATHS) $(INCLUDE_GPIO) EnginesWithEncoderMX1508SX1509.cpp
 
-EnginesWithEncoderMX1509PWMExp.o: EnginesWithEncoderMX1509PWMExp.cpp $(HEADERS)
-	$(CC) -fPIC -c $(INCLUDEPATHS) $(INCLUDE_GPIO) EnginesWithEncoderMX1509PWMExp.cpp
+EnginesWithEncoderMX1508PWMExp.o: EnginesWithEncoderMX1508PWMExp.cpp $(HEADERS)
+	$(CC) -fPIC -c $(INCLUDEPATHS) $(INCLUDE_GPIO) EnginesWithEncoderMX1508PWMExp.cpp
 	
 clean:
 	if [ -f libengines.so ]; then rm libengines.so; fi;

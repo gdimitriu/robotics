@@ -32,7 +32,7 @@
 #include <string.h>
 #include <CEngineWithEncoder.h>
 #include <CFactoryEngine.h>
-#include <CFactoryEnginePCA9685EncMX1509.h>
+#include <CFactoryEnginePCA9685EncMX1508.h>
 #include <CLoggerStdout.h>
 #include <CSettingLoading.h>
 
@@ -51,7 +51,7 @@ int main(int argc, char **argv) {
 	CFactoryEngine *factory;
 	if (strcmp("CFactoryEnginePCA9685EncMX1509", type) == 0) {
 		char *type = settings->getLine(); //ignore the pwmDriver
-		factory = new CFactoryEnginePCA9685EncMX1509(settings, NULL, logger);
+		factory = new CFactoryEnginePCA9685EncMX1508(settings, NULL, logger);
 	}
 	else
 		exit(1);

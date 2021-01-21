@@ -1,6 +1,6 @@
 /*
- * CEnginePCA9685EncMX1509.h
- * Engine for raspberry Pi Zero with PCA9865 and MX1509 with encoders
+ * CEnginePCA9685EncMX1508.h
+ * Engine for raspberry Pi Zero with PCA9865 and MX1508 with encoders
  *  Created on: Oct 2, 2020
  *      Author: Gabriel Dimitriu
  * Copyright (C) 2020 Gabriel Dimitriu
@@ -27,20 +27,20 @@
 #include <Adafruit_PWMServoDriver.h>
 #include <CEngineWithEncoder.h>
 
-#ifndef CONTROLL_ENGINES_CEnginePCA9685EncMX1509_H_
-#define CONTROLL_ENGINES_CEnginePCA9685EncMX1509_H_
+#ifndef CONTROLL_ENGINES_CEnginePCA9685EncMX1508_H_
+#define CONTROLL_ENGINES_CEnginePCA9685EncMX1508_H_
 
-class CEnginePCA9685EncMX1509: public CEngineWithEncoder {
+class CEnginePCA9685EncMX1508: public CEngineWithEncoder {
 public:
 	/*
 	 * engineNR is the number of engine ex:0(left front),1 (left back),2 (right back),3 (right front)
 	 * port is the gpio port on which the encoder is wired
-	 * engPin1 and engPin2 are the port on pwm driver which are wired to the MX1509 pins
+	 * engPin1 and engPin2 are the port on pwm driver which are wired to the MX1508 pins
 	 * driver is the PCA9685 I2C PWM expander (do not delete this because it will be used also for servos)
 	 */
-	CEnginePCA9685EncMX1509(unsigned int engineNr, unsigned int port, int edge,
+	CEnginePCA9685EncMX1508(unsigned int engineNr, unsigned int port, int edge,
 			unsigned int engPin1, unsigned int engPin2);
-	virtual ~CEnginePCA9685EncMX1509();
+	virtual ~CEnginePCA9685EncMX1508();
 	virtual void dumpInfo(CLogger *logger);
 	/*
 	 * set the pwm driver which generate PWM for engines and servo
@@ -86,11 +86,11 @@ public:
 	 * this will be run inside a thread.
 	 * Each engine will compute and go at the specified distance.
 	 */
-	friend void* CEnginePCA9685EncMX1509_moveDistance(void *engine);
+	friend void* CEnginePCA9685EncMX1508_moveDistance(void *engine);
 	/*
 	 * this will rotate the well with the number of encoder ticks into a thread
 	 */
-	friend void* CEnginePCA9685EncMX1509_moveEncoderNr(void *engine);
+	friend void* CEnginePCA9685EncMX1508_moveEncoderNr(void *engine);
 	/*
 	 * get the actual distance that the droid had move
 	*/
@@ -161,4 +161,4 @@ private:
 	int m_stopped;
 };
 
-#endif /* CONTROLL_ENGINES_CEnginePCA9685EncMX1509_H_ */
+#endif /* CONTROLL_ENGINES_CEnginePCA9685EncMX1508_H_ */

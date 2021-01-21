@@ -1,5 +1,5 @@
 /*
- Calibrations with MX1509 and extender PCA9685
+ Calibrations with MX1508 and extender PCA9685
  Copyright (C) 2020 Gabriel Dimitriu
  All rights reserved.
 
@@ -19,20 +19,20 @@
 
  */
 
-#include <EnginesWithEncoderMX1509PCA9685.h>
+#include <EnginesWithEncoderMX1508PCA9685.h>
 
-#ifndef MICRO_CALIBRATIONS_CALIBRATIONMX1509PCA9685_H_
-#define MICRO_CALIBRATIONS_CALIBRATIONMX1509PCA9685_H_
+#ifndef MICRO_CALIBRATIONS_CALIBRATIONMX1508PCA9685_H_
+#define MICRO_CALIBRATIONS_CALIBRATIONMX1508PCA9685_H_
 
-class CalibrationMX1509PCA9685 {
+class CalibrationMX1508PCA9685 {
 public:
-	CalibrationMX1509PCA9685();
-	virtual ~CalibrationMX1509PCA9685();
+	CalibrationMX1508PCA9685();
+	virtual ~CalibrationMX1508PCA9685();
 	void start();
 private:
 	void printMenu();
-	EnginesWithEncoderMX1509PCA9685 * m_engines;
+	EnginesWithEncoderMX1508PCA9685 * m_engines;
 	Adafruit_PWMServoDriver *m_pwmExpander;
 };
 
-#endif /* MICRO_CALIBRATIONS_CALIBRATIONMX1509PCA9685_H_ */
+#endif /* MICRO_CALIBRATIONS_CALIBRATIONMX1508PCA9685_H_ */

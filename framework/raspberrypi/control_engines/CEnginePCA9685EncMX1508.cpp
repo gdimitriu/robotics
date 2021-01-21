@@ -1,6 +1,6 @@
 /*
- * CEnginePCA9685EncMX1509.cpp
- * Engine for raspberry Pi Zero with PCA9865 and MX1509 with encoders
+ * CEnginePCA9685EncMX1508.cpp
+ * Engine for raspberry Pi Zero with PCA9865 and MX1508 with encoders
  *  Created on: Oct 2, 2020
  *      Author: Gabriel Dimitriu
  *
@@ -24,17 +24,17 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#include "CEnginePCA9685EncMX1509.h"
+#include "CEnginePCA9685EncMX1508.h"
 
 #include <iostream>
 #include <string>
 #include <sched.h>
 
-unsigned int CEnginePCA9685EncMX1509::maxEnginePower = 4000;
-unsigned int CEnginePCA9685EncMX1509::minEnginePower = 2000;
-unsigned long CEnginePCA9685EncMX1509::lowPowerDistance = 300;
+unsigned int CEnginePCA9685EncMX1508::maxEnginePower = 4000;
+unsigned int CEnginePCA9685EncMX1508::minEnginePower = 2000;
+unsigned long CEnginePCA9685EncMX1508::lowPowerDistance = 300;
 
-CEnginePCA9685EncMX1509::~CEnginePCA9685EncMX1509() {
+CEnginePCA9685EncMX1508::~CEnginePCA9685EncMX1508() {
 	gpioSetISRFuncEx(m_encPort, m_encEdge, -1, 0, this);
 	breakEngine();
 	if (m_goTh > 0)
@@ -45,7 +45,7 @@ CEnginePCA9685EncMX1509::~CEnginePCA9685EncMX1509() {
 	pthread_mutex_destroy(&m_isrMutex);
 }
 
-CEnginePCA9685EncMX1509::CEnginePCA9685EncMX1509(unsigned int engineNr, unsigned int port, int edge, unsigned int engPin1, unsigned int engPin2) :
+CEnginePCA9685EncMX1508::CEnginePCA9685EncMX1508(unsigned int engineNr, unsigned int port, int edge, unsigned int engPin1, unsigned int engPin2) :
 	CEngineWithEncoder(){
 	this->m_encPort = port;
 	this->m_encEdge = edge;
@@ -71,50 +71,50 @@ CEnginePCA9685EncMX1509::CEnginePCA9685EncMX1509(unsigned int engineNr, unsigned
 	m_stopped = 1;
 }
 
-void CEnginePCA9685EncMX1509::setMaxEnginePower(unsigned int newPower) {
+void CEnginePCA9685EncMX1508::setMaxEnginePower(unsigned int newPower) {
 	this->maxEnginePower = newPower;
 }
 
-void CEnginePCA9685EncMX1509::setMinEnginePower(unsigned int newPower) {
+void CEnginePCA9685EncMX1508::setMinEnginePower(unsigned int newPower) {
 	this->minEnginePower = newPower;
 }
 
-unsigned int CEnginePCA9685EncMX1509::getMaxEnginePower() {
+unsigned int CEnginePCA9685EncMX1508::getMaxEnginePower() {
 	return maxEnginePower;
 }
 
-unsigned int CEnginePCA9685EncMX1509::getMinEnginePower() {
+unsigned int CEnginePCA9685EncMX1508::getMinEnginePower() {
 	return minEnginePower;
 }
 
-unsigned long CEnginePCA9685EncMX1509::getLowPowerDistance() {
+unsigned long CEnginePCA9685EncMX1508::getLowPowerDistance() {
 	return lowPowerDistance;
 }
 
-void CEnginePCA9685EncMX1509::setLowPowerDistance(unsigned long distance) {
+void CEnginePCA9685EncMX1508::setLowPowerDistance(unsigned long distance) {
 	lowPowerDistance = distance;
 }
 
-void CEnginePCA9685EncMX1509::setPWMDriver(Adafruit_PWMServoDriver *driver) {
+void CEnginePCA9685EncMX1508::setPWMDriver(Adafruit_PWMServoDriver *driver) {
 	this->m_pwmDriver = driver;
 }
 
-void *CEnginePCA9685EncMX1509::getPWMDriver() {
+void *CEnginePCA9685EncMX1508::getPWMDriver() {
 	return m_pwmDriver;
 }
-unsigned int CEnginePCA9685EncMX1509::getEngineNr() {
+unsigned int CEnginePCA9685EncMX1508::getEngineNr() {
 	return m_engineNr;
 }
 
-void CEnginePCA9685EncMX1509::startEncoder() {
+void CEnginePCA9685EncMX1508::startEncoder() {
 	m_encoderCount = 0;
 	m_stopped = 0;
 	gpioSetMode(m_encPort, PI_INPUT);
 	gpioSetPullUpDown(m_encPort, PI_PUD_UP);
-	gpioSetISRFuncEx(m_encPort, m_encEdge, -1, CEnginePCA9685EncMX1509::ISRMain, this);
+	gpioSetISRFuncEx(m_encPort, m_encEdge, -1, CEnginePCA9685EncMX1508::ISRMain, this);
 }
 
-void CEnginePCA9685EncMX1509::stopEncoder() {
+void CEnginePCA9685EncMX1508::stopEncoder() {
 	pthread_mutex_lock(&m_isrMutex);
 	pthread_cond_signal(&m_isrCond);
 	pthread_mutex_unlock(&m_isrMutex);
@@ -125,20 +125,20 @@ void CEnginePCA9685EncMX1509::stopEncoder() {
 	sched_yield();
 }
 
-void CEnginePCA9685EncMX1509::clearEncoder() {
+void CEnginePCA9685EncMX1508::clearEncoder() {
 	m_encoderCount = 0;
 }
 
-unsigned long CEnginePCA9685EncMX1509::getEncoder() {
+unsigned long CEnginePCA9685EncMX1508::getEncoder() {
 	return m_encoderCount;
 }
 
-void CEnginePCA9685EncMX1509::ISRMain(int gpio, int level, uint32_t tick,
+void CEnginePCA9685EncMX1508::ISRMain(int gpio, int level, uint32_t tick,
 		void *holder) {
-	((CEnginePCA9685EncMX1509*) holder)->encISR(gpio, level, tick);
+	((CEnginePCA9685EncMX1508*) holder)->encISR(gpio, level, tick);
 }
 
-void CEnginePCA9685EncMX1509::encISR(int gpio, int level, uint32_t tick) {
+void CEnginePCA9685EncMX1508::encISR(int gpio, int level, uint32_t tick) {
 	m_encoderCount++;
 	pthread_mutex_lock(&m_isrMutex);
 	pthread_cond_signal(&m_isrCond);
@@ -146,7 +146,7 @@ void CEnginePCA9685EncMX1509::encISR(int gpio, int level, uint32_t tick) {
 	sched_yield();
 }
 
-void CEnginePCA9685EncMX1509::setEnginePower(unsigned int power) {
+void CEnginePCA9685EncMX1508::setEnginePower(unsigned int power) {
 	if (power > maxEnginePower) {
 		m_enginePower = maxEnginePower;
 	} else if (power < minEnginePower) {
@@ -156,15 +156,15 @@ void CEnginePCA9685EncMX1509::setEnginePower(unsigned int power) {
 	}
 }
 
-int CEnginePCA9685EncMX1509::isStopped() {
+int CEnginePCA9685EncMX1508::isStopped() {
 	return m_stopped;
 }
 
-unsigned int CEnginePCA9685EncMX1509::getEnginePower() {
+unsigned int CEnginePCA9685EncMX1508::getEnginePower() {
 	return m_enginePower;
 }
 
-void CEnginePCA9685EncMX1509::breakEngine(int type) {
+void CEnginePCA9685EncMX1508::breakEngine(int type) {
 	m_pwmDriver->setPWM(m_enginePin1, 0, 4095);
 	m_pwmDriver->setPWM(m_enginePin2, 0, 4095);
 	if (type != 0) {
@@ -173,17 +173,17 @@ void CEnginePCA9685EncMX1509::breakEngine(int type) {
 	stopEncoder();
 }
 
-void CEnginePCA9685EncMX1509::coastEngine() {
+void CEnginePCA9685EncMX1508::coastEngine() {
 	m_pwmDriver->setPWM(m_enginePin1, 0, 0);
 	m_pwmDriver->setPWM(m_enginePin2, 0, 0);
 	stopEncoder();
 }
 
-void CEnginePCA9685EncMX1509::setPPI(float ppi) {
+void CEnginePCA9685EncMX1508::setPPI(float ppi) {
 	m_ppi = ppi;
 }
 
-std::string CEnginePCA9685EncMX1509::getDebugInformation() {
+std::string CEnginePCA9685EncMX1508::getDebugInformation() {
 	std::string message("EngineNR=");
 	message +=std::to_string(m_engineNr);
 	message +=" with encport=";
@@ -200,7 +200,7 @@ std::string CEnginePCA9685EncMX1509::getDebugInformation() {
 	return message;
 }
 
-void CEnginePCA9685EncMX1509::dumpInfo(CLogger *logger) {
+void CEnginePCA9685EncMX1508::dumpInfo(CLogger *logger) {
 	if (logger != NULL) {
 		std::string message("EngineNR=");
 		message +=std::to_string(m_engineNr);
@@ -219,7 +219,7 @@ void CEnginePCA9685EncMX1509::dumpInfo(CLogger *logger) {
 	}
 }
 
-void CEnginePCA9685EncMX1509::startMoving() {
+void CEnginePCA9685EncMX1508::startMoving() {
 	if (m_requestedDistance > 0) {
 		m_pwmDriver->setPWM(m_enginePin2, 0, 0);
 	} else if (m_requestedDistance < 0) {
@@ -235,16 +235,16 @@ void CEnginePCA9685EncMX1509::startMoving() {
 		m_pwmDriver->setPWM(m_enginePin2, 0, 0);
 	}
 }
-void CEnginePCA9685EncMX1509_moveCleanup(void *arg) {
+void CEnginePCA9685EncMX1508_moveCleanup(void *arg) {
 	pthread_mutex_t *mutex = (pthread_mutex_t *)arg;
 	pthread_mutex_unlock(mutex);
 }
 
-void* CEnginePCA9685EncMX1509_moveDistance(void *engine) {
+void* CEnginePCA9685EncMX1508_moveDistance(void *engine) {
 
 	pthread_setcanceltype(PTHREAD_CANCEL_ASYNCHRONOUS, 0);
-	CEnginePCA9685EncMX1509 *currentEngine = (CEnginePCA9685EncMX1509*) engine;
-	pthread_cleanup_push(CEnginePCA9685EncMX1509_moveCleanup, (void *)&(currentEngine->m_isrMutex));
+	CEnginePCA9685EncMX1508 *currentEngine = (CEnginePCA9685EncMX1508*) engine;
+	pthread_cleanup_push(CEnginePCA9685EncMX1508_moveCleanup, (void *)&(currentEngine->m_isrMutex));
 	currentEngine->startMoving();
 	while ((currentEngine->m_targetDistance - currentEngine->m_currentDistance)
 			> 0.2 && currentEngine->isStopped() == 0) {
@@ -267,7 +267,7 @@ void* CEnginePCA9685EncMX1509_moveDistance(void *engine) {
 	return 0;
 }
 
-void CEnginePCA9685EncMX1509::moveDistance(float distance) {
+void CEnginePCA9685EncMX1508::moveDistance(float distance) {
 	if (m_logger != NULL && m_logger->isDebug() == 1) {
 		std::string message("Moving ");
 		message +=std::to_string(distance);
@@ -289,13 +289,13 @@ void CEnginePCA9685EncMX1509::moveDistance(float distance) {
 		}
 	}
 	m_encoderCount = 0;
-	pthread_create(&m_goTh, &m_goThAttr, CEnginePCA9685EncMX1509_moveDistance, this);
+	pthread_create(&m_goTh, &m_goThAttr, CEnginePCA9685EncMX1508_moveDistance, this);
 }
 
-void* CEnginePCA9685EncMX1509_moveEncoderNr(void *engine) {
+void* CEnginePCA9685EncMX1508_moveEncoderNr(void *engine) {
 	pthread_setcanceltype(PTHREAD_CANCEL_ASYNCHRONOUS, 0);
-	CEnginePCA9685EncMX1509 *currentEngine = (CEnginePCA9685EncMX1509*) engine;
-	pthread_cleanup_push(CEnginePCA9685EncMX1509_moveCleanup, (void *)&(currentEngine->m_isrMutex));
+	CEnginePCA9685EncMX1508 *currentEngine = (CEnginePCA9685EncMX1508*) engine;
+	pthread_cleanup_push(CEnginePCA9685EncMX1508_moveCleanup, (void *)&(currentEngine->m_isrMutex));
 	currentEngine->startMoving();
 	while (currentEngine->m_targetEncoder > currentEngine->m_encoderCount && currentEngine->isStopped() == 0) {
 		pthread_mutex_lock(&(currentEngine->m_isrMutex));
@@ -311,7 +311,7 @@ void* CEnginePCA9685EncMX1509_moveEncoderNr(void *engine) {
 	return 0;
 }
 
-void CEnginePCA9685EncMX1509::moveEncoderNr(unsigned long encoderNr, int direction) {
+void CEnginePCA9685EncMX1508::moveEncoderNr(unsigned long encoderNr, int direction) {
 	if (m_logger != NULL && m_logger->isDebug() == 1) {
 		std::string message("Move with encoder nr ");
 		message +=std::to_string(encoderNr);
@@ -323,9 +323,9 @@ void CEnginePCA9685EncMX1509::moveEncoderNr(unsigned long encoderNr, int directi
 	m_encoderCount = 0;
 	m_requestedDistance = direction;
 	m_actualPower = m_enginePower;
-	pthread_create(&m_goTh, &m_goThAttr, CEnginePCA9685EncMX1509_moveEncoderNr, this);
+	pthread_create(&m_goTh, &m_goThAttr, CEnginePCA9685EncMX1508_moveEncoderNr, this);
 }
 
-float CEnginePCA9685EncMX1509::getActualDistance() {
+float CEnginePCA9685EncMX1508::getActualDistance() {
 	return m_currentDistance;
 }

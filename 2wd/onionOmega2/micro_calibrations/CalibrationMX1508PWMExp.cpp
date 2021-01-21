@@ -1,5 +1,5 @@
 /*
- Calibrations with MX1509 and Onion PWM Expansion
+ Calibrations with MX1508 and Onion PWM Expansion
  Copyright (C) 2020 Gabriel Dimitriu
  All rights reserved.
 
@@ -19,31 +19,31 @@
 
  */
 
-#include "CalibrationMX1509PWMExp.h"
+#include "CalibrationMX1508PWMExp.h"
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <iostream>
 
 int main() {
-	CalibrationMX1509PWMExp *droid = new CalibrationMX1509PWMExp();
+	CalibrationMX1508PWMExp *droid = new CalibrationMX1508PWMExp();
 	droid->start();
 	delete droid;
 }
 
-CalibrationMX1509PWMExp::CalibrationMX1509PWMExp() {
-	m_engines = new EnginesWithEncoderMX1509PWMExp(3, 1452,
+CalibrationMX1508PWMExp::CalibrationMX1508PWMExp() {
+	m_engines = new EnginesWithEncoderMX1508PWMExp(3, 1452,
 			1468, 9, 10, 3, 2);
 	m_engines->setEnginesPins(0, 1, 2, 3);
 	m_engines->enableEnginesPins();
 }
 
-CalibrationMX1509PWMExp::~CalibrationMX1509PWMExp() {
+CalibrationMX1508PWMExp::~CalibrationMX1508PWMExp() {
 	delete m_engines;
 }
 
-void CalibrationMX1509PWMExp::printMenu() {
-	printf("Calibrations of Onion PWM Extension with MX1509 on onion Omega\n");
+void CalibrationMX1508PWMExp::printMenu() {
+	printf("Calibrations of Onion PWM Extension with MX1508 on onion Omega\n");
 	printf("Print Encoders values (p)\n");
 	printf("Clear Encoders values (c)\n");
 	printf("Full stop (s)\n");
@@ -55,7 +55,7 @@ void CalibrationMX1509PWMExp::printMenu() {
 	fflush(stdout);
 }
 
-void CalibrationMX1509PWMExp::start() {
+void CalibrationMX1508PWMExp::start() {
 	char *last;
 	float fValue;
 	long lValue;

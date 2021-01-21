@@ -1,5 +1,5 @@
 /*
- Calibrations with MX1509 and Onion PWM Expansion
+ Calibrations with MX1508 and Onion PWM Expansion
  Copyright (C) 2020 Gabriel Dimitriu
  All rights reserved.
 
@@ -19,19 +19,19 @@
 
  */
 
-#include <EnginesWithEncoderMX1509PWMExp.h>
+#include <EnginesWithEncoderMX1508PWMExp.h>
 
-#ifndef MICRO_CALIBRATIONS_CALIBRATIONMX1509PWMEXP_H_
-#define MICRO_CALIBRATIONS_CALIBRATIONMX1509PWMEXP_H_
+#ifndef MICRO_CALIBRATIONS_CALIBRATIONMX1508PWMEXP_H_
+#define MICRO_CALIBRATIONS_CALIBRATIONMX1508PWMEXP_H_
 
-class CalibrationMX1509PWMExp {
+class CalibrationMX1508PWMExp {
 public:
-	CalibrationMX1509PWMExp();
-	virtual ~CalibrationMX1509PWMExp();
+	CalibrationMX1508PWMExp();
+	virtual ~CalibrationMX1508PWMExp();
 	void start();
 private:
 	void printMenu();
-	EnginesWithEncoderMX1509PWMExp * m_engines;
+	EnginesWithEncoderMX1508PWMExp * m_engines;
 };
 
-#endif /* MICRO_CALIBRATIONS_CALIBRATIONMX1509PCA9685_H_ */
+#endif /* MICRO_CALIBRATIONS_CALIBRATIONMX1508PCA9685_H_ */

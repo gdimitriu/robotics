@@ -1,5 +1,5 @@
 /*
- Engine driver with MX1509 and extender PCA9685
+ Engine driver with MX1508 and extender PCA9685
  Copyright (C) 2020 Gabriel Dimitriu
  All rights reserved.
 
@@ -18,29 +18,29 @@
  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#include "EnginesWithEncoderMX1509PCA9685.h"
+#include "EnginesWithEncoderMX1508PCA9685.h"
 
-EnginesWithEncoderMX1509PCA9685::EnginesWithEncoderMX1509PCA9685(
+EnginesWithEncoderMX1508PCA9685::EnginesWithEncoderMX1508PCA9685(
 		Adafruit_PWMServoDriver *t_pPwm, float t_whellRadius,
 		long t_resolutionCoderLeft, long t_resolutionCoderRight,
 		long t_countRotate1Inner, long t_countRotate1Outer,
 		unsigned int t_leftEncoderPin, unsigned int t_rightEncoderPin) :
-		EnginesWithEncoderMX1509(t_whellRadius, t_resolutionCoderLeft,
+		EnginesWithEncoderMX1508(t_whellRadius, t_resolutionCoderLeft,
 				t_resolutionCoderRight, t_countRotate1Inner,
 				t_countRotate1Outer, t_leftEncoderPin, t_rightEncoderPin) {
 	m_pPWMExpander = t_pPwm;
 	setIdlePower(0);
 }
 
-EnginesWithEncoderMX1509PCA9685::~EnginesWithEncoderMX1509PCA9685() {
+EnginesWithEncoderMX1508PCA9685::~EnginesWithEncoderMX1508PCA9685() {
 	// TODO Auto-generated destructor stub
 }
 
-void EnginesWithEncoderMX1509PCA9685::enableEnginesPins() {
+void EnginesWithEncoderMX1508PCA9685::enableEnginesPins() {
 
 }
 
-void EnginesWithEncoderMX1509PCA9685::go(int t_leftSpeed, int t_rightSpeed) {
+void EnginesWithEncoderMX1508PCA9685::go(int t_leftSpeed, int t_rightSpeed) {
 	if (t_leftSpeed == 0 && t_rightSpeed == 0) {
 			m_pPWMExpander->setPWM(getLeftEnginePin1(), 0, getIdlePower());
 			m_pPWMExpander->setPWM(getLeftEnginePin2(), 0, getIdlePower());
@@ -65,12 +65,12 @@ void EnginesWithEncoderMX1509PCA9685::go(int t_leftSpeed, int t_rightSpeed) {
 		}
 }
 
-void EnginesWithEncoderMX1509PCA9685::stopLeftEngine() {
+void EnginesWithEncoderMX1508PCA9685::stopLeftEngine() {
 	m_pPWMExpander->setPWM(getLeftEnginePin1(), 0, getIdlePower());
 	m_pPWMExpander->setPWM(getLeftEnginePin2(), 0, getIdlePower());
 }
 
-void EnginesWithEncoderMX1509PCA9685::stopRightEngine() {
+void EnginesWithEncoderMX1508PCA9685::stopRightEngine() {
 	m_pPWMExpander->setPWM(getRightEnginePin1(), 0, getIdlePower());
 	m_pPWMExpander->setPWM(getRightEnginePin2(), 0, getIdlePower());
 }

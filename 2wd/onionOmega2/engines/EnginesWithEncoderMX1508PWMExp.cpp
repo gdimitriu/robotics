@@ -1,5 +1,5 @@
 /*
- Engine driver with MX1509 and Onion PWM extender
+ Engine driver with MX1508 and Onion PWM extender
  Copyright (C) 2020 Gabriel Dimitriu
  All rights reserved.
 
@@ -18,14 +18,15 @@
  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#include "EnginesWithEncoderMX1509PWMExp.h"
+#include "EnginesWithEncoderMX1508PWMExp.h"
+
 #include <pwm-exp.h>
 
-EnginesWithEncoderMX1509PWMExp::EnginesWithEncoderMX1509PWMExp(float t_whellRadius,
+EnginesWithEncoderMX1508PWMExp::EnginesWithEncoderMX1508PWMExp(float t_whellRadius,
 		long t_resolutionCoderLeft, long t_resolutionCoderRight,
 		long t_countRotate1Inner, long t_countRotate1Outer,
 		unsigned int t_leftEncoderPin, unsigned int t_rightEncoderPin) :
-		EnginesWithEncoderMX1509(t_whellRadius, t_resolutionCoderLeft,
+		EnginesWithEncoderMX1508(t_whellRadius, t_resolutionCoderLeft,
 				t_resolutionCoderRight, t_countRotate1Inner,
 				t_countRotate1Outer, t_leftEncoderPin, t_rightEncoderPin) {
 	setIdlePower(0);
@@ -38,15 +39,15 @@ EnginesWithEncoderMX1509PWMExp::EnginesWithEncoderMX1509PWMExp(float t_whellRadi
 	}
 }
 
-EnginesWithEncoderMX1509PWMExp::~EnginesWithEncoderMX1509PWMExp() {
+EnginesWithEncoderMX1508PWMExp::~EnginesWithEncoderMX1508PWMExp() {
 	pwmDisableChip ();
 }
 
-void EnginesWithEncoderMX1509PWMExp::enableEnginesPins() {
+void EnginesWithEncoderMX1508PWMExp::enableEnginesPins() {
 
 }
 
-void EnginesWithEncoderMX1509PWMExp::go(int t_leftSpeed, int t_rightSpeed) {
+void EnginesWithEncoderMX1508PWMExp::go(int t_leftSpeed, int t_rightSpeed) {
 	pwmSetFrequency(50.0);
 	if (t_leftSpeed == 0 && t_rightSpeed == 0) {
 			pwmSetupDriver(getLeftEnginePin1(), getIdlePower(), 0);
@@ -72,13 +73,13 @@ void EnginesWithEncoderMX1509PWMExp::go(int t_leftSpeed, int t_rightSpeed) {
 		}
 }
 
-void EnginesWithEncoderMX1509PWMExp::stopLeftEngine() {
+void EnginesWithEncoderMX1508PWMExp::stopLeftEngine() {
 	pwmSetFrequency(50.0);
 	pwmSetupDriver(getLeftEnginePin1(), 100, 0);
 	pwmSetupDriver(getLeftEnginePin2(), 100, 0);
 }
 
-void EnginesWithEncoderMX1509PWMExp::stopRightEngine() {
+void EnginesWithEncoderMX1508PWMExp::stopRightEngine() {
 	pwmSetFrequency(50.0);
 	pwmSetupDriver(getRightEnginePin1(), 100, 0);
 	pwmSetupDriver(getRightEnginePin2(), 100, 0);

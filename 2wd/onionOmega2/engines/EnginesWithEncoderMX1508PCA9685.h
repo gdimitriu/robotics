@@ -1,5 +1,5 @@
 /*
- Engine driver with MX1509 and Onion PWM extender
+ Engine driver with MX1508 and extender PCA9685
  Copyright (C) 2020 Gabriel Dimitriu
  All rights reserved.
 
@@ -18,23 +18,28 @@
  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef ENGINES_ENGINESWITHENCODERMX1509PWMEXP_H_
-#define ENGINES_ENGINESWITHENCODERMX1509PWMEXP_H_
+#ifndef ENGINES_ENGINESWITHENCODERMX1508PCA9685_H_
+#define ENGINES_ENGINESWITHENCODERMX1508PCA9685_H_
 
-#include "EnginesWithEncoderMX1509.h"
+#include <Adafruit_PWMServoDriver.h>
 
-class EnginesWithEncoderMX1509PWMExp: public EnginesWithEncoderMX1509 {
+#include "EnginesWithEncoderMX1508.h"
+
+class EnginesWithEncoderMX1508PCA9685: public EnginesWithEncoderMX1508 {
 public:
-	EnginesWithEncoderMX1509PWMExp(float t_whellRadius, long t_resolutionCoderLeft,
+	EnginesWithEncoderMX1508PCA9685(Adafruit_PWMServoDriver *t_pPwm,
+			float t_whellRadius, long t_resolutionCoderLeft,
 			long t_resolutionCoderRight, long t_countRotate1Inner,
 			long t_countRotate1Outer, unsigned int t_leftEncoderPin,
 			unsigned int t_rightEncoderPin);
-	EnginesWithEncoderMX1509PWMExp();
-	virtual ~EnginesWithEncoderMX1509PWMExp();
+	EnginesWithEncoderMX1508PCA9685();
+	virtual ~EnginesWithEncoderMX1508PCA9685();
 	virtual void enableEnginesPins();
 	virtual void go(int t_leftSpeed, int t_rightSpeed);
 	virtual void stopLeftEngine();
 	virtual void stopRightEngine();
+private:
+	Adafruit_PWMServoDriver *m_pPWMExpander;
 };
 
-#endif /* ENGINES_ENGINESWITHENCODERMX1509PWMEXP_H_ */
+#endif /* ENGINES_ENGINESWITHENCODERMX1508PCA9685_H_ */

@@ -1,5 +1,5 @@
 /*
-Calibrations with MX1509 and extender SX1509
+Calibrations with MX1508 and extender SX1509
 Copyright (C) 2020 Gabriel Dimitriu
 All rights reserved.
 
@@ -19,19 +19,19 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 */
 
-#ifndef CALIBRATION_MX1509_SX1509_H_
-#define CALIBRATION_MX1509_SX1509_H_
+#ifndef CALIBRATION_MX1508_SX1509_H_
+#define CALIBRATION_MX1508_SX1509_H_
 
-#include <EnginesWithEncoderMX1509SX1509.h>
+#include <EnginesWithEncoderMX1508SX1509.h>
 
-class CalibrationMX1509SX1509 {
+class CalibrationMX1508SX1509 {
 public:
-	CalibrationMX1509SX1509();
-	virtual ~CalibrationMX1509SX1509();
+	CalibrationMX1508SX1509();
+	virtual ~CalibrationMX1508SX1509();
 	void start();
 private:
 	void printMenu();
-	EnginesWithEncoderMX1509SX1509 * m_engines;
+	EnginesWithEncoderMX1508SX1509 * m_engines;
 };
 
-#endif /* CALIBRATION_MX1509_SX1509_H_ */
+#endif /* CALIBRATION_MX1508_SX1509_H_ */

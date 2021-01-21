@@ -23,7 +23,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #include<string>
 #include<unistd.h>
 
-#include "../EnginesWithEncoderMX1509SX1509.h"
+#include "../EnginesWithEncoderMX1508SX1509.h"
 
 int main(int args, char* argv[]){
 	EnginesWithEncoder * encoders;
@@ -31,7 +31,7 @@ int main(int args, char* argv[]){
 	std::cout<<"Print Encoders values (p)"<<std::endl;
 	std::cout<<"Reset Encoders values (r)"<<std::endl;
 	std::cout<<"Quit (q)"<<std::endl;
-	encoders = new EnginesWithEncoderMX1509SX1509(3, 1452, 1468, 9, 10, 3, 2);
+	encoders = new EnginesWithEncoderMX1508SX1509(3, 1452, 1468, 9, 10, 3, 2);
 	std::string inputParameter;
 	std::getline(std::cin, inputParameter);
 	encoders->startIsr();

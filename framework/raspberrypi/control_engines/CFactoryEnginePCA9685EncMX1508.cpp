@@ -1,5 +1,5 @@
 /*
- * CFactoryEnginePCA9685EncMX1509.cpp
+ * CFactoryEnginePCA9685EncMX1508.cpp
  *
  *  Created on: Oct 5, 2020
  *      Author: Gabriel Dimitriu
@@ -22,20 +22,20 @@
  * License along with Robotics; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
-#include "CFactoryEnginePCA9685EncMX1509.h"
+#include "CFactoryEnginePCA9685EncMX1508.h"
 #include <Adafruit_PWMServoDriver.h>
 #include <CSettingLoading.h>
 
-CFactoryEnginePCA9685EncMX1509::CFactoryEnginePCA9685EncMX1509(CSettingLoading *settingsLoader, Adafruit_PWMServoDriver *pwmDriver, CLogger *logger)
+CFactoryEnginePCA9685EncMX1508::CFactoryEnginePCA9685EncMX1508(CSettingLoading *settingsLoader, Adafruit_PWMServoDriver *pwmDriver, CLogger *logger)
 	: CFactoryEngine(logger){
 	m_settingLoader = settingsLoader;
 	m_pwmDriver = pwmDriver;
 }
 
-CFactoryEnginePCA9685EncMX1509::~CFactoryEnginePCA9685EncMX1509() {
+CFactoryEnginePCA9685EncMX1508::~CFactoryEnginePCA9685EncMX1508() {
 }
 
-CEngineWithEncoder **CFactoryEnginePCA9685EncMX1509::createEngines(unsigned int &enginesNr) {
+CEngineWithEncoder **CFactoryEnginePCA9685EncMX1508::createEngines(unsigned int &enginesNr) {
 	unsigned int engineNr = 0;
 	unsigned int port, engPin1, engPin2;
 	int edge;
@@ -48,10 +48,10 @@ CEngineWithEncoder **CFactoryEnginePCA9685EncMX1509::createEngines(unsigned int 
 	engines = new CEngineWithEncoder*[enginesNr];
 	for (int i = 0; i < enginesNr; i++) {
 		sscanf(m_settingLoader->getLine(), "%u %u %d %u %u %f",&engineNr, &port, &edge, &engPin1, &engPin2, &ppi);
-		engines[i] = new CEnginePCA9685EncMX1509(engineNr, port, edge, engPin1, engPin2);
+		engines[i] = new CEnginePCA9685EncMX1508(engineNr, port, edge, engPin1, engPin2);
 		engines[i]->setLogger(m_logger);
-		((CEnginePCA9685EncMX1509 *)engines[i])->setPWMDriver(m_pwmDriver);
-		((CEnginePCA9685EncMX1509 *)engines[i])->setPPI(ppi);
+		((CEnginePCA9685EncMX1508 *)engines[i])->setPWMDriver(m_pwmDriver);
+		((CEnginePCA9685EncMX1508 *)engines[i])->setPPI(ppi);
 		CLogger *logger = m_settingLoader->getLogger();
 		if (logger != NULL && logger->isInfo()) {
 			logger->info(engines[i]->getDebugInformation());
@@ -67,6 +67,6 @@ CEngineWithEncoder **CFactoryEnginePCA9685EncMX1509::createEngines(unsigned int 
 	return engines;
 }
 
-void *CFactoryEnginePCA9685EncMX1509::getPWMDriver() {
+void *CFactoryEnginePCA9685EncMX1508::getPWMDriver() {
 	return m_pwmDriver;
 }

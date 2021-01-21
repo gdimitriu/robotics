@@ -1,5 +1,5 @@
 /*
- Engine driver with MX1509
+ Engine driver with MX1508
  Copyright (C) 2020 Gabriel Dimitriu
  All rights reserved.
 
@@ -17,9 +17,9 @@
  License along with this library; if not, write to the Free Software
  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
-#include "EnginesWithEncoderMX1509.h"
+#include "EnginesWithEncoderMX1508.h"
 
-EnginesWithEncoderMX1509::EnginesWithEncoderMX1509(float t_whellRadius,
+EnginesWithEncoderMX1508::EnginesWithEncoderMX1508(float t_whellRadius,
 		long t_resolutionCoderLeft, long t_resolutionCoderRight,
 		long t_countRotate1Inner, long t_countRotate1Outer,
 		unsigned int t_leftEncoderPin, unsigned int t_rightEncoderPin) :
@@ -32,18 +32,18 @@ EnginesWithEncoderMX1509::EnginesWithEncoderMX1509(float t_whellRadius,
 	this->m_rightEnginePin2 = 0;
 }
 
-EnginesWithEncoderMX1509::EnginesWithEncoderMX1509() {
+EnginesWithEncoderMX1508::EnginesWithEncoderMX1508() {
 	this->m_leftEnginePin1 = 0;
 	this->m_leftEnginePin2 = 0;
 	this->m_rightEnginePin1 = 0;
 	this->m_rightEnginePin2 = 0;
 }
 
-EnginesWithEncoderMX1509::~EnginesWithEncoderMX1509() {
+EnginesWithEncoderMX1508::~EnginesWithEncoderMX1508() {
 	// TODO Auto-generated destructor stub
 }
 
-void EnginesWithEncoderMX1509::setEnginesPins(unsigned char t_leftPin1,
+void EnginesWithEncoderMX1508::setEnginesPins(unsigned char t_leftPin1,
 		unsigned char t_leftPin2, unsigned char t_rightPin1,
 		unsigned char t_rightPin2) {
 	this->m_leftEnginePin1 = t_leftPin1;
@@ -52,17 +52,17 @@ void EnginesWithEncoderMX1509::setEnginesPins(unsigned char t_leftPin1,
 	this->m_rightEnginePin2 = t_rightPin2;
 }
 
-unsigned char EnginesWithEncoderMX1509::getLeftEnginePin1() {
+unsigned char EnginesWithEncoderMX1508::getLeftEnginePin1() {
 	return m_leftEnginePin1;
 }
 
-unsigned char EnginesWithEncoderMX1509::getLeftEnginePin2() {
+unsigned char EnginesWithEncoderMX1508::getLeftEnginePin2() {
 	return m_leftEnginePin2;
 }
-unsigned char EnginesWithEncoderMX1509::getRightEnginePin1() {
+unsigned char EnginesWithEncoderMX1508::getRightEnginePin1() {
 	return m_rightEnginePin1;
 }
 
-unsigned char EnginesWithEncoderMX1509::getRightEnginePin2() {
+unsigned char EnginesWithEncoderMX1508::getRightEnginePin2() {
 	return m_rightEnginePin2;
 }

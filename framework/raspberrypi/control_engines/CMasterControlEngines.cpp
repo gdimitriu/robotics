@@ -24,7 +24,7 @@
  */
 
 #include "CMasterControlEngines.h"
-#include <CFactoryEnginePCA9685EncMX1509.h>
+#include <CFactoryEnginePCA9685EncMX1508.h>
 #include <CLogger.h>
 #include <CLoggerStdout.h>
 #include <CLoggerBleHC5.h>
@@ -42,7 +42,7 @@ CMasterControlEngines::CMasterControlEngines(char *configFile,
 	m_logger = loggerFactory->createLogger(settingLogger);
 	char *type = settingsLoading->getLine();
 	if (strcmp("CFactoryEnginePCA9685EncMX1509", type) == 0) {
-		m_factory = new CFactoryEnginePCA9685EncMX1509(settingsLoading, pwmDriver, m_logger);
+		m_factory = new CFactoryEnginePCA9685EncMX1508(settingsLoading, pwmDriver, m_logger);
 	} else {
 		m_factory = NULL;
 		return;

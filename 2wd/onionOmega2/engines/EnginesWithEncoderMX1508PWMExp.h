@@ -1,5 +1,5 @@
 /*
- Engine driver with MX1509 and extender SX1509
+ Engine driver with MX1508 and Onion PWM extender
  Copyright (C) 2020 Gabriel Dimitriu
  All rights reserved.
 
@@ -16,32 +16,25 @@
  You should have received a copy of the GNU Lesser General Public
  License along with this library; if not, write to the Free Software
  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
-
  */
 
-#ifndef ENGINES_ENGINESWITHENCODERMX1509SX1509_H_
-#define ENGINES_ENGINESWITHENCODERMX1509SX1509_H_
+#ifndef ENGINES_ENGINESWITHENCODERMX1508PWMEXP_H_
+#define ENGINES_ENGINESWITHENCODERMX1508PWMEXP_H_
 
-#include <SX1509.h>
-#include "EnginesWithEncoderMX1509.h"
+#include "EnginesWithEncoderMX1508.h"
 
-class EnginesWithEncoderMX1509SX1509: public EnginesWithEncoderMX1509 {
+class EnginesWithEncoderMX1508PWMExp: public EnginesWithEncoderMX1508 {
 public:
-	EnginesWithEncoderMX1509SX1509(float t_whellRadius,
-			long t_resolutionCoderLeft, long t_resolutionCoderRight,
-			long t_countRotate1Inner, long t_countRotate1Outer,
-			unsigned int t_leftEncoderPin, unsigned int t_rightEncoderPin);
-	EnginesWithEncoderMX1509SX1509();
-	virtual ~EnginesWithEncoderMX1509SX1509();
+	EnginesWithEncoderMX1508PWMExp(float t_whellRadius, long t_resolutionCoderLeft,
+			long t_resolutionCoderRight, long t_countRotate1Inner,
+			long t_countRotate1Outer, unsigned int t_leftEncoderPin,
+			unsigned int t_rightEncoderPin);
+	EnginesWithEncoderMX1508PWMExp();
+	virtual ~EnginesWithEncoderMX1508PWMExp();
 	virtual void enableEnginesPins();
-	void setClockDivider(unsigned char t_divider);
-	int getClockDivider();
 	virtual void go(int t_leftSpeed, int t_rightSpeed);
 	virtual void stopLeftEngine();
 	virtual void stopRightEngine();
-private:
-	SX1509 *m_extender;
-	unsigned char m_clockDivider;
 };
 
-#endif /* ENGINES_ENGINESWITHENCODERMX1509SX1509_H_ */
+#endif /* ENGINES_ENGINESWITHENCODERMX1508PWMEXP_H_ */

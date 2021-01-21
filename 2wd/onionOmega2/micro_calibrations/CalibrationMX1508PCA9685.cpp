@@ -1,5 +1,5 @@
 /*
- Calibrations with MX1509 and extender SX1509
+ Calibrations with MX1508 and extender PCA9685
  Copyright (C) 2020 Gabriel Dimitriu
  All rights reserved.
 
@@ -19,46 +19,46 @@
 
  */
 
-#include "CalibrationMX1509SX1509.h"
+#include "CalibrationMX1508PCA9685.h"
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <iostream>
 
-int main()
-{
-	CalibrationMX1509SX1509* droid = new CalibrationMX1509SX1509();
+int main() {
+	CalibrationMX1508PCA9685 *droid = new CalibrationMX1508PCA9685();
 	droid->start();
 	delete droid;
 }
 
-CalibrationMX1509SX1509::CalibrationMX1509SX1509() {
-	//settings for micro see documentation from docs when it will be available
-	m_engines = new EnginesWithEncoderMX1509SX1509(3, 1452, 1468, 9, 10, 3, 2);
+CalibrationMX1508PCA9685::CalibrationMX1508PCA9685() {
+	m_pwmExpander = new Adafruit_PWMServoDriver(0x40);
+	m_pwmExpander->setOscillatorFrequency(27000000);
+	m_pwmExpander->setPWMFreq(50.0);
+	m_engines = new EnginesWithEncoderMX1508PCA9685(m_pwmExpander, 3, 1452,
+			1468, 9, 10, 3, 2);
 	m_engines->setEnginesPins(0, 1, 2, 3);
-	m_engines->setClockDivider(7);
 	m_engines->enableEnginesPins();
 }
 
-CalibrationMX1509SX1509::~CalibrationMX1509SX1509() {
+CalibrationMX1508PCA9685::~CalibrationMX1508PCA9685() {
 	delete m_engines;
 }
 
-void CalibrationMX1509SX1509::printMenu() {
-	printf("Calibrations of SX1509 with MX1509 on onion Omega\n");
+void CalibrationMX1508PCA9685::printMenu() {
+	printf("Calibrations of PCA9685 with L298N micro on onion Omega\n");
 	printf("Print Encoders values (p)\n");
 	printf("Clear Encoders values (c)\n");
 	printf("Full stop (s)\n");
 	printf("Linear move (-)xxx cm (l(-)xxx)\n");
 	printf("Rotate xxx degree (- for left rotation) (r(-)xxx)\n");
-	printf("Change engine power max value in range 0-255 (vxxx)\n");
-	printf("Change engine power idle value in range 0-255 (i(xxx)\n");
-	printf("Change clock divider value 1-64? (dxx)\n");
+	printf("Change engine power max value in range 0-600 (vxxx)\n");
+	printf("Change engine power idle value in range 0-600 (i(xxx)\n");
 	printf("Quit (q)\n");
 	fflush(stdout);
 }
 
-void CalibrationMX1509SX1509::start() {
+void CalibrationMX1508PCA9685::start() {
 	char *last;
 	float fValue;
 	long lValue;
@@ -78,13 +78,15 @@ void CalibrationMX1509SX1509::start() {
 				break;
 			case 'p':
 				printf("Left Encoder=%d Right Encoder= %d\n",
-						m_engines->getLeftCounter(), m_engines->getRightCounter());
+						m_engines->getLeftCounter(),
+						m_engines->getRightCounter());
 				fflush(stdout);
 				break;
 			case 'c':
 				printf("Clear Counters with actual values\n");
 				printf("Left Encoder=%d Right Encoder=%d\n",
-						m_engines->getLeftCounter(), m_engines->getRightCounter());
+						m_engines->getLeftCounter(),
+						m_engines->getRightCounter());
 				fflush(stdout);
 				m_engines->resetCounters();
 				break;
@@ -133,49 +135,20 @@ void CalibrationMX1509SX1509::start() {
 			case 'v':
 				inputParameter.erase(0, 1);
 				lValue = strtol(inputParameter.c_str(), &last, 10);
-				if (lValue >= 0 && lValue < 256) {
-					printf("Changed engine max power from %d : %d to %d\n",
-							m_engines->getLeftEnginePower(),
-							m_engines->getRightEnginePower(), lValue);
-					fflush(stdout);
-					m_engines->setLeftEnginePower((unsigned int) lValue);
-					m_engines->setRightEnginePower((unsigned int) lValue);
-				} else {
-					printf(
-							"Engine max power should be between 0 and 255 but it was : %s\n",
-							inputParameter.c_str());
-					printMenu();
-				}
+				printf("Changed engine max power from %d : %d to %d\n",
+						m_engines->getLeftEnginePower(),
+						m_engines->getRightEnginePower(), lValue);
+				fflush(stdout);
+				m_engines->setLeftEnginePower((unsigned int) lValue);
+				m_engines->setRightEnginePower((unsigned int) lValue);
 				break;
 			case 'i':
 				inputParameter.erase(0, 1);
 				lValue = strtol(inputParameter.c_str(), &last, 10);
-				if (lValue >= 0 && lValue < 256) {
-					printf("Changed engine idle power from %d to %d\n",
-							m_engines->getIdlePower(), lValue);
-					fflush(stdout);
-					m_engines->setIdlePower((unsigned int) lValue);
-				} else {
-					printf(
-							"Engine idle power should be between 0 and 255 but it was : %s\n",
-							inputParameter.c_str());
-					printMenu();
-				}
-				break;
-			case 'd':
-				inputParameter.erase(0, 1);
-				lValue = strtol(inputParameter.c_str(), &last, 10);
-				if (lValue > 0 && lValue < 65) {
-					printf("Changed clock divider for SX1509 from %d to %ld\n",
-							m_engines->getClockDivider(), lValue);
-					fflush(stdout);
-					m_engines->setClockDivider((unsigned char) lValue);
-				} else {
-					printf(
-							"Clock divider for SX1509 should be between 1 and 64 but was : %s\n",
-							inputParameter.c_str());
-					printMenu();
-				}
+				printf("Changed engine idle power from %d to %d\n",
+						m_engines->getIdlePower(), lValue);
+				fflush(stdout);
+				m_engines->setIdlePower((unsigned int) lValue);
 				break;
 			default:
 				printMenu();
@@ -184,3 +157,4 @@ void CalibrationMX1509SX1509::start() {
 		std::getline(std::cin, inputParameter);
 	}
 }
+

@@ -1,5 +1,5 @@
 /*
- Engine driver with MX1509 and extender PCA9685
+ Engine driver with MX1508 and extender SX1509
  Copyright (C) 2020 Gabriel Dimitriu
  All rights reserved.
 
@@ -16,29 +16,33 @@
  You should have received a copy of the GNU Lesser General Public
  License along with this library; if not, write to the Free Software
  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+
  */
 
-#ifndef ENGINES_ENGINESWITHENCODERMX1509PCA9685_H_
-#define ENGINES_ENGINESWITHENCODERMX1509PCA9685_H_
+#ifndef ENGINES_ENGINESWITHENCODERMX1508SX1509_H_
+#define ENGINES_ENGINESWITHENCODERMX1508SX1509_H_
 
-#include <Adafruit_PWMServoDriver.h>
-#include "EnginesWithEncoderMX1509.h"
+#include <SX1509.h>
 
-class EnginesWithEncoderMX1509PCA9685: public EnginesWithEncoderMX1509 {
+#include "EnginesWithEncoderMX1508.h"
+
+class EnginesWithEncoderMX1508SX1509: public EnginesWithEncoderMX1508 {
 public:
-	EnginesWithEncoderMX1509PCA9685(Adafruit_PWMServoDriver *t_pPwm,
-			float t_whellRadius, long t_resolutionCoderLeft,
-			long t_resolutionCoderRight, long t_countRotate1Inner,
-			long t_countRotate1Outer, unsigned int t_leftEncoderPin,
-			unsigned int t_rightEncoderPin);
-	EnginesWithEncoderMX1509PCA9685();
-	virtual ~EnginesWithEncoderMX1509PCA9685();
+	EnginesWithEncoderMX1508SX1509(float t_whellRadius,
+			long t_resolutionCoderLeft, long t_resolutionCoderRight,
+			long t_countRotate1Inner, long t_countRotate1Outer,
+			unsigned int t_leftEncoderPin, unsigned int t_rightEncoderPin);
+	EnginesWithEncoderMX1508SX1509();
+	virtual ~EnginesWithEncoderMX1508SX1509();
 	virtual void enableEnginesPins();
+	void setClockDivider(unsigned char t_divider);
+	int getClockDivider();
 	virtual void go(int t_leftSpeed, int t_rightSpeed);
 	virtual void stopLeftEngine();
 	virtual void stopRightEngine();
 private:
-	Adafruit_PWMServoDriver *m_pPWMExpander;
+	SX1509 *m_extender;
+	unsigned char m_clockDivider;
 };
 
-#endif /* ENGINES_ENGINESWITHENCODERMX1509PCA9685_H_ */
+#endif /* ENGINES_ENGINESWITHENCODERMX1508SX1509_H_ */

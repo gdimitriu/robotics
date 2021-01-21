@@ -1,5 +1,5 @@
 /*
- Engine driver with MX1509
+ Engine driver with MX1508
  Copyright (C) 2020 Gabriel Dimitriu
  All rights reserved.
 
@@ -18,21 +18,21 @@
  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef ENGINES_ENGINESWITHENCODERMX1509_H_
-#define ENGINES_ENGINESWITHENCODERMX1509_H_
+#ifndef ENGINES_ENGINESWITHENCODERMX1508_H_
+#define ENGINES_ENGINESWITHENCODERMX1508_H_
 
 #include "EnginesWithEncoder.h"
 
-class EnginesWithEncoderMX1509: public EnginesWithEncoder {
+class EnginesWithEncoderMX1508: public EnginesWithEncoder {
 public:
-	EnginesWithEncoderMX1509();
-	EnginesWithEncoderMX1509(float t_whellRadius, long t_resolutionCoderLeft,
+	EnginesWithEncoderMX1508();
+	EnginesWithEncoderMX1508(float t_whellRadius, long t_resolutionCoderLeft,
 			long t_resolutionCoderRight, long t_countRotate1Inner,
 			long t_countRotate1Outer, unsigned int t_leftEncoderPin,
 			unsigned int t_rightEncoderPin);
 	void setEnginesPins(unsigned char t_leftPin1, unsigned char t_leftPin2,
 			unsigned char t_rightPin1, unsigned char t_rightPin2);
-	virtual ~EnginesWithEncoderMX1509();
+	virtual ~EnginesWithEncoderMX1508();
 	virtual void enableEnginesPins() = 0; //depends of expander and command driver
 protected:
 	unsigned char getLeftEnginePin1();
@@ -46,4 +46,4 @@ private:
 	unsigned char m_rightEnginePin2;
 };
 
-#endif /* ENGINES_ENGINESWITHENCODERMX1509_H_ */
+#endif /* ENGINES_ENGINESWITHENCODERMX1508_H_ */
