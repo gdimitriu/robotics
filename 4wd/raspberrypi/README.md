@@ -7,7 +7,7 @@ against objects in front and when it take left/right turn.
 Those projects have a 4wd chasy drive train:
 -   4 independent engines with encoders
 -   pca9685 pwm driver on I2C from https://www.adafruit.com/product/815
--   2 micro motor drivers MX1509
+-   2 micro motor drivers MX1508
 -   4 U-shape sensors for encoder
 -   LM7005 for powering servo from 7.4V power pack
 -   AMS1117 for powering moving sensors

@@ -34,8 +34,8 @@ byte index = 0; // Index into array; where to store the character
 
 #define RIGHT_ENGINE_PIN 5
 #define LEFT_ENGINE_PIN 6
-#define FRONT_ENGINE_PIN 9
-#define BACK_ENGINE_PIN 10
+#define FRONT_ENGINE_PIN 10
+#define BACK_ENGINE_PIN 11
 
 #define FRONT_ENGINE_IDX 0
 #define RIGHT_ENGINE_IDX 1

@@ -33,13 +33,13 @@ char inData[20]; // Allocate some space for the string
 char inChar; // Where to store the character read
 byte index = 0; // Index into array; where to store the character
 
-#define RxD 2
+#define RxD 4
 #define TxD 3
 
 #define RIGHT_ENGINE_PIN 5
 #define LEFT_ENGINE_PIN 6
-#define FRONT_ENGINE_PIN 10
-#define BACK_ENGINE_PIN 11
+#define FRONT_ENGINE_PIN 11
+#define BACK_ENGINE_PIN 12
 
 #define FRONT_ENGINE_IDX 0
 #define RIGHT_ENGINE_IDX 1

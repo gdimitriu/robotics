@@ -18,10 +18,7 @@
  * along with Robotics; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
 */
-/**
- * this has to be done to not break arms.
- * https://stackoverflow.com/questions/26695670/attach-arduino-servo-without-moving
- */
+
 #include<Arduino.h>
 #include<Servo.h>
 #define servoPin_Gripper 12
