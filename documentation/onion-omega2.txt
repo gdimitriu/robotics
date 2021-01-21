@@ -1,0 +1,20 @@
+githubs:
+
+https://github.com/huxflux/onion_omega_gpio
+https://github.com/OnionIoT/i2c-exp-driver
+https://github.com/OnionIoT/gpioIrq
+https://github.com/OnionIoT/Onion-Docs/blob/master/Omega2/Documentation/Doing-Stuff/Arduino-Dock/Connecting-via-uart1.md
+https://github.com/cbrake/linux-serial-test/blob/master/linux-serial-test.c
+
+official documentation:
+
+https://docs.onion.io/omega2-docs/pin-multiplexing.html
+https://docs.onion.io/omega2-docs/uart1.html
+https://docs.onion.io/omega2-docs/pwm-expansion.html#pwm-expansion
+https://docs.onion.io/omega2-docs/pwm-expansion-c-library.html
+https://coolcomponents.co.uk/blogs/news/getting-started-with-the-onion-pwm-expansion
+https://electronics.stackexchange.com/questions/129961/how-to-get-the-pwm-frequency-and-duration-of-each-pulse
+https://docs.onion.io/omega2-docs/generating-pwm-signals.html
+https://community.onion.io/topic/3069/opkg-local-package-installation/2
+https://community.onion.io/topic/2830/building-kernel-modules-for-the-omega2/2
+
