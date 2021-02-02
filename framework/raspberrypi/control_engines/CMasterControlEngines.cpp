@@ -41,7 +41,7 @@ CMasterControlEngines::CMasterControlEngines(char *configFile,
 	CFactoryLogger *loggerFactory = new CFactoryLogger(settingsLoading);
 	m_logger = loggerFactory->createLogger(settingLogger);
 	char *type = settingsLoading->getLine();
-	if (strcmp("CFactoryEnginePCA9685EncMX1509", type) == 0) {
+	if (strcmp("CFactoryEnginePCA9685EncMX1508", type) == 0) {
 		m_factory = new CFactoryEnginePCA9685EncMX1508(settingsLoading, pwmDriver, m_logger);
 	} else {
 		m_factory = NULL;
