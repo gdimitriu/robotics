@@ -1,6 +1,7 @@
 //EEPROM ON I2C
 http://playground.arduino.cc/Code/I2CEEPROM
 http://kamilslab.com/2015/12/11/24lc256-eeprom-on-arduino/
+https://github.com/PaulStoffregen/SerialFlash
 
 //DIVERSE ON ARDUINO
 https://www.safaribooksonline.com/library/view/learning-c-for/9781787120099/ch09s03.html

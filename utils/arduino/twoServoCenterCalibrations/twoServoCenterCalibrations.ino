@@ -21,7 +21,7 @@
 #include <Servo.h>
 
 #define SERVO1_PIN 5
-#define SERVO2_PIN 6
+#define SERVO2_PIN 4
 Servo firstServo;
 Servo secondServo;
 char inData[20]; // Allocate some space for the string

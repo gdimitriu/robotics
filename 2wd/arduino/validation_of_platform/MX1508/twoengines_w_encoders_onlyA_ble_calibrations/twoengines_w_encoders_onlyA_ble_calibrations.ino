@@ -348,7 +348,7 @@ void moveForward(float distance) {
   go(speedValue,speedValue);
   boolean stopLeft = false;
   boolean stopRight = false;
-  while(!stopLeft && !stopRight){
+  while(!stopLeft || !stopRight){
     if (!stopLeft) {
       if((distance - currentLeftPosition) > 0.2){
         currentLeftPosition = left_encoder_count/PPI_left;
@@ -385,7 +385,7 @@ void moveBackward(float distance) {
   go(-speedValue,-speedValue);
   boolean stopLeft = false;
   boolean stopRight = false;
-  while(!stopLeft && !stopRight){
+  while(!stopLeft || !stopRight){
     if (!stopLeft) {
       if((distance - currentLeftPosition) > 0.2){
         currentLeftPosition = left_encoder_count/PPI_left;

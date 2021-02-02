@@ -271,7 +271,7 @@ void go(int speedLeft, int speedRight) {
 }
 
 void rotate90Left() {
-  go(-sppedValue,speedValue);
+  go(-speedValue,speedValue);
   while(left_encoder_A_count < countRotate90Left && right_encoder_A_count < countRotate90Right);
   go(0,0);
 }

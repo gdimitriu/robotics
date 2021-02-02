@@ -289,7 +289,7 @@ void moveForward(float distance) {
   go(255,255);
   boolean stopLeft = false;
   boolean stopRight = false;
-  while(!stopLeft && !stopRight){
+  while(!stopLeft || !stopRight){
     if (!stopLeft) {
       if((distance - currentLeftPosition) > 0.2){
         currentLeftPosition = left_encoder_A_count/PPI_left;
@@ -319,7 +319,7 @@ void moveBackward(float distance) {
   go(-255,-255);
   boolean stopLeft = false;
   boolean stopRight = false;
-  while(!stopLeft && !stopRight){
+  while(!stopLeft || !stopRight){
     if (!stopLeft) {
       if((distance - currentLeftPosition) > 0.2){
         currentLeftPosition = left_encoder_A_count/PPI_left;

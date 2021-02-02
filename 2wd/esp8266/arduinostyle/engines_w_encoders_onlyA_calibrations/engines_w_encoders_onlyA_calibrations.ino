@@ -1,6 +1,8 @@
 /*
- * Engine with encoder phase A using L298N driver and extender SX1509 calibration.
- * Copyright 2019 Gabriel Dimitriu
+ * Calibration of engines using encoder phase A and MX1508 driver.
+ * This is just porting from arduino.
+ *
+ * Copyright 2021 Gabriel Dimitriu
  * 
  * This file is part of Robotics project.
 
@@ -18,20 +20,15 @@
  * along with Robotics; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  */
-#include <EnableInterrupt.h>
-#include <Wire.h>
-#include <SparkFunSX1509.h>
-#define LEFT_MOTOR_PIN1 0
-#define LEFT_MOTOR_PIN2 1
-#define LEFT_MOTOR_SPEED 2
-#define RIGHT_MOTOR_PIN1 3
-#define RIGHT_MOTOR_PIN2 4
-#define RIGHT_MOTOR_SPEED 5
-#define LEFT_ENCODER_A 3
-#define RIGHT_ENCODER_A 12
+#define LEFT_MOTOR_PIN1 14
+#define LEFT_MOTOR_PIN2 12
+#define RIGHT_MOTOR_PIN1 13
+#define RIGHT_MOTOR_PIN2 15
+#define LEFT_ENCODER_A 4
+#define RIGHT_ENCODER_A 5
 float whellRadius = 3;
 long resolutionCodor_left = 1452;
-long resolutionCodor_right = 1468;
+long resolutionCodor_right = 1460;
 const float pi = 3.14f;
 float PPI_left = resolutionCodor_left/(2*pi*whellRadius);
 float PPI_right = resolutionCodor_right/(2*pi*whellRadius);
@@ -43,42 +40,36 @@ long countRotate1Outer = 10;
 bool isValidInput;
 char inData[20]; // Allocate some space for the string
 char inChar; // Where to store the character read
-byte index = 0; // Index into array; where to store the character
+int indexArray = 0; // indexArray into array; where to store the character
 volatile long left_encoder_A_count = 0;
 volatile long right_encoder_A_count = 0;
 float currentLeftPosition = 0.0f;
 float currentRightPosition = 0.0f;
-long speedValue = 1; //max speed on s1509 ... slower max 200
 
-SX1509 extender;
+long speedValue = 1023;
 
 /*
  * isr for encoder pins
  */
-void isrLeftEncoderA() {
+ICACHE_RAM_ATTR void isrLeftEncoderA() {
   left_encoder_A_count++;
 }
 
-void isrRightEncoderA() {
+ICACHE_RAM_ATTR void isrRightEncoderA() {
   right_encoder_A_count++;
 }
 
 void setup() {
-  Serial.begin(9600);
-  //Wire.begin();
-  extender.begin(0x3E);
-  extender.clock(INTERNAL_CLOCK_2MHZ,7);
-  extender.pinMode(LEFT_MOTOR_PIN1, OUTPUT);
-  extender.pinMode(LEFT_MOTOR_PIN2, OUTPUT);
-  extender.pinMode(LEFT_MOTOR_SPEED, ANALOG_OUTPUT);
-  extender.pinMode(RIGHT_MOTOR_PIN1, OUTPUT);
-  extender.pinMode(RIGHT_MOTOR_PIN2, OUTPUT);
-  extender.pinMode(RIGHT_MOTOR_SPEED, ANALOG_OUTPUT);
+  Serial.begin(74880);
+  isValidInput = false;  
+  pinMode(LEFT_MOTOR_PIN1, OUTPUT);
+  pinMode(LEFT_MOTOR_PIN2, OUTPUT);
+  pinMode(RIGHT_MOTOR_PIN1, OUTPUT);
+  pinMode(RIGHT_MOTOR_PIN2, OUTPUT);
   pinMode(LEFT_ENCODER_A, INPUT_PULLUP);
-  pinMode(RIGHT_ENCODER_A, INPUT_PULLUP);
-  isValidInput = false;
-  enableInterrupt(LEFT_ENCODER_A, isrLeftEncoderA, RISING);
-  enableInterrupt(RIGHT_ENCODER_A, isrRightEncoderA, RISING);
+  pinMode(RIGHT_ENCODER_A, INPUT_PULLUP);  
+  attachInterrupt(digitalPinToInterrupt(LEFT_ENCODER_A), isrLeftEncoderA, RISING);
+  attachInterrupt(digitalPinToInterrupt(RIGHT_ENCODER_A), isrRightEncoderA, RISING);
 }
 
 boolean isValidNumber(char *data, int size)
@@ -100,9 +91,9 @@ void resetCounters() {
 }
 
 void loop() {
-  Serial.println( "--------------------------------------------------------------------------" );
-  Serial.println( "Calibration of engines with encoder using driver L298N and extender SX1509");
-  Serial.println( "--------------------------------------------------------------------------" );
+  Serial.println( "-----------------------------------------------------" );
+  Serial.println( "Calibration of engines with encoder using driver MX1508");
+  Serial.println( "-----------------------------------------------------" );
   Serial.println( "MENU:" );
   Serial.println( "s# Stop" );
   Serial.println( "p# print encoder counting");
@@ -115,35 +106,36 @@ void loop() {
   Serial.println( "lxx# rotate xx degree left");
   Serial.println( "rxx# rotate xx degree right");
   Serial.println( "vxx# change speed value");
+  Serial.println( "xaa# change frequency");
   Serial.println( "-----------------------------" );
    do {
-    for (index = 0; index < 20; index++)
+    for (indexArray = 0; indexArray < 20; indexArray++)
     {
-       inData[index] = '\0';
+       inData[indexArray] = '\0';
     }
     inChar = '0';
-    index = 0;
+    indexArray = 0;
     while(inChar != '#') {
       while( !Serial.available() )
         ; // LOOP...
       while(Serial.available() > 0) // Don't read unless
                                                  // there you know there is data
       {
-          if(index < 19) // One less than the size of the array
+          if(indexArray < 19) // One less than the size of the array
           {
               inChar = Serial.read(); // Read a character
-              inData[index] = inChar; // Store it
-              index++; // Increment where to write next
-              inData[index] = '\0'; // Null terminate the string
+              inData[indexArray] = inChar; // Store it
+              indexArray++; // Increment where to write next
+              inData[indexArray] = '\0'; // Null terminate the string
           }
       }
     }
-    if (index > 0) {
-      inData[index-1] = '\0';
+    if (indexArray > 0) {
+      inData[indexArray-1] = '\0';
     }
     if (strcmp(inData,"f") == 0) {
       Serial.println("forward");
-      go(speedValue, speedValue);
+      go(255, 255);
       delay(1000);
       isValidInput = true;
     } else if (strcmp(inData,"s") == 0) {
@@ -172,7 +164,7 @@ void loop() {
         for (int i = 0 ; i < strlen(inData); i++) {
           inData[i]=inData[i+1];
         }
-        if (!isValidNumber(inData, index - 2)) {
+        if (!isValidNumber(inData, indexArray - 2)) {
           isValidInput = false;
           break;
         }
@@ -186,7 +178,7 @@ void loop() {
           for (int i = 0 ; i < strlen(inData); i++) {
             inData[i]=inData[i+1];
           }
-          if (!isValidNumber(inData, index - 2)) {
+          if (!isValidNumber(inData, indexArray - 2)) {
           isValidInput = false;
           break;
         }
@@ -200,7 +192,7 @@ void loop() {
         for (int i = 0 ; i < strlen(inData); i++) {
           inData[i]=inData[i+1];
         }
-        if (!isValidNumber(inData, index - 2)) {
+        if (!isValidNumber(inData, indexArray - 2)) {
          isValidInput = false;
           break;
         }
@@ -214,7 +206,7 @@ void loop() {
         for (int i = 0 ; i < strlen(inData); i++) {
           inData[i]=inData[i+1];
         }
-        if (!isValidNumber(inData, index - 2)) {
+        if (!isValidNumber(inData, indexArray - 2)) {
           isValidInput = false;
           break;
         }
@@ -228,12 +220,12 @@ void loop() {
         for (int i = 0 ; i < strlen(inData); i++) {
           inData[i]=inData[i+1];
         }
-        if (!isValidNumber(inData, index - 2)) {
+        if (!isValidNumber(inData, indexArray - 2)) {
           isValidInput = false;
           break;
         }
-        if (atol(inData) > 255 || atol(inData) < 0) {
-          Serial.println("Speed value should be between 0 and 255");
+        if (atol(inData) < 0) {
+          Serial.println("Speed value should be positive");
           isValidInput = false;
           break;
         }
@@ -242,6 +234,24 @@ void loop() {
         Serial.print(" from ");
         Serial.println(speedValue);
         speedValue = atol(inData);
+        isValidInput = true;
+      } else if (inData[0] == 'x') {
+        //remove x from command
+        for (int i = 0 ; i < strlen(inData); i++) {
+          inData[i]=inData[i+1];
+        }
+        if (!isValidNumber(inData, indexArray - 2)) {
+          isValidInput = false;
+          break;
+        }
+        if (atol(inData) < 0) {
+          Serial.println("Frequency value should be positive");
+          isValidInput = false;
+          break;
+        }
+        Serial.print("Change frequency ");
+        Serial.println(atol(inData));
+        analogWriteFreq(atol(inData));
         isValidInput = true;
       } else {
         isValidInput = false;
@@ -254,33 +264,28 @@ void loop() {
 
 void go(int speedLeft, int speedRight) {
   if (speedLeft == 0 && speedRight == 0 ) {
-    extender.digitalWrite(LEFT_MOTOR_PIN1,LOW);
-    extender.digitalWrite(LEFT_MOTOR_PIN2,LOW);
-    extender.analogWrite(LEFT_MOTOR_SPEED, LOW);
-    extender.digitalWrite(RIGHT_MOTOR_PIN1,LOW);
-    extender.digitalWrite(RIGHT_MOTOR_PIN2,LOW);
-    extender.analogWrite(RIGHT_MOTOR_SPEED, LOW);
+    digitalWrite(LEFT_MOTOR_PIN1,LOW);
+    digitalWrite(LEFT_MOTOR_PIN2,LOW);
+    digitalWrite(RIGHT_MOTOR_PIN1,LOW);
+    digitalWrite(RIGHT_MOTOR_PIN2,LOW);
     return;
   }
   if (speedLeft > 0) {
-    extender.digitalWrite(LEFT_MOTOR_PIN1,LOW);
-    extender.digitalWrite(LEFT_MOTOR_PIN2,HIGH);
-    extender.analogWrite(LEFT_MOTOR_SPEED, speedLeft);
+    analogWrite(LEFT_MOTOR_PIN1, speedLeft);
+    digitalWrite(LEFT_MOTOR_PIN2,LOW);
   } 
   else {
-    extender.digitalWrite(LEFT_MOTOR_PIN1,HIGH);
-    extender.digitalWrite(LEFT_MOTOR_PIN2,LOW);
-    extender.analogWrite(LEFT_MOTOR_SPEED, -speedLeft);
+    digitalWrite(LEFT_MOTOR_PIN1,LOW);
+    analogWrite(LEFT_MOTOR_PIN2, -speedLeft);
   }
  
   if (speedRight > 0) {
-    extender.digitalWrite(RIGHT_MOTOR_PIN1,LOW);
-    extender.digitalWrite(RIGHT_MOTOR_PIN2,HIGH);
-    extender.analogWrite(RIGHT_MOTOR_SPEED, speedRight);
+    analogWrite(RIGHT_MOTOR_PIN1, speedRight);
+    digitalWrite(RIGHT_MOTOR_PIN2,LOW);
+    
   }else {
-    extender.digitalWrite(RIGHT_MOTOR_PIN1,HIGH);
-    extender.digitalWrite(RIGHT_MOTOR_PIN2,LOW);
-    extender.analogWrite(RIGHT_MOTOR_SPEED, -speedRight);
+    digitalWrite(RIGHT_MOTOR_PIN1,LOW);
+    analogWrite(RIGHT_MOTOR_PIN2, -speedRight);
   }
 }
 
@@ -369,13 +374,11 @@ void moveBackward(float distance) {
 }
 
 void stopLeftEngine() {
-    extender.digitalWrite(LEFT_MOTOR_PIN1,LOW);
-    extender.digitalWrite(LEFT_MOTOR_PIN2,LOW);
-    extender.analogWrite(LEFT_MOTOR_SPEED, LOW);
+    analogWrite(LEFT_MOTOR_PIN1,1023);
+    analogWrite(LEFT_MOTOR_PIN2,1023);
 }
 
 void stopRightEngine() {
-    extender.digitalWrite(RIGHT_MOTOR_PIN1,LOW);
-    extender.digitalWrite(RIGHT_MOTOR_PIN2,LOW);
-    extender.analogWrite(RIGHT_MOTOR_SPEED, LOW);
+    analogWrite(RIGHT_MOTOR_PIN1,1023);
+    analogWrite(RIGHT_MOTOR_PIN2,1023);
 }

@@ -171,7 +171,7 @@ void moveLinear(float distance) {
   }
   boolean stopLeft = false;
   boolean stopRight = false;
-  while(!stopLeft && !stopRight){
+  while(!stopLeft || !stopRight){
     if (!stopLeft) {
       if((distance - currentLeftFrontPosition) > 0.2){
         currentLeftFrontPosition = left_front_encoder_count/PPI_front_left;
