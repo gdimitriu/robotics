@@ -111,7 +111,7 @@ void loop()
           isValidInput = false;
           break;
         }
-        Serial.print("Moving horinzontally at ");
+        Serial.print("Moving horizontally at ");
         Serial.println(atol(inData));
         hValue = atol(inData);
         pixy.setServos(hValue,vValue);

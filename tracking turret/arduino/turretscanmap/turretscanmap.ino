@@ -39,7 +39,7 @@ boolean seekEnemy = false;
 #define ERROR_MARGIN 10
 SerialFlashFile file;
 unsigned long Len_mm  = 0;
-NewPing rightSensor(RightTrigPin,RightEchoPin,4000);
+NewPing rightSensor(LeftTrigPin,LeftEchoPin,400);
 void setup()
 {  //Initialize
 // #ifdef DEBUG_SERIAL
@@ -60,10 +60,10 @@ void setup()
         }
     }
     if (SerialFlash.exists("map.dat")) {
-      file = SerialFlash.open("map.dat");
+      file = SerialFlash.open("map.dat");      
+      file.erase();
       file.seek(0);
-//      file.erase();
-      hasBeenRun = true;
+      hasBeenRun = false;
     } else {
       SerialFlash.createErasable("map.dat",2520);
       file = SerialFlash.open("map.dat");
@@ -100,8 +100,8 @@ void loop()
       for(int j = 0; j < 180; j=j+2) {
         uint16_t rightDistance;
         horizontalServo.write(j);
-//        rightDistance = NewPing::convert_cm(rightSensor.ping_median(3));
-        rightDistance = rightSensor.ping_cm();
+        rightDistance = NewPing::convert_cm(rightSensor.ping_median(3));
+//        rightDistance = rightSensor.ping_cm();
         uint16_t mapDistance = 0;
         file.read(&mapDistance,2);
         int16_t diff = mapDistance-rightDistance;
