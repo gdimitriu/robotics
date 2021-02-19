@@ -161,12 +161,10 @@ void makeMove() {
 
 void setup() 
 {
-  Serial.begin(74880);  
+  Serial.begin(38400);  
   BTSerial.begin(38400);
   
-  //init the PWM driver
   Wire.begin();
-//  Wire.setClock(40000);    
   pixy.init();
   pinMode(LEFT_MOTOR_PIN1, OUTPUT);
   pinMode(LEFT_MOTOR_PIN2, OUTPUT);
@@ -175,7 +173,7 @@ void setup()
   attachPinChangeInterrupt(RxD, neoSSerial1ISR, CHANGE);
   BTSerial.println("Starting...");
   Serial.print("Starting...\n");
-//  pixy.setServos(380,500);
+//  pixy.setServos(380,500); //this if for barcodes in front on posts
   pixy.setServos(380,0);
   go(0,0);  
   // change to the line_tracking program.  Note, changeProg can use partial strings, so for example,
@@ -184,6 +182,9 @@ void setup()
   pixy.changeProg("line");
   autoCalibrationDone = false;
   cleanupBT = false;
+  // Turn off both laps upper and lower
+  pixy.setLamp(0, 0);
+
 }
 int8_t droidDirection = 0;
 
@@ -199,9 +200,6 @@ void makeCleanup() {
 void loop()
 {
   int8_t res;
-  // Turn off both laps upper and lower
-  pixy.setLamp(0, 0);
-
   autocalibrationCamera();
   while(BTSerial.available() > 0) // Don't read unless there you know there is data
   {
