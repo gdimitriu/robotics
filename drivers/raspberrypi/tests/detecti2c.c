@@ -37,15 +37,11 @@ int main(int argc, char **argv) {
 	} else {
 		printf("I2C Scanner\n");
 		int nDevices  = 0;
-		int address, error;
+		int address;
 		for(address = 1; address < 127; address++) {
 			int handle = i2cOpen(atoi(argv[1]), address, 0);
-			printf("Device found at adress 0x");
-			if( handle > 0 && i2cClose(handle)) {
-				if (address < 16) {
-					printf("0");
-				}
-				printf("%x %d\n", address, address);
+			if( (handle > 0) && (i2cClose(handle) == 0)) {
+				printf("Device found at address 0x%x %d\n", address, address);
 				nDevices++;
 			}
 		}

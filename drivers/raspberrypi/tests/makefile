@@ -8,6 +8,7 @@ EXECUTABLES = led_gpio detecti2c trigger_gpio ble_serial_receive ble_serial_sndr
 all: $(EXECUTABLES)
 	cd isr_cpp && make
 	cd camera && make
+	cd mpu6050 && make
 
 led_gpio:led_gpio.c
 	$(CC) -fPIC -o led_gpio led_gpio.c $(LIBS) $(INCLUDES)
@@ -41,3 +42,4 @@ clean:
 	done
 	cd isr_cpp && make clean
 	cd camera && make clean
+	cd mpu6050 && make clean
