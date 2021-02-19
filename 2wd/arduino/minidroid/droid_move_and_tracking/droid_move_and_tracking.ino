@@ -161,10 +161,10 @@ void printMenuOnBLE() {
   BTSerial.println( "A# autocalibration of pixy\n");
   BTSerial.println( "a# auto mode\n");
   BTSerial.println( "pxx# position of camera -1 down 0 front\n");
-  BTSerial.println( "fxxx# full forward with xxx power util stop command\n");
-  BTSerial.println( "bxxx# move backward with xxx power until stop command\n");
-  BTSerial.println( "lxxx# rotate left with xxx power until stop command\n");
-  BTSerial.println( "rxxx# rotate right with xxx power until stop command\n");
+  BTSerial.println( "fxxx# move forward with xxx power util stop\n");
+  BTSerial.println( "bxxx# move backward with xxx power until stop\n");
+  BTSerial.println( "lxxx# rotate left with xxx power until stop\n");
+  BTSerial.println( "rxxx# rotate right with xxx power until stop\n");
   BTSerial.println( "-----------------------------\n" );
 }
 
