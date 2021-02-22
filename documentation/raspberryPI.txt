@@ -1,0 +1,36 @@
+//crosscompiling
+//working
+https://wiki.debian.org/QemuUserEmulation
+https://github.com/Yadoms/yadoms/wiki/Cross-compile-for-raspberry-PI
+https://deardevices.com/2019/04/18/how-to-crosscompile-raspi/
+https://stackoverflow.com/questions/19162072/how-to-install-the-raspberry-pi-cross-compiler-on-my-linux-host-machine
+
+//not tested
+https://medium.com/@au42/the-useful-raspberrypi-cross-compile-guide-ea56054de187
+https://blog.kitware.com/cross-compiling-for-raspberry-pi/
+https://www.acmesystems.it/arm9_toolchain
+https://askubuntu.com/questions/250696/how-to-cross-compile-for-arm
+https://github.com/UvinduW/Cross-Compiling-Qt-for-Raspberry-Pi-4
+https://www.96boards.org/documentation/guides/crosscompile/commandline.html
+
+//gpio
+http://abyz.me.uk/rpi/pigpio/
+http://abyz.me.uk/rpi/pigpio/cif.html
+http://abyz.me.uk/rpi/pigpio/download.html
+https://www.raspberrypi.org/documentation/usage/gpio/README.md
+https://www.raspberrypi.org/documentation/hardware/raspberrypi/gpio/README.md
+http://www.mosaic-industries.com/embedded-systems/microcontroller-projects/raspberry-pi/gpio-pin-electrical-specifications
+
+//diverse
+https://www.raspberrypi.org/forums/viewtopic.php?t=2376
+https://raspberrypi.stackexchange.com/questions/63519/power-consumption-of-pi-zero-w
+
+https://www.raspberrypi.org/documentation/remote-access/ssh/
+https://www.raspberrypi.org/forums/viewtopic.php?t=269072
+
+//raspberryPI 4
+https://blogs.oracle.com/javamagazine/getting-started-with-javafx-on-raspberry-pi?source=:em:nw:mt::RC_WWMK200429P00043:NSL400076643
+
+
+//gpio
+http://wiringpi.com/download-and-install/
