@@ -32,10 +32,12 @@
 #define RIGHT_MOTOR_PIN2 11
 
 #define BLE_DEBUG_MODE true
+#define BLE_DEBUG_MODE_MOVE true
 
 #define TURN_90 1200
 #define MAX_CAMERA_BRIGHTNESS 255
 #define MAX_POWER_ENGINE 255
+#define MIN_POWER_ENGINE 150
 
 //for communication
 bool isValidInput;
@@ -49,12 +51,19 @@ bool isTracking = false;
 bool isLampOn = false;
 bool isProgramChanged = true;
 bool isAutoMode = false;
+bool isLineTracking = false;
 int tempIValue;
 int8_t droidDirection = 0;
+
 Pixy2I2C pixy;
 PIDLoop panLoop(-300, 0, -5, true);
 PIDLoop tiltLoop(-400, 0, -5, true);
+
 NeoSWSerial BTSerial(RxD, TxD);
+
+PIDLoop headingLoop(500, 0, 0, true);
+
+PIDLoop trackPanDroidLoop(500,0,0,true);
 
 void neoSSerial1ISR()
 {
@@ -70,7 +79,7 @@ void go(int speedLeft, int speedRight) {
     digitalWrite(LEFT_MOTOR_PIN2,LOW);
     digitalWrite(RIGHT_MOTOR_PIN1,LOW);
     digitalWrite(RIGHT_MOTOR_PIN2,LOW);
-#ifdef SERIAL_DEBUG_MODE    
+#ifdef BLE_DEBUG_MODE_MOVE    
     BTSerial.println("All on zero");
 #endif
     return;
@@ -78,14 +87,14 @@ void go(int speedLeft, int speedRight) {
   if (speedLeft > 0) {
     analogWrite(LEFT_MOTOR_PIN1, speedLeft);
     digitalWrite(LEFT_MOTOR_PIN2,LOW);
-#ifdef BLE_DEBUG_MODE
+#ifdef BLE_DEBUG_MODE_MOVE
     BTSerial.print("Left "); BTSerial.print(speedLeft); BTSerial.print(" , "); BTSerial.println(0);
 #endif
   } 
   else {
     digitalWrite(LEFT_MOTOR_PIN1,LOW);
     analogWrite(LEFT_MOTOR_PIN2, -speedLeft);
-#ifdef BLE_DEBUG_MODE
+#ifdef BLE_DEBUG_MODE_MOVE
     BTSerial.print("Left "); BTSerial.print(0); BTSerial.print(" , "); BTSerial.println(-speedLeft);
 #endif
   }
@@ -93,13 +102,13 @@ void go(int speedLeft, int speedRight) {
   if (speedRight > 0) {
     analogWrite(RIGHT_MOTOR_PIN1, speedRight);
     digitalWrite(RIGHT_MOTOR_PIN2,LOW);
-#ifdef BLE_DEBUG_MODE
+#ifdef BLE_DEBUG_MODE_MOVE
     BTSerial.print("Right "); BTSerial.print(speedRight); BTSerial.print(" , "); BTSerial.println(0);
 #endif
   }else {
     digitalWrite(RIGHT_MOTOR_PIN1,LOW);
     analogWrite(RIGHT_MOTOR_PIN2, -speedRight);
-#ifdef BLE_DEBUG_MODE
+#ifdef BLE_DEBUG_MODE_MOVE
     BTSerial.print("Right "); BTSerial.print(0); BTSerial.print(" , "); BTSerial.println(-speedRight);
 #endif
   }
@@ -157,14 +166,15 @@ void printMenuOnBLE() {
   BTSerial.println( "s# Stop\n" );
   BTSerial.println( "T# tracking on\n");
   BTSerial.println( "t# tracking off\n");
-  BTSerial.println( "L# lamp on/off\n");
+  BTSerial.println( "l# lamp on/off\n");
+  BTSerial.println( "L# line tracking on/off\n");
   BTSerial.println( "A# autocalibration of pixy\n");
   BTSerial.println( "a# auto mode\n");
   BTSerial.println( "pxx# position of camera -1 down 0 front\n");
-  BTSerial.println( "fxxx# move forward with xxx power util stop\n");
-  BTSerial.println( "bxxx# move backward with xxx power until stop\n");
-  BTSerial.println( "lxxx# rotate left with xxx power until stop\n");
-  BTSerial.println( "rxxx# rotate right with xxx power until stop\n");
+  BTSerial.println( "fxx# move forward with xx power util stop\n");
+  BTSerial.println( "bxx# move backward with xx power until stop\n");
+  BTSerial.println( "lxx# rotate left with xx power until stop\n");
+  BTSerial.println( "rxx# rotate right with xx power until stop\n");
   BTSerial.println( "-----------------------------\n" );
 }
 
@@ -212,9 +222,20 @@ void makeMove() {
     tiltLoop.reset();
     pixy.setServos(panLoop.m_command, tiltLoop.m_command);  
     isTracking = true;
+  } else if(strcmp(inData,"L") == 0) {
+    if (isLineTracking) {
+      isLineTracking = false;
+      isStopped = true;
+      go(0,0);
+    } else {
+      isLineTracking = true;
+      isStopped = false;
+      isTracking = false;
+      pixy.changeProg("line");
+    }
   } else if (strcmp(inData,"h") == 0) {
     printMenuOnBLE();
-  } else if (strcmp(inData,"L") == 0) {
+  } else if (strcmp(inData,"l") == 0) {
     if (isLampOn) {
       // Turn off both laps upper and lower
       pixy.setLamp(0, 0);
@@ -327,6 +348,7 @@ void setup()
   pixy.setLamp(0, 0);
   isProgramChanged = true;
   isAutoMode = false;
+  isLineTracking = false;
 }
 
 void makeCleanup() {
@@ -385,6 +407,20 @@ void loop()
   
       // set pan and tilt servos  
       pixy.setServos(panLoop.m_command, tiltLoop.m_command);
+      if (panLoop.m_command < 10 || panLoop.m_command > 990) {
+        int32_t error  = (int32_t)pixy.frameWidth/2 - (int32_t)pixy.ccc.blocks[0].m_x;
+        trackPanDroidLoop.update(error);
+        int left, right;
+        if (panLoop.m_command < 10) {
+          left = trackPanDroidLoop.m_command;
+          right = -trackPanDroidLoop.m_command;
+        } else if (panLoop.m_command > 990) {
+          left = -trackPanDroidLoop.m_command;
+          right = trackPanDroidLoop.m_command;
+        }
+        left += MIN_POWER_ENGINE;
+        right += MIN_POWER_ENGINE;
+      }
     } else // no object detected, go into reset state
     {
       panLoop.reset();
@@ -430,35 +466,33 @@ void loop()
           BTSerial.println(droidDirection);
 #endif
         }
-    }
-    // code==5 is our right-turn sign
-    else if (pixy.line.barcodes->m_code==5)
-    {
+      }
+      // code==5 is our right-turn sign
+      else if (pixy.line.barcodes->m_code==5) {
 #if BLE_DEBUG_MODE      
-      BTSerial.println("right");
+        BTSerial.println("right");
 #endif
-      go(MAX_POWER_ENGINE,-MAX_POWER_ENGINE);
-      delay(TURN_90);
-      go(0,0);
-      if (droidDirection == 1) {
+        go(MAX_POWER_ENGINE,-MAX_POWER_ENGINE);
+        delay(TURN_90);
+        go(0,0);
+        if (droidDirection == 1) {
 #if BLE_DEBUG_MODE
-        BTSerial.println("resuming forward");
+          BTSerial.println("resuming forward");
 #endif
-        go(MAX_POWER_ENGINE,MAX_POWER_ENGINE);
-      } else if (droidDirection == 2) {
+          go(MAX_POWER_ENGINE,MAX_POWER_ENGINE);
+        } else if (droidDirection == 2) {
 #if BLE_DEBUG_MODE
-        BTSerial.println("resuming backward");
+          BTSerial.println("resuming backward");
 #endif
-        go(-MAX_POWER_ENGINE,-MAX_POWER_ENGINE);
+          go(-MAX_POWER_ENGINE,-MAX_POWER_ENGINE);
       } else {
 #if BLE_DEBUG_MODE
-        BTSerial.println(droidDirection);
+          BTSerial.println(droidDirection);
 #endif
       }
     }
     //code==1 is our stop sign for 10000 ms
-    else if (pixy.line.barcodes->m_code==1)
-    {
+    else if (pixy.line.barcodes->m_code==1) {
 #if BLE_DEBUG_MODE
       BTSerial.println("stop");
 #endif
@@ -466,10 +500,9 @@ void loop()
       delay(10000);
     }
     //code==2 is our forward sign
-    else if (pixy.line.barcodes->m_code==2)
-    {
+    else if (pixy.line.barcodes->m_code==2) {
 #if BLE_DEBUG_MODE
-      Serial.println("forward");
+       Serial.println("forward");
 #endif
       if (droidDirection != 1) {
         go(0,0);
@@ -481,7 +514,7 @@ void loop()
     else if (pixy.line.barcodes->m_code==3)
     {
 #if BLE_DEBUG_MODE
-      Serial.println("backward");
+      BTSerial.println("backward");
 #endif
       if (droidDirection != 2) {
         go(0,0);
@@ -489,6 +522,57 @@ void loop()
       droidDirection = 2;//backward
       go(-MAX_POWER_ENGINE,-MAX_POWER_ENGINE);
     }
+   }
   }
+  if (isLineTracking) {
+    int8_t res;
+    int32_t error;
+    int left, right;
+    // Get latest data from Pixy, including main vector, new intersections and new barcodes.
+    res = pixy.line.getMainFeatures();
+    // If error or nothing detected, stop motors
+    if (res<=0) {
+      go(0,0);
+      return;
+    }
+    if (res&LINE_VECTOR) {
+      // Calculate heading error with respect to m_x1, which is the far-end of the vector,
+      // the part of the vector we're heading toward.
+      error = (int32_t)pixy.line.vectors->m_x1 - (int32_t)(pixy.frameWidth/2);
+     
+      //Perform PID calcs on heading error
+      headingLoop.update(error);
+      // separate heading into left and right wheel velocities.
+      left = headingLoop.m_command;
+      right = -headingLoop.m_command;
+      // If vector is heading away from us (arrow pointing up), things are normal.
+      if (pixy.line.vectors->m_y0 > pixy.line.vectors->m_y1) {
+        // ... but slow down a little if intersection is present, so we don't miss it.
+        if (pixy.line.vectors->m_flags&LINE_FLAG_INTERSECTION_PRESENT)
+        {
+          left += MIN_POWER_ENGINE;
+          right += MIN_POWER_ENGINE;
+        } else // otherwise, pedal to the metal!
+        {
+          left += MAX_POWER_ENGINE;
+          right += MAX_POWER_ENGINE;
+        }
+      } else  // If the vector is pointing down, or down-ish, we need to go backwards to follow.
+      {
+        left -= MIN_POWER_ENGINE;
+        right -= MIN_POWER_ENGINE;  
+      }
+      go(left,right);  
+    }
+    if (res&LINE_BARCODE)
+    {
+      // code==0 is our left-turn sign
+      if (pixy.line.barcodes->m_code==0)
+        pixy.line.setNextTurn(90); // 90 degrees is a left turn 
+        // code==5 is our right-turn sign
+      else if (pixy.line.barcodes->m_code==5)
+        pixy.line.setNextTurn(-90); // -90 is a right turn 
+    }
+    delay(100);
   }
 }
