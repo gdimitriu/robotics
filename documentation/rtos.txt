@@ -1,0 +1,3 @@
+https://github.com/PacktPublishing/Mastering-Embedded-Linux-Programming-Second-Edition
+https://www.osrtos.com/rtos/rtems/
+https://devel.rtems.org/wiki

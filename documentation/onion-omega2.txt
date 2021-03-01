@@ -7,6 +7,7 @@ https://github.com/OnionIoT/Onion-Docs/blob/master/Omega2/Documentation/Doing-St
 https://github.com/cbrake/linux-serial-test/blob/master/linux-serial-test.c
 
 official documentation:
+https://coolcomponents.co.uk/blogs/news/getting-started-with-the-onion-pwm-expansion
 
 https://docs.onion.io/omega2-docs/pin-multiplexing.html
 https://docs.onion.io/omega2-docs/uart1.html
