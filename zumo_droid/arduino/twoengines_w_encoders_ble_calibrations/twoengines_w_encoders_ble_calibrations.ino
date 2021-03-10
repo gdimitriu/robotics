@@ -34,7 +34,7 @@
 #define LEFT_ENCODER 4
 #define RIGHT_ENCODER 12
 
-float whellRadius = 3;
+float whellRadius = 2;
 long resolutionCodor_left = 1452;
 long resolutionCodor_right = 1468;
 const float pi = 3.14f;
@@ -307,6 +307,7 @@ void loop() {
     }
   }
   if (inChar == '#') {
+     inData[index-1] = '\0';
      makeMove();
      return;
   } else if (cleanupBT) {
