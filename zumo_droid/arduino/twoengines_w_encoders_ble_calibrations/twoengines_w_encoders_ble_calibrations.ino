@@ -88,7 +88,8 @@ void printMenu() {
   BTSerial.println( "s# Stop" );
   BTSerial.println( "p# print encoder counting");
   BTSerial.println( "c# reset counters");
-  BTSerial.println( "f# full forward util stop command");
+  BTSerial.println( "f# forward util stop command");
+  BTSerial.println( "b# backward until stop command");
   BTSerial.println( "h# print help");
   BTSerial.println( "fxx# move forward xx cm");
   BTSerial.println( "bxx# move backward xx cm");
@@ -153,7 +154,20 @@ boolean makeMove() {
 #ifdef BLE_DEBUG_MODE        
       BTSerial.println("forward");
 #endif      
-      go(255, 255);
+      go(speedValue, speedValue);
+      delay(1000);
+      isValidInput = true;
+    } else if (strcmp(inData,"s") == 0) {
+#ifdef BLE_DEBUG_MODE      
+      BTSerial.println("stop");
+#endif      
+      go(0, 0);
+      isValidInput = true;
+    } else if (strcmp(inData,"b") == 0) {
+#ifdef BLE_DEBUG_MODE        
+      BTSerial.println("backward");
+#endif      
+      go(-speedValue, -speedValue);
       delay(1000);
       isValidInput = true;
     } else if (strcmp(inData,"s") == 0) {
