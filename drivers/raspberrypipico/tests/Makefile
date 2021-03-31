@@ -1,3 +1,3 @@
 all:
-	cd usb && cmake CMakeLists.txt && make
+	cd usb-echo && cmake CMakeLists.txt && make
 
