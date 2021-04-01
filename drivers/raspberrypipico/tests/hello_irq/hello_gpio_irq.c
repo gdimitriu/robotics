@@ -39,9 +39,6 @@ int main() {
     stdio_init_all();
     gpio_init(BUTTON_GPIO);
     gpio_set_dir(BUTTON_GPIO, GPIO_IN);
-    // We are using the button to pull down to 0v when pressed, so ensure that when
-    // unpressed, it uses internal pull ups. Otherwise when unpressed, the input will
-    // be floating.
     gpio_pull_down(BUTTON_GPIO);
 
     gpio_init(LED_PIN);
@@ -50,8 +47,6 @@ int main() {
     printf("Hello GPIO IRQ\n");
     gpio_set_irq_enabled_with_callback(BUTTON_GPIO, GPIO_IRQ_EDGE_RISE | GPIO_IRQ_EDGE_FALL, true, &gpio_callback);
 
-    // Everything after this point happens in the PWM interrupt handler, so we
-    // can twiddle our thumbs
     while (1)
           tight_loop_contents();
     return 0;
