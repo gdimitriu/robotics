@@ -10,8 +10,8 @@
 #include "hardware/gpio.h"
 
 static char event_str[128];
-#define LED_PIN 14
-#define BUTTON_GPIO 15
+#define LED_PIN 13
+#define BUTTON_GPIO 12
 
 /*
  * 3.3V to VCC rail
