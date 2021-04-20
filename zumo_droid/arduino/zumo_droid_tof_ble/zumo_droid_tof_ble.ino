@@ -43,8 +43,8 @@ long resolutionCodor_right = 1468;
 const float pi = 3.14f;
 float PPI_left = resolutionCodor_left/(2*pi*whellRadius);
 float PPI_right = resolutionCodor_right/(2*pi*whellRadius);
-long countRotate90Left= 841;
-long countRotate90Right= 830;
+long countRotate90Left= 920;
+long countRotate90Right= 920;
 long countRotate1Inner = 9;
 long countRotate1Outer = 10;
 
@@ -62,7 +62,9 @@ boolean cleanupBT;
 long speedValue = 255;
 long followDistance = 100; //10cm
 boolean followEnable = false;
-
+uint16_t collisionDistance = 100;//10cm 
+boolean enableAroundObject = false;
+boolean isIncollision = false;
 VL53L0X frontSensor;
 
 NeoSWSerial BTSerial(RxD, TxD);
@@ -89,8 +91,7 @@ void isrRightEncoder() {
 }
 
 uint16_t readDistance() {
-  uint16_t value = frontSensor.readRangeSingleMillimeters();
-  return value;
+  return frontSensor.readRangeSingleMillimeters();
 }
 
 void printMenu() {
@@ -111,6 +112,8 @@ void printMenu() {
   BTSerial.println( "vxx# change speed value");
   BTSerial.println( "Fxx# follow distance mm");
   BTSerial.println( "F# follow distance enable/disable");
+  BTSerial.println( "Sxx# set stop (collision) distance");
+  BTSerial.println( "c# enable around object");
   BTSerial.println( "-----------------------------" );
 }
 
@@ -132,6 +135,7 @@ void setup() {
   enableInterrupt(LEFT_ENCODER, isrLeftEncoder, RISING);
   enableInterrupt(RIGHT_ENCODER, isrRightEncoder, RISING);
   cleanupBT = false;
+  enableAroundObject = false;
   frontSensor.init();
   //frontSensor.setSignalRateLimit(0.1);
   frontSensor.setTimeout(100);
@@ -200,10 +204,15 @@ boolean makeMove() {
 #endif      
       followEnable = !followEnable;
       isValidInput = true;
+    } else if (strcmp(inData,"c") == 0) {
+      enableAroundObject = !enableAroundObject;
+      isValidInput = true;
+      if (enableAroundObject)
+        BTSerial.println("Enabled Around Object");
+      else
+        BTSerial.println("Disabled Around Object");
     } else if (strcmp(inData,"s") == 0) {
-#ifdef BLE_DEBUG_MODE      
       BTSerial.println("stop");
-#endif      
       go(0, 0);
       followEnable = false;
       isValidInput = true;
@@ -245,8 +254,14 @@ boolean makeMove() {
         BTSerial.print("Moving forward ");
         BTSerial.print(atof(inData));
         BTSerial.println(" cm");
-#endif        
-        moveForward(atof(inData));
+#endif  
+        float remainDistance = atof(inData) - moveForward(atof(inData));
+        delay(100);
+        if (remainDistance > 0 && isIncollision && enableAroundObject) {
+          remainDistance -=moveAroundObject();
+        }
+        delay(100);
+        moveForward(remainDistance);
         isValidInput = true;
       } else if (inData[0] == 'l') {
           //remove l from command
@@ -315,16 +330,14 @@ boolean makeMove() {
           makeCleanup(); 
           return false;
         }
-#ifdef BLE_DEBUG_MODE        
         BTSerial.print("Change speed ");
         BTSerial.print(atol(inData));
         BTSerial.print(" from ");
         BTSerial.println(speedValue);
-#endif        
         speedValue = atol(inData);
         isValidInput = true;
       } else if (inData[0] == 'F') {
-        //remove c from command
+        //remove F from command
         for (int i = 0 ; i < strlen(inData); i++) {
           inData[i]=inData[i+1];
         }
@@ -333,12 +346,26 @@ boolean makeMove() {
           makeCleanup();
           return false;
         }
-#ifdef BLE_DEBUG_MODE        
         BTSerial.print("Change follow distance ");
         BTSerial.print(atol(inData));
         BTSerial.print(" from ");
         BTSerial.println(followDistance);
-#endif        
+        followDistance = atol(inData);
+        isValidInput = true;
+      } else if (inData[0] == 'S') {
+        //remove S from command
+        for (int i = 0 ; i < strlen(inData); i++) {
+          inData[i]=inData[i+1];
+        }
+        if (!isValidNumber(inData, index - 2)) {
+          isValidInput = false;
+          makeCleanup();
+          return false;
+        }
+        BTSerial.print("Change collision distance ");
+        BTSerial.print(atol(inData));
+        BTSerial.print(" from ");
+        BTSerial.println(collisionDistance);
         followDistance = atol(inData);
         isValidInput = true;
       } else {
@@ -439,6 +466,52 @@ void go(int speedLeft, int speedRight) {
   }
 }
 
+float moveAroundObject() {
+  float movedLinear;
+  boolean isLeft =false;
+  rotate90Left();
+  delay(100);
+  uint16_t leftDistance = readDistance();
+  rotate90Right();
+  delay(100);
+  rotate90Right();
+  uint16_t rightDistance = readDistance();
+  if (leftDistance > rightDistance) {
+    rotate90Left();
+    delay(100);
+    rotate90Left();
+    delay(100);
+    isLeft = true;
+  } else {
+    isLeft = false;
+  }
+  moveForward(10);//10cm
+  delay(100);
+  if (isLeft) {
+    rotate90Right();
+  } else {
+    rotate90Left();
+  }
+  delay(100);
+  moveForward(10+collisionDistance/10);//10cm
+  delay(100);
+  if (isLeft) {
+    rotate90Right();
+  } else {
+    rotate90Left();
+  }
+  delay(100);
+  moveForward(10);//10cm
+  delay(100);
+  if(isLeft) {
+    rotate90Left();
+  } else {
+    rotate90Right();
+  }
+  delay(100);
+  return 10 + collisionDistance/10;
+}
+
 void rotate90Left() {
   //go to idle and reset counters
   go(0,0);
@@ -475,7 +548,8 @@ void rotateRightDegree(long nr) {
   go(0,0);
 }
 
-void moveForward(float distance) {
+
+float moveForward(float distance) {
   //go to idle and reset counters
   go(0,0);
   resetCounters();
@@ -483,6 +557,13 @@ void moveForward(float distance) {
   boolean stopLeft = false;
   boolean stopRight = false;
   while(!stopLeft || !stopRight){
+    if (collisionDistance >= readDistance()) {
+      stopLeftEngine();
+      stopRightEngine();
+      stopLeft = true;
+      stopRight=true;
+      isIncollision = true;
+    }
     if (!stopLeft) {
       if((distance - currentLeftPosition) > 0.2){
         currentLeftPosition = left_encoder_count/PPI_left;
@@ -511,8 +592,15 @@ void moveForward(float distance) {
   BTSerial.print(" leftPosition="); BTSerial.print(currentLeftPosition);
   BTSerial.print(" rightPosition="); BTSerial.println(currentRightPosition);
 #endif
+  float travelDistance = 0.0f;
+  if (currentLeftPosition < currentRightPosition) {
+    travelDistance = currentRightPosition; 
+  } else {
+    travelDistance = currentLeftPosition; 
+  }
   currentLeftPosition = 0;
   currentRightPosition = 0;
+  return travelDistance;
 }
 
 void moveBackward(float distance) {
@@ -522,7 +610,7 @@ void moveBackward(float distance) {
   go(-speedValue,-speedValue);
   boolean stopLeft = false;
   boolean stopRight = false;
-  while(!stopLeft || !stopRight){
+  while(!stopLeft || !stopRight){    
     if (!stopLeft) {
       if((distance - currentLeftPosition) > 0.2){
         currentLeftPosition = left_encoder_count/PPI_left;
