@@ -42,12 +42,11 @@ CCamera::CCamera(char * configLine, CLogger *settingLogger) {
 	else {
 		return;
 	}
-	m_pCamera = new raspicam::RaspiCam_Still();
-	m_pCamera->setWidth ( m_width);
-	m_pCamera->setHeight ( m_height);
-	m_pCamera->setISO(m_iso);
-	m_pCamera->setEncoding ( raspicam::RASPICAM_ENCODING_JPEG );
-	if ( !m_pCamera->open()) {
+	m_Camera.setWidth ( m_width);
+	m_Camera.setHeight ( m_height);
+	m_Camera.setISO(m_iso);
+	m_Camera.setEncoding ( raspicam::RASPICAM_ENCODING_JPEG );
+	if ( !m_Camera.open()) {
 		std::string message("Camera is missing on droid");
 		settingLogger->error(message);
 		m_isDisabled = true;
@@ -55,24 +54,14 @@ CCamera::CCamera(char * configLine, CLogger *settingLogger) {
 }
 
 CCamera::~CCamera() {
-	delete m_pCamera;
 }
 
 void CCamera::captureCameraImage(std::ofstream *pFile) {
 	if (m_isDisabled)
 		return;
-	if (m_pCamera->getWidth() != m_width || m_pCamera->getHeight() != m_height) {
-		delete m_pCamera;
-		m_pCamera = new raspicam::RaspiCam_Still();
-		m_pCamera->setWidth ( m_width);
-		m_pCamera->setHeight ( m_height);
-		m_pCamera->setISO(m_iso);
-		m_pCamera->setEncoding ( raspicam::RASPICAM_ENCODING_JPEG );
-		m_pCamera->open();
-	}
-	unsigned int length = m_pCamera->getImageBufferSize(); // Header + Image Data + Padding
+	unsigned int length = m_Camera.getImageBufferSize(); // Header + Image Data + Padding
 	unsigned char * data = new unsigned char[length];
-	if ( !m_pCamera->grab_retrieve(data, length) ) {
+	if ( !m_Camera.grab_retrieve(data, length) ) {
 		delete data;
 		return;
 	}
@@ -80,24 +69,3 @@ void CCamera::captureCameraImage(std::ofstream *pFile) {
 	delete data;
 }
 
-void CCamera::captureHighResolutionImage(std::ofstream *pFile) {
-	if (m_isDisabled)
-		return;
-	if (m_pCamera->getWidth() != 2592 || m_pCamera->getHeight() != 1944) {
-		delete m_pCamera;
-		m_pCamera = new raspicam::RaspiCam_Still();
-		m_pCamera->setWidth ( 2592);
-		m_pCamera->setHeight ( 1944);
-		m_pCamera->setISO(m_iso);
-		m_pCamera->setEncoding ( raspicam::RASPICAM_ENCODING_JPEG );
-		m_pCamera->open();
-	}
-	unsigned int length = m_pCamera->getImageBufferSize(); // Header + Image Data + Padding
-	unsigned char * data = new unsigned char[length];
-	if ( !m_pCamera->grab_retrieve(data, length) ) {
-		delete data;
-		return;
-	}
-	pFile->write ( ( char* ) data,   length );
-	delete data;
-}

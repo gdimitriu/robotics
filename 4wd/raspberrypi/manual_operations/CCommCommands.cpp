@@ -44,13 +44,11 @@ CCommCommands::CCommCommands(CCommand *move, CCommand *setting) {
 	m_menu->append("SfilePath# save record into the file\t;\n");
 	m_menu->append("LfilePath# load record from the file\t;\n");
 	m_menu->append("PfilePath# take a picture into the file\t;\n");
-	m_menu->append("HfilePath# take a picture into the file with high resolution\t;\n");
 	m_isRecording = false;
 	m_localOperations.insert('R'); //start/stop recording of movement
 	m_localOperations.insert('P'); //play the recording of movement or take a picture
 	m_localOperations.insert('S'); //save record as file
 	m_localOperations.insert('L'); //load record file
-	m_localOperations.insert('H'); //take a picture in high resolution
 	m_droid = NULL;
 }
 
@@ -218,26 +216,6 @@ int CCommCommands::executeLocal(const char *operation) {
 		free(newOperation);
 		break;
 	}
-	case 'H':
-		newOperation = (char *)calloc(strlen(operation) +1, sizeof(char));
-		strncpy(newOperation, operation, strlen(operation));
-		removeCommandPrefix(newOperation);
-		//clear the #
-		newOperation[strlen(newOperation) -1] = '\0';
-		pFile = new std::ofstream(newOperation,std::ios::out | std::ios::app | std::ios::ate);
-		if (!pFile->good()) {
-			if (pFile->is_open())
-				pFile->close();
-			sprintf(message, "Invalid filename for saving = %s\n", newOperation);
-			m_logger->error(message);
-			free(newOperation);
-			return 1;
-		}
-		m_droid->captureHighResolutionImage(pFile);
-		pFile->close();
-		delete pFile;
-		free(newOperation);
-		break;
 	default:
 		sprintf(message, "Invalid Command with data command = %s\n", operation);
 		m_logger->error(message);

@@ -37,9 +37,8 @@ public:
 	CCamera(char *configLine, CLogger *settingLogger);
 	virtual ~CCamera();
 	void captureCameraImage(std::ofstream *pFile);
-	void captureHighResolutionImage(std::ofstream *pFile);
 private:
-	raspicam::RaspiCam_Still *m_pCamera;
+	raspicam::RaspiCam_Still m_Camera;
 	bool m_isDisabled;
 	int m_width;
 	int m_height;

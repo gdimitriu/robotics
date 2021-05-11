@@ -444,9 +444,3 @@ void CDroid::captureCameraImage(std::ofstream *pFile) {
 		m_camera->captureCameraImage(pFile);
 	}
 }
-void CDroid::captureHighResolutionImage(std::ofstream *pFile) {
-	if (m_camera != NULL) {
-		m_camera->captureHighResolutionImage(pFile);
-	}
-}
-

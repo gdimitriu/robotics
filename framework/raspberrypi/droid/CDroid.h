@@ -87,7 +87,6 @@ public:
 	void setBlockingOperation(bool type);
 
 	void captureCameraImage(std::ofstream *pFile);
-	void captureHighResolutionImage(std::ofstream *pFile);
 protected:
 	/*
 	 * nrEncoder + is right and - is left
