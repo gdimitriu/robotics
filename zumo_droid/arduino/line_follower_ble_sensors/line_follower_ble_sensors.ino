@@ -65,6 +65,7 @@ void printMenu() {
   BTSerial.println( "MENU:" );
   BTSerial.println( "s# Stop" );
   BTSerial.println( "C# calibrate sensors");
+  BTSerial.println( "R# read sensors");
   BTSerial.println( "-----------------------------" );
 }
 
@@ -78,6 +79,7 @@ void setup() {
   pinMode(RIGHT_LINE_SENSOR, INPUT_PULLUP);
   enableInterrupt(RxD, neoSSerial1ISR, CHANGE);
   sensors.setTypeAnalog();
+  sensors.setSamplesPerSensor(10);
   sensors.setSensorPins((const uint8_t[]) {A0,A1,A2},3);
   isValidInput = false;
   cleanupBT = false;
@@ -134,11 +136,18 @@ boolean makeMove() {
       isValidInput = true;
     } else if (strcmp(inData,"C") == 0) {
       BTSerial.println("Calibration of line sensors");
+      sensors.resetCalibration();
       for(int i = 0; i < 250;i++) {
         sensors.calibrate();
         delay(20);
       }
       sensors.readCalibrated(lineSensors);
+      BTSerial.print("sensor 0=");BTSerial.print(lineSensors[0]);
+      BTSerial.print("sensor 1=");BTSerial.print(lineSensors[1]);
+      BTSerial.print("sensor 2=");BTSerial.print(lineSensors[2]);
+    } else if (strcmp(inData,"R") == 0) {
+      BTSerial.println("Read of line sensors");
+      sensors.readLineBlack(lineSensors);
       BTSerial.print("sensor 0=");BTSerial.print(lineSensors[0]);
       BTSerial.print("sensor 1=");BTSerial.print(lineSensors[1]);
       BTSerial.print("sensor 2=");BTSerial.print(lineSensors[2]);

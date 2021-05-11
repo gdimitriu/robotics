@@ -43,10 +43,10 @@ long resolutionCodor_right = 1468;
 const float pi = 3.14f;
 float PPI_left = resolutionCodor_left/(2*pi*whellRadius);
 float PPI_right = resolutionCodor_right/(2*pi*whellRadius);
-long countRotate90Left= 920;
-long countRotate90Right= 920;
-long countRotate1Inner = 9;
-long countRotate1Outer = 10;
+long countRotate90Left= 1030;//980;
+long countRotate90Right= 1040;//990;
+long countRotate1Inner = 12;
+long countRotate1Outer = 15;
 
 bool isValidInput;
 char inData[20]; // Allocate some space for the string
@@ -485,7 +485,7 @@ float moveAroundObject() {
   } else {
     isLeft = false;
   }
-  moveForward(10);//10cm
+  moveForward(15);//15cm
   delay(100);
   if (isLeft) {
     rotate90Right();
@@ -493,7 +493,7 @@ float moveAroundObject() {
     rotate90Left();
   }
   delay(100);
-  moveForward(10+collisionDistance/10);//10cm
+  moveForward(15+collisionDistance/10);//15cm
   delay(100);
   if (isLeft) {
     rotate90Right();
@@ -501,7 +501,7 @@ float moveAroundObject() {
     rotate90Left();
   }
   delay(100);
-  moveForward(10);//10cm
+  moveForward(15);//10cm
   delay(100);
   if(isLeft) {
     rotate90Left();
@@ -509,24 +509,46 @@ float moveAroundObject() {
     rotate90Right();
   }
   delay(100);
-  return 10 + collisionDistance/10;
+  return 15 + collisionDistance/10;
 }
 
 void rotate90Left() {
+  boolean leftStopped = false;
+  boolean rightStopped = false;
   //go to idle and reset counters
   go(0,0);
   resetCounters();
   go(-speedValue,speedValue);
-  while(left_encoder_count < countRotate90Left && right_encoder_count < countRotate90Right);
+  while(!rightStopped || !leftStopped) {
+    if (left_encoder_count >= countRotate90Left && !leftStopped) {
+      stopLeftEngine();
+      leftStopped = true;
+    }
+    if (right_encoder_count >= countRotate90Right && !rightStopped) {
+      stopRightEngine();
+      rightStopped = true;
+    }
+  }
   go(0,0);
 }
 
 void rotate90Right() {
+  boolean leftStopped = false;
+  boolean rightStopped = false;
   //go to idle and reset counters
   go(0,0);
   resetCounters();
   go(speedValue,-speedValue);
-  while(left_encoder_count < countRotate90Left && right_encoder_count < countRotate90Right);
+  while(!rightStopped || !leftStopped) {
+    if (left_encoder_count >= countRotate90Left && !leftStopped) {
+      stopLeftEngine();
+      leftStopped = true;
+    }
+    if (right_encoder_count >= countRotate90Right && !rightStopped) {
+      stopRightEngine();
+      rightStopped = true;
+    }
+  }
   go(0,0);
 }
 
@@ -644,11 +666,11 @@ void moveBackward(float distance) {
 }
 
 void stopLeftEngine() {
-    digitalWrite(LEFT_MOTOR_PIN1,LOW);
-    digitalWrite(LEFT_MOTOR_PIN2,LOW);
+    digitalWrite(LEFT_MOTOR_PIN1,HIGH);
+    digitalWrite(LEFT_MOTOR_PIN2,HIGH);
 }
 
 void stopRightEngine() {
-    digitalWrite(RIGHT_MOTOR_PIN1,LOW);
-    digitalWrite(RIGHT_MOTOR_PIN2,LOW);
+    digitalWrite(RIGHT_MOTOR_PIN1,HIGH);
+    digitalWrite(RIGHT_MOTOR_PIN2,HIGH);
 }

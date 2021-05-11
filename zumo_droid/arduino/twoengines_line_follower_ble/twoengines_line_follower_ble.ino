@@ -34,7 +34,7 @@
 #define RIGHT_MOTOR_PIN2 11
 #define LEFT_LINE_SENSOR A0
 #define CENTER_LINE_SENSOR A1
-#define RIGHT_LINE_SENSOR A2
+#define RIGHT_LINE_SENSOR A3
 
 bool isValidInput;
 char inData[20]; // Allocate some space for the string
@@ -45,11 +45,13 @@ boolean cleanupBT;
 boolean followLine = false;
 
 long speedValue = 255;
+long speedIncrement = 100;
 
 NeoSWSerial BTSerial(RxD, TxD);
 
 QTRSensors sensors;
 unsigned int lineSensors[3];
+unsigned int whiteValue;
 
 //=================================================================
 //====                    NEO SERIAL INTERRUPT                  ===
@@ -84,8 +86,8 @@ void setup() {
   pinMode(RIGHT_LINE_SENSOR, INPUT_PULLUP);
   enableInterrupt(RxD, neoSSerial1ISR, CHANGE);
   sensors.setTypeAnalog();
-  sensors.setSensorPins((const uint8_t[]) {A0,A1,A2},3);
-  sensors.setSamplesPerSensor(16);
+  sensors.setSamplesPerSensor(10);
+  sensors.setSensorPins((const uint8_t[]) {LEFT_LINE_SENSOR,CENTER_LINE_SENSOR,RIGHT_LINE_SENSOR},3);
   isValidInput = false;
   cleanupBT = false;
   followLine = false;
@@ -97,6 +99,9 @@ void setup() {
     sensors.calibrate();
     delay(20);
   }
+  lineSensors[0] = 0;
+  lineSensors[1] = 0;
+  lineSensors[2] = 0;
 }
 
 boolean isValidNumber(char *data, int size)
@@ -123,24 +128,46 @@ void makeCleanup() {
 
 void followTheLine() {
   int position = sensors.readLineBlack(lineSensors);
-  if (lineSensors[0] > 750 && lineSensors[1] > 750 && lineSensors[2] > 750) {
+  if (lineSensors[0] > whiteValue && lineSensors[1] > whiteValue && lineSensors[2] > whiteValue) {
     go(0,0);
     followLine = false;
 #ifdef BLE_DEBUG_MODE
+    BTSerial.print("sensor 0=");BTSerial.print(lineSensors[0]);
+    BTSerial.print("sensor 1=");BTSerial.print(lineSensors[1]);
+    BTSerial.print("sensor 2=");BTSerial.println(lineSensors[2]);
     BTSerial.println("Stopping");
 #endif
     return;
   }
   int error = position - 1000;
 #ifdef BLE_DEBUG_MODE
-  BTSerial.println(error);  
+  BTSerial.print("sensor 0=");BTSerial.print(lineSensors[0]);
+  BTSerial.print("sensor 1=");BTSerial.print(lineSensors[1]);
+  BTSerial.print("sensor 2=");BTSerial.println(lineSensors[2]);
+//  BTSerial.println(error);
 #endif
+
   if (error < -500) // the line is on the left
-    go(-200,200);
+    go(-255,255);
   else if (error > 500) // the line is on the right
-    go(200,-200);
+    go(255,-255);
   else
-    go(200,200);
+    go(255,255);
+/*
+  if (lineSensors[0] < whiteValue && lineSensors[1] > whiteValue &&  lineSensors[2] < whiteValue) {
+    go(speedValue,speedValue);
+  } else if (lineSensors[0] < whiteValue && lineSensors[1] > whiteValue && lineSensors[2] > whiteValue) {
+    go (-speedValue,speedValue);
+  } else if (lineSensors[0] < whiteValue && lineSensors[1] < whiteValue && whiteValue && lineSensors[2] > whiteValue) {
+    go (-speedValue-speedIncrement,speedValue+speedIncrement);
+  } else if (lineSensors[0] > whiteValue && lineSensors[1] > whiteValue && lineSensors[2] < whiteValue) {
+    go (speedValue,-speedValue);
+  } else if (lineSensors[0] > whiteValue && lineSensors[1] < whiteValue && lineSensors[2] < whiteValue) {
+    go (speedValue+speedIncrement,-speedValue-speedIncrement);
+  } /*
+  else {
+    go(speedValue,speedValue);
+  } */
 }
 
 boolean makeMove() {
@@ -174,14 +201,28 @@ boolean makeMove() {
     } else if (strcmp(inData,"h") == 0) {
       printMenu();
       isValidInput = true;
+    } else if (strcmp(inData,"R") == 0) {
+      BTSerial.println("Read of line sensors");
+      sensors.readLineBlack(lineSensors);
+      BTSerial.print("sensor 0=");BTSerial.print(lineSensors[0]);
+      BTSerial.print("sensor 1=");BTSerial.print(lineSensors[1]);
+      BTSerial.print("sensor 2=");BTSerial.print(lineSensors[2]);
     } else if (strcmp(inData,"C") == 0) {
       BTSerial.println("Calibration of line sensors");
+      sensors.resetCalibration();
       for(int i = 0; i < 250;i++) {
         sensors.calibrate();
         delay(20);
       }
-#ifdef BLE_DEBUG_MODE      
       sensors.readCalibrated(lineSensors);
+      whiteValue = lineSensors[0];
+      if (whiteValue < lineSensors[1])
+        whiteValue = lineSensors[1];
+      if (whiteValue < lineSensors[2])
+        whiteValue = lineSensors[2];
+      whiteValue += 50; 
+      whiteValue=750;
+#ifdef BLE_DEBUG_MODE      
       BTSerial.print("sensor 0=");BTSerial.print(lineSensors[0]);
       BTSerial.print("sensor 1=");BTSerial.print(lineSensors[1]);
       BTSerial.print("sensor 2=");BTSerial.print(lineSensors[2]);
@@ -219,6 +260,7 @@ boolean makeMove() {
     } else {
       makeCleanup(); 
       isValidInput = false;
+      printMenu();
       return false;
     }
     makeCleanup();
@@ -246,13 +288,23 @@ void loop() {
   } else if (cleanupBT) {
      makeCleanup();
      cleanupBT = false;
-     printMenu();
   }
   if (followLine)
     followTheLine();
+  delay(50);
 }
 
 void go(int speedLeft, int speedRight) {
+  if (speedLeft > 255) {
+    speedLeft = 255;
+  } else if (speedLeft < -255) {
+    speedLeft = -255;
+  }
+  if (speedRight > 255) {
+    speedRight = 255;
+  } else if (speedRight < -255) {
+    speedRight = -255;
+  }
   if (speedLeft == 0 && speedRight == 0 ) {
     digitalWrite(LEFT_MOTOR_PIN1,LOW);
     digitalWrite(LEFT_MOTOR_PIN2,LOW);
