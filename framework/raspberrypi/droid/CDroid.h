@@ -37,6 +37,7 @@
 #include <CResetableBarrier.h>
 #include <pthread.h>
 #include <CGrabberController.h>
+#include <CCamera.h>
 
 class CDroid {
 public:
@@ -84,6 +85,9 @@ public:
 	 * set blocking on nonblocking operation
 	 */
 	void setBlockingOperation(bool type);
+
+	void captureCameraImage(std::ofstream *pFile);
+	void captureHighResolutionImage(std::ofstream *pFile);
 protected:
 	/*
 	 * nrEncoder + is right and - is left
@@ -125,6 +129,7 @@ protected:
 	CGrabberController *m_grabberController;
 	CLogger* m_settingLogger;
 	bool m_blockingOperation;
+	CCamera* m_camera;
 };
 
 #endif /* DROID_CDROID_H_ */

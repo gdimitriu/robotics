@@ -3,7 +3,8 @@ all:
 	cd settings && make
 	cd control_sensors && make
 	cd control_engines && make
-	cd grabber && make	
+	cd grabber && make
+	cd camera && make	
 	cd droid && make
 clean:
 	cd loggers && make clean
@@ -11,5 +12,6 @@ clean:
 	cd control_sensors && make clean
 	cd control_engines && make clean
 	cd grabber && make clean
+	cd camera && make clean
 	cd droid && make clean
 	

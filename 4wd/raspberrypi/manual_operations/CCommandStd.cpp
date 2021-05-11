@@ -1,5 +1,5 @@
 /*
- * CBLECommandHC05.cpp
+ * CCommandStdout.cpp
  *
  *  Created on: Oct 5, 2020
  *      Author: Gabriel Dimitriu

@@ -54,6 +54,7 @@ CDroid::CDroid(char *droidCfgFile, int isOnHost) {
 	m_nextCheckRotate = 0;
 	m_grabberController = NULL;
 	m_blockingOperation = false;
+	m_camera = NULL;
 	pthread_attr_init(&m_moveThreadAttr);
 	initialize();
 }
@@ -76,6 +77,9 @@ CDroid::~CDroid() {
 	}
 	if (m_settingLogger != 0) {
 		delete m_settingLogger;
+	}
+	if (m_camera != 0) {
+		delete m_camera;
 	}
 	if (m_isOnHost == 0) {
 		gpioTerminate();
@@ -162,12 +166,15 @@ void CDroid::initialize() {
 	} else {
 		m_maxLeftServoEncoder = m_maxRightServoEncoder = -1; // no sweep sensor in front
 	}
+	line = getLine();
+	m_camera = new CCamera(line, m_settingLogger);
 	m_moveBarrier.init(m_controlEngines->getEnginesNr() + 1);
 	m_controlEngines->setMoveBarrier(&m_moveBarrier);
 	struct sched_param goSchedParam;
 	pthread_attr_setschedpolicy(&m_moveThreadAttr, SCHED_FIFO);
 	goSchedParam.__sched_priority = sched_get_priority_max(SCHED_FIFO);
 	pthread_attr_setschedparam(&m_moveThreadAttr, &goSchedParam);
+
 }
 
 void CDroid::setMaxEnginePower(unsigned int newPower) {
@@ -431,3 +438,15 @@ void CDroid::internalMoveRight() {
 	else
 		move(value);
 }
+
+void CDroid::captureCameraImage(std::ofstream *pFile) {
+	if (m_camera != NULL) {
+		m_camera->captureCameraImage(pFile);
+	}
+}
+void CDroid::captureHighResolutionImage(std::ofstream *pFile) {
+	if (m_camera != NULL) {
+		m_camera->captureHighResolutionImage(pFile);
+	}
+}
+

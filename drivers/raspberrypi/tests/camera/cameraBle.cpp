@@ -32,6 +32,8 @@
 #include <raspicam.h>
 #include <ctime>
 #include <unistd.h>
+#include <iostream>
+#include <raspicam_still.h>
 using namespace std;
 
 int main(int argc, char **argv) {
@@ -51,7 +53,7 @@ int main(int argc, char **argv) {
 		gpioTerminate();
 		exit(1);
 	}
-	raspicam::RaspiCam Camera; //Camera object
+	raspicam::RaspiCam_Still Camera; //Camera object
 		//Open camera
 		memset(sendBuffer, 0, sizeof(sendBuffer));
 		sprintf(sendBuffer, "Opening Camera...\n");
@@ -88,14 +90,21 @@ int main(int argc, char **argv) {
 			//clear the #
 			newOperation[strlen(newOperation) -1] = '\0';
 			if (newOperation[0] == 'c') {
-				Camera.grab();
-				unsigned char *data=new unsigned char[  Camera.getImageTypeSize ( raspicam::RASPICAM_FORMAT_RGB )];
-				//extract the image in rgb format
-				Camera.retrieve ( data,raspicam::RASPICAM_FORMAT_IGNORE );//get camera image
-				//save
-				std::ofstream outFile( "raspicam_image.ppm",std::ios::binary );
-				outFile<<"P6\n"<<Camera.getWidth() <<" "<<Camera.getHeight() <<" 255\n";
-				outFile.write ( ( char* ) data, Camera.getImageTypeSize ( raspicam::RASPICAM_FORMAT_RGB ) );
+				Camera.setWidth ( 800);//2592 );
+				Camera.setHeight ( 600);//1944 );
+				Camera.setISO(400);
+				Camera.setQuality(10);
+				Camera.setEncoding ( raspicam::RASPICAM_ENCODING_JPEG );
+				unsigned int length = Camera.getImageBufferSize(); // Header + Image Data + Padding
+				unsigned char * data = new unsigned char[length];
+				      if ( !Camera.grab_retrieve(data, length) ) {
+				        std::cerr<<"Error in grab"<<std::endl;
+				        return -1;
+				    }
+
+				    std::cout<<"saving picture.jpg"<<std::endl;
+				    ofstream file ( "picture.jpg",ios::binary );
+				    file.write ( ( char* ) data,   length );
 				delete data;
 			}
 		}

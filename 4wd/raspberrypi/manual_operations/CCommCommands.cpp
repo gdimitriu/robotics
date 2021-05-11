@@ -41,13 +41,16 @@ CCommCommands::CCommCommands(CCommand *move, CCommand *setting) {
 	m_menu->append("Rc# continue old recording of movement\t;\n");
 	m_menu->append("RS# stop recording of movement\t;\n");
 	m_menu->append("P# play the record of movement\t;\n");
-	m_menu->append("S<filePath># save record as file\t;\n");
-	m_menu->append("L<filePath># load record as file\t;\n");
+	m_menu->append("SfilePath# save record into the file\t;\n");
+	m_menu->append("LfilePath# load record from the file\t;\n");
+	m_menu->append("PfilePath# take a picture into the file\t;\n");
+	m_menu->append("HfilePath# take a picture into the file with high resolution\t;\n");
 	m_isRecording = false;
 	m_localOperations.insert('R'); //start/stop recording of movement
-	m_localOperations.insert('P'); //play the recording of movement
+	m_localOperations.insert('P'); //play the recording of movement or take a picture
 	m_localOperations.insert('S'); //save record as file
 	m_localOperations.insert('L'); //load record file
+	m_localOperations.insert('H'); //take a picture in high resolution
 	m_droid = NULL;
 }
 
@@ -104,16 +107,39 @@ int CCommCommands::executeLocal(const char *operation) {
 	if (operation == NULL) {
 		return 0;
 	}
+	std::ofstream *pFile;
 	int result = 0;
 	char message[255];
 	memset(message, 0, 255 * sizeof(char));
+	char * newOperation;
 	switch (operation[0]) {
 	case 'P':
-		m_droid->setBlockingOperation(true);
-		for (vector<string *>::iterator in= m_recordMovement.begin(); in != m_recordMovement.end();in++) {
-			processInputData(*in);
+		newOperation = (char *)calloc(strlen(operation) +1, sizeof(char));
+		strncpy(newOperation, operation, strlen(operation));
+		removeCommandPrefix(newOperation);
+		//clear the #
+		newOperation[strlen(newOperation) -1] = '\0';
+		if (strlen(newOperation)==0) {
+			m_droid->setBlockingOperation(true);
+			for (vector<string *>::iterator in= m_recordMovement.begin(); in != m_recordMovement.end();in++) {
+				processInputData(*in);
+			}
+			m_droid->setBlockingOperation(false);
+		} else {
+			pFile = new std::ofstream(newOperation,std::ios::out | std::ios::app | std::ios::ate);
+			if (!pFile->good()) {
+				if (pFile->is_open())
+					pFile->close();
+				sprintf(message, "Invalid filename for saving = %s\n", newOperation);
+				m_logger->error(message);
+				free(newOperation);
+				return 1;
+			}
+			m_droid->captureCameraImage(pFile);
+			pFile->close();
+			delete pFile;
 		}
-		m_droid->setBlockingOperation(false);
+		free(newOperation);
 		break;
 	case 'R':
 		if (strlen(operation) != 3) {
@@ -142,17 +168,18 @@ int CCommCommands::executeLocal(const char *operation) {
 		return 1;
 	case 'S': {
 		cout<<"Receive S but ... "<<operation<<endl<<flush;
-		char * newOperation = (char *)calloc(strlen(operation) +1, sizeof(char));
+		newOperation = (char *)calloc(strlen(operation) +1, sizeof(char));
 		strncpy(newOperation, operation, strlen(operation));
 		removeCommandPrefix(newOperation);
 		//clear the #
 		newOperation[strlen(newOperation) -1] = '\0';
-		std::ofstream *pFile = new std::ofstream(newOperation,std::ios::out | std::ios::app | std::ios::ate);
+		pFile = new std::ofstream(newOperation,std::ios::out | std::ios::app | std::ios::ate);
 		if (!pFile->good()) {
 			if (pFile->is_open())
 				pFile->close();
 			sprintf(message, "Invalid filename for saving = %s\n", newOperation);
 			m_logger->error(message);
+			free(newOperation);
 			return 1;
 		}
 		for (int i = 0; i < (m_recordMovement.size() - 1); i++) {
@@ -191,6 +218,26 @@ int CCommCommands::executeLocal(const char *operation) {
 		free(newOperation);
 		break;
 	}
+	case 'H':
+		newOperation = (char *)calloc(strlen(operation) +1, sizeof(char));
+		strncpy(newOperation, operation, strlen(operation));
+		removeCommandPrefix(newOperation);
+		//clear the #
+		newOperation[strlen(newOperation) -1] = '\0';
+		pFile = new std::ofstream(newOperation,std::ios::out | std::ios::app | std::ios::ate);
+		if (!pFile->good()) {
+			if (pFile->is_open())
+				pFile->close();
+			sprintf(message, "Invalid filename for saving = %s\n", newOperation);
+			m_logger->error(message);
+			free(newOperation);
+			return 1;
+		}
+		m_droid->captureHighResolutionImage(pFile);
+		pFile->close();
+		delete pFile;
+		free(newOperation);
+		break;
 	default:
 		sprintf(message, "Invalid Command with data command = %s\n", operation);
 		m_logger->error(message);

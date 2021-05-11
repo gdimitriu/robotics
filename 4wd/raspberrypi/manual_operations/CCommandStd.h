@@ -1,5 +1,5 @@
 /*
- * CBLECommandStdout.h
+ * CCommandStdout.h
  *
  *  Created on: Oct 5, 2020
  *      Author: Gabriel Dimitriu
