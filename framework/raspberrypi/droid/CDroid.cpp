@@ -383,7 +383,7 @@ void CDroid::internalMoveLeft() {
 	 * rotation where we could check directly the space
 	 * if the m_nextCheckRotate is on, the rotate could check
 	*/
-	if ((m_nextRotation == -1 || m_nextRotation == m_maxLeftServoEncoder) && m_nextCheckRotate == 0) {
+	if ((m_nextRotation == -1 || m_nextRotation == m_maxLeftServoEncoder) && m_nextCheckRotate == 1) {
 		value = m_controlSensors->lookLeft(1);
 		if (m_logger != NULL && m_logger->isDebug() == 1) {
 			std::string message("Look left distance in mm ");
@@ -414,7 +414,7 @@ void CDroid::internalMoveRight() {
 	 * rotation where we could check directly the space
 	 * if the m_nextCheckRotate is on, the rotate could check
 	 */
-	if ((m_nextRotation == 1 || m_nextRotation == m_maxRightServoEncoder) && m_nextCheckRotate == 0) {
+	if ((m_nextRotation == 1 || m_nextRotation == m_maxRightServoEncoder) && m_nextCheckRotate == 1) {
 		value = m_controlSensors->lookRight(1);
 		if (m_logger != NULL && m_logger->isDebug() == 1) {
 			std::string message("Look right distance in mm ");
@@ -442,5 +442,17 @@ void CDroid::internalMoveRight() {
 void CDroid::captureCameraImage(std::ofstream *pFile) {
 	if (m_camera != NULL) {
 		m_camera->captureCameraImage(pFile);
+	}
+}
+
+void CDroid::openClaw() {
+	if (m_grabberController != NULL) {
+		m_grabberController->openClaw(0);
+	}
+}
+
+void CDroid::closeClaw() {
+	if (m_grabberController != NULL) {
+		m_grabberController->closeClaw(0);
 	}
 }

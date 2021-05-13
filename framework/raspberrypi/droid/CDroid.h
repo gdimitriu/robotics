@@ -87,6 +87,12 @@ public:
 	void setBlockingOperation(bool type);
 
 	void captureCameraImage(std::ofstream *pFile);
+
+	/*
+	 * grab the object that is already in claw using 1/2 claw
+	 */
+	void openClaw();
+	void closeClaw();
 protected:
 	/*
 	 * nrEncoder + is right and - is left

@@ -44,11 +44,13 @@ CCommCommands::CCommCommands(CCommand *move, CCommand *setting) {
 	m_menu->append("SfilePath# save record into the file\t;\n");
 	m_menu->append("LfilePath# load record from the file\t;\n");
 	m_menu->append("PfilePath# take a picture into the file\t;\n");
+	m_menu->append("Go/c# grab the object using claw (o for open c for close)\t;\n");
 	m_isRecording = false;
 	m_localOperations.insert('R'); //start/stop recording of movement
 	m_localOperations.insert('P'); //play the recording of movement or take a picture
 	m_localOperations.insert('S'); //save record as file
 	m_localOperations.insert('L'); //load record file
+	m_localOperations.insert('G');//grab
 	m_droid = NULL;
 }
 
@@ -216,6 +218,24 @@ int CCommCommands::executeLocal(const char *operation) {
 		free(newOperation);
 		break;
 	}
+	case 'G':
+		newOperation = (char *)calloc(strlen(operation) +1, sizeof(char));
+		strncpy(newOperation, operation, strlen(operation));
+		removeCommandPrefix(newOperation);
+		//clear the #
+		newOperation[strlen(newOperation) -1] = '\0';
+		if (strlen(newOperation) == 0) {
+			sprintf(message, "Invalid Command with data command = %s\n", operation);
+			m_logger->error(message);
+			return 1;
+		}
+		if (newOperation[0] == 'o') {
+			m_droid->openClaw();
+		} else if (newOperation[0] == 'c') {
+			m_droid->closeClaw();
+		}
+		free(newOperation);
+		break;
 	default:
 		sprintf(message, "Invalid Command with data command = %s\n", operation);
 		m_logger->error(message);

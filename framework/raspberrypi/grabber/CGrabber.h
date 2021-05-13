@@ -34,6 +34,9 @@ public:
 	CGrabber(Adafruit_PWMServoDriver *pwmDriver, int position, int pin, int closePulse, int openPulse, CLogger *logger);
 	virtual ~CGrabber();
 	std::string getDebugInformation();
+	int getPosition();
+	void openClaw();
+	void closeClaw();
 protected:
 	Adafruit_PWMServoDriver *m_pwmDriver;
 	CLogger *m_logger;

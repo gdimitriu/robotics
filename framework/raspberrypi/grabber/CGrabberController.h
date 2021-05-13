@@ -35,6 +35,8 @@ class CGrabberController {
 public:
 	CGrabberController(char *configFile, CLogger *settingLogger, Adafruit_PWMServoDriver *pwmDriver, CMasterControlSensors *sensors);
 	virtual ~CGrabberController();
+	void openClaw(int position);
+	void closeClaw(int position);
 protected:
 	CGrabber *m_grabber;
 	CMasterControlSensors *m_controlSensors;

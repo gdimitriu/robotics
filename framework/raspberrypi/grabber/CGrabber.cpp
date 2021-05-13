@@ -61,3 +61,16 @@ std::string CGrabber::getDebugInformation() {
 	message +="\n";
 	return message;
 }
+
+int CGrabber::getPosition() {
+	return m_position;
+}
+
+void CGrabber::openClaw() {
+	m_pwmDriver->setPWM(m_pin, 0, m_openPulse);
+}
+
+void CGrabber::closeClaw() {
+	m_pwmDriver->setPWM(m_pin, 0, m_closePulse);
+}
+

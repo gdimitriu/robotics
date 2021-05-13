@@ -58,3 +58,13 @@ CGrabberController::~CGrabberController() {
 	}
 }
 
+void CGrabberController::openClaw(int position) {
+	if (m_grabber->getPosition() == position) {
+		m_grabber->openClaw();
+	}
+}
+void CGrabberController::closeClaw(int position) {
+	if (m_grabber->getPosition() == position) {
+		m_grabber->closeClaw();
+	}
+}
