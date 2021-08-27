@@ -40,7 +40,7 @@ public:
 	virtual void setDroid(CDroid *droid);
 	virtual int executeLocal(const char *operation);
 protected:
-	void processInputData(string *input);
+	void processInputData(string *input, int reverse = 0);
 	void removeCommandPrefix(char *operation);
 	set<char> *m_moveOperations;
 	set<char> *m_settingOperations;

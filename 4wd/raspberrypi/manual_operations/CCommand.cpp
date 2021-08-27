@@ -29,10 +29,12 @@
 
 CCommand::CCommand() {
 	m_logger = NULL;
+	m_reverseType = 0;
 }
 
 CCommand::CCommand(CLogger *logger) {
 	m_logger = logger;
+	m_reverseType = 0;
 }
 
 CCommand::~CCommand() {
@@ -84,4 +86,8 @@ void CCommand::removeCommandPrefix(char *operation) {
 		operation[i] = operation[i+1];
 	}
 	operation[size+1] = '\0';
+}
+
+void CCommand::setReverseType(int reverse) {
+	m_reverseType = reverse;
 }

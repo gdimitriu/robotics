@@ -50,6 +50,7 @@ public:
 	 * return 1 if it executed with succes 0 otherwise
 	 */
 	virtual int execute(const char *operation);
+
 	/*
 	 * validate if the data is a valid number
 	 * data pointer to the number representation as C string
@@ -57,6 +58,12 @@ public:
 	 */
 	int isValidNumber(char *data);
 	virtual void setDroid(CDroid *droid) = 0;
+	/*
+	 * 0 for normal movement
+	 * 1 for reverse left right
+	 * 2 for full reverse
+	 */
+	void setReverseType(int reverse);
 protected:
 	/*
 	 * execute the operation without data
@@ -78,6 +85,12 @@ protected:
 	 */
 	void removeCommandPrefix(char *operation);
 	CLogger * m_logger;
+	/*
+	 * 0 for normal
+	 * 1 for reverse
+	 * 2 for full reverse
+	 */
+	int m_reverseType;
 };
 
 #endif /* MANUAL_OPERATIONS_CCOMMAND_H_ */

@@ -82,12 +82,36 @@ int CMoveCommand::executeSimpleCommand(char *operation) {
 		m_droid->fullStop();
 		break;
 	case 'l':
-		m_logger->debug("Rotate left 45 degree !\n");
-		m_droid->move(0, -1, 0);
+		switch (m_reverseType) {
+		case 1:
+			m_logger->debug("Rotate right 45 degree !\n");
+			m_droid->move(0, 1, 0);
+			break;
+		case 2:
+			m_logger->debug("Rotate right 45 degree !\n");
+			m_droid->move(0, 1, 0);
+			break;
+		case 0://do nothing
+		default:
+			m_logger->debug("Rotate left 45 degree !\n");
+			m_droid->move(0, -1, 0);
+		}
 		break;
 	case 'r':
-		m_logger->debug("Rotate right 45 degree !\n");
-		m_droid->move(0, 1, 0);
+		switch (m_reverseType) {
+		case 1:
+			m_logger->debug("Rotate left 45 degree !\n");
+			m_droid->move(0, -1, 0);
+			break;
+		case 2:
+			m_logger->debug("Rotate left 45 degree !\n");
+			m_droid->move(0, -1, 0);
+			break;
+		case 0://do nothing
+		default:
+			m_logger->debug("Rotate right 45 degree !\n");
+			m_droid->move(0, 1, 0);
+		}
 		break;
 	default:
 		char message[255];
@@ -107,6 +131,18 @@ int CMoveCommand::executeDataCommand(char *operation) {
 	case 'm':
 		removeCommandPrefix(operation);
 		sscanf(operation, "%f,%d", &distance, &rotation);
+		switch (m_reverseType) {
+		case 1:
+			rotation = -rotation;
+			break;
+		case 2:
+			rotation = -rotation;
+			distance = -distance;
+			break;
+		case 0://do nothing
+		default:
+			break;
+		}
 		if (m_logger->isDebug()) {
 			if (rotation == 0) {
 				if (distance > 0) {
@@ -150,3 +186,4 @@ int CMoveCommand::executeDataCommand(char *operation) {
 	}
 	return 0;
 }
+

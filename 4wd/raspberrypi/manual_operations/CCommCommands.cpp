@@ -41,13 +41,16 @@ CCommCommands::CCommCommands(CCommand *move, CCommand *setting) {
 	m_menu->append("Rc# continue old recording of movement\t;\n");
 	m_menu->append("RS# stop recording of movement\t;\n");
 	m_menu->append("P# play the record of movement\t;\n");
+	m_menu->append("Pr# play the record of movement in reverse order only left right\t;\n");
+	m_menu->append("PR# play the record of movement in full reverse order\t;\n");
 	m_menu->append("SfilePath# save record into the file\t;\n");
 	m_menu->append("LfilePath# load record from the file\t;\n");
-	m_menu->append("PfilePath# take a picture into the file\t;\n");
+	m_menu->append("TfilePath# take a picture into the file\t;\n");
 	m_menu->append("Go/c# grab the object using claw (o for open c for close)\t;\n");
 	m_isRecording = false;
 	m_localOperations.insert('R'); //start/stop recording of movement
-	m_localOperations.insert('P'); //play the recording of movement or take a picture
+	m_localOperations.insert('P'); //play the recording of movement or play in reverse the recording
+	m_localOperations.insert('T');//take a picture
 	m_localOperations.insert('S'); //save record as file
 	m_localOperations.insert('L'); //load record file
 	m_localOperations.insert('G');//grab
@@ -71,7 +74,7 @@ void CCommCommands::setDroid(CDroid *droid) {
 	m_droid = droid;
 }
 
-void CCommCommands::processInputData(string *input) {
+void CCommCommands::processInputData(string *input, int reverse) {
 	int status;
 	if (input->empty() || input->size() == 1)
 		return;
@@ -83,6 +86,7 @@ void CCommCommands::processInputData(string *input) {
 		return;
 	}
 	string *command;
+	m_moveCommand->setReverseType(reverse);
 	if (m_moveOperations->find(input->at(0)) != m_moveOperations->end()) {
 		status = m_moveCommand->execute(input->c_str());
 	} else if (m_settingOperations->find(input->at(0)) != m_settingOperations->end()) {
@@ -95,6 +99,7 @@ void CCommCommands::processInputData(string *input) {
 		memset(message,0,255);
 		sprintf(message,"Operation not known = %s\n", input->c_str());
 		m_logger->error(message);
+		m_moveCommand->setReverseType(0);
 		return;
 	}
 	if (status == 0 && m_isRecording) {
@@ -113,34 +118,60 @@ int CCommCommands::executeLocal(const char *operation) {
 	memset(message, 0, 255 * sizeof(char));
 	char * newOperation;
 	switch (operation[0]) {
-	case 'P':
+	case 'T':
 		newOperation = (char *)calloc(strlen(operation) +1, sizeof(char));
 		strncpy(newOperation, operation, strlen(operation));
 		removeCommandPrefix(newOperation);
 		//clear the #
 		newOperation[strlen(newOperation) -1] = '\0';
-		if (strlen(newOperation)==0) {
-			m_droid->setBlockingOperation(true);
-			for (vector<string *>::iterator in= m_recordMovement.begin(); in != m_recordMovement.end();in++) {
-				processInputData(*in);
-			}
-			m_droid->setBlockingOperation(false);
-		} else {
-			pFile = new std::ofstream(newOperation,std::ios::out | std::ios::app | std::ios::ate);
-			if (!pFile->good()) {
-				if (pFile->is_open())
-					pFile->close();
-				sprintf(message, "Invalid filename for saving = %s\n", newOperation);
-				m_logger->error(message);
-				free(newOperation);
-				return 1;
-			}
-			m_droid->captureCameraImage(pFile);
-			pFile->close();
-			delete pFile;
+		pFile = new std::ofstream(newOperation,std::ios::out | std::ios::app | std::ios::ate);
+		if (!pFile->good()) {
+			if (pFile->is_open())
+				pFile->close();
+			sprintf(message, "Invalid filename for saving = %s\n", newOperation);
+			m_logger->error(message);
+			free(newOperation);
+			return 1;
 		}
+		m_droid->captureCameraImage(pFile);
+		pFile->close();
+		delete pFile;
 		free(newOperation);
 		break;
+	case 'P':
+			newOperation = (char *)calloc(strlen(operation) +1, sizeof(char));
+			strncpy(newOperation, operation, strlen(operation));
+			removeCommandPrefix(newOperation);
+			//clear the #
+			newOperation[strlen(newOperation) -1] = '\0';
+			if (strlen(newOperation)==0) {
+				m_droid->setBlockingOperation(true);
+				for (vector<string *>::iterator in= m_recordMovement.begin(); in != m_recordMovement.end();in++) {
+					processInputData(*in);
+				}
+				m_droid->setBlockingOperation(false);
+			} else if (strlen(newOperation) == 1 && newOperation[0] == 'r') {
+				m_droid->setBlockingOperation(true);
+				//rotate 180 degree
+				string *pstr = new string("m0,1#");
+				processInputData(pstr);
+				processInputData(pstr);
+				for (vector<string *>::reverse_iterator in= m_recordMovement.rbegin(); in != m_recordMovement.rend();in++) {
+					processInputData(*in, 1);
+				}
+				processInputData(pstr);
+				processInputData(pstr);
+				delete pstr;
+				m_droid->setBlockingOperation(false);
+			} else if (strlen(newOperation) == 1 && newOperation[0] == 'R') {
+				m_droid->setBlockingOperation(true);
+				for (vector<string *>::reverse_iterator in= m_recordMovement.rbegin(); in != m_recordMovement.rend();in++) {
+					processInputData(*in, 2);
+				}
+				m_droid->setBlockingOperation(false);
+			}
+			free(newOperation);
+			break;
 	case 'R':
 		if (strlen(operation) != 3) {
 			sprintf(message, "Invalid Command with data command = %s\n", operation);
