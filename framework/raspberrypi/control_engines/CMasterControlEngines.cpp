@@ -165,6 +165,12 @@ void CMasterControlEngines::moveDistance(float distance) {
 	}
 }
 
+void CMasterControlEngines::moveWOEncoder(int direction) {
+	for (int i = 0; i < m_enginesNr; i++) {
+		m_engines[i]->moveWOEncoder(direction);
+	}
+}
+
 void CMasterControlEngines::dumpInfo(CLogger *logger) {
 	for (int i = 0; i < m_enginesNr; i++) {
 		m_engines[i]->dumpInfo(logger);
@@ -187,6 +193,20 @@ void CMasterControlEngines::rotate(int encoderNr) {
 		for (int i = 0; i < m_enginesNr / 2; i++) {
 			m_engines[m_leftEnginesIndex[i]]->moveEncoderNr(encoderNr, 1);
 			m_engines[m_rightEnginesIndex[i]]->moveEncoderNr(encoderNr, -1);
+		}
+	}
+}
+
+void CMasterControlEngines::rotateWOEncoder(int direction) {
+	if (direction < 0) { //left
+		for (int i = 0; i < m_enginesNr / 2; i++) {
+			m_engines[m_leftEnginesIndex[i]]->moveWOEncoder(-1);
+			m_engines[m_rightEnginesIndex[i]]->moveWOEncoder(1);
+		}
+	} else 	if (direction > 0) { //right
+		for (int i = 0; i < m_enginesNr / 2; i++) {
+			m_engines[m_leftEnginesIndex[i]]->moveWOEncoder(1);
+			m_engines[m_rightEnginesIndex[i]]->moveWOEncoder(-1);
 		}
 	}
 }

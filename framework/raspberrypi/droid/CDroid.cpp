@@ -300,6 +300,36 @@ void CDroid::rotate(int nrEncoder, int check) {
 	}
 }
 
+void CDroid::move(int direction, int rotation) {
+	if (m_logger != NULL && m_logger->isDebug() == 1) {
+		std::string message("Move ");
+		if (direction < 0)
+			message +=" backward";
+		else if (direction > 0)
+			message +=" forward";
+		if (rotation < 0)
+			message +=" left";
+		else if (rotation > 0)
+			message +=" right";
+		message += "\n";
+		m_logger->debug(message);
+	}
+
+	m_controlSensors->unregisterCollisionCallback(0);
+	m_controlSensors->unregisterCollisionCallback(180);
+
+	if (direction < 0)
+		m_controlSensors->registerCollisionCallback(m_stopDistance, 180,
+					CDroid::mainCollisionCallback, this);
+	else if (direction > 0)
+		m_controlSensors->registerCollisionCallback(m_stopDistance, 0,
+					CDroid::mainCollisionCallback, this);
+	if (direction != 0)
+		m_controlEngines->moveWOEncoder(direction);
+	else if (rotation != 0)
+		m_controlEngines->rotateWOEncoder(rotation);
+}
+
 void CDroid::move(float distance) {
 	if (m_logger != NULL && m_logger->isDebug() == 1) {
 		std::string message("Move with request in mm ");

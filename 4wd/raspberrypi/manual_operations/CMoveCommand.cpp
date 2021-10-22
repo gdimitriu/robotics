@@ -44,6 +44,7 @@ void CMoveCommand::init() {
 	m_operations->insert('m');
 	m_operations->insert('l');
 	m_operations->insert('r');
+	m_operations->insert('M');
 	m_menu->append("b# (break) full stop\t;\n");
 	m_menu->append("mxxx,yyy# move (forward xxx > 0  xxx = 0 rotate or xxx < 0 backward) cm and rotate before \n");
 	m_menu->append("(-1 left, 0 center, 1 right) or (negative for left encoder and positive for right encoder)\t;\n");
@@ -53,6 +54,7 @@ void CMoveCommand::init() {
 	m_menu->append("r# rotate right 45 degree and restore safe distance\t;\n");
 	m_menu->append(
 			"rxxx# rotate right in step of 45 degree where is distance and move xxx cm\t;\n");
+	m_menu->append("Mxxx,yyy# move or rotate until another command\t;\n");
 	m_droid = NULL;
 }
 
@@ -125,6 +127,7 @@ int CMoveCommand::executeSimpleCommand(char *operation) {
 int CMoveCommand::executeDataCommand(char *operation) {
 	float distance;
 	int rotation;
+	int direction;
 	char message[255];
 	memset(message, 0, 255 * sizeof(char));
 	switch (operation[0]) {
@@ -178,6 +181,28 @@ int CMoveCommand::executeDataCommand(char *operation) {
 		sprintf(message, "Move right after find space with %f cm\n", distance);
 		m_logger->debug(message);
 		m_droid->move(distance, 1, 1);
+		break;
+	case 'M':
+		removeCommandPrefix(operation);
+		sscanf(operation, "%d,%d", &direction, &rotation);
+		if (m_logger->isDebug()) {
+			if (rotation == 0) {
+				if (direction > 0) {
+					sprintf(message, "Move forward");
+				} else if (direction < 0) {
+					sprintf(message, "Move backward");
+				}
+			}
+			if (direction == 0) {
+				if (rotation > 0) {
+					sprintf(message, "Rotate right");
+				} else if (rotation < 0) {
+					sprintf(message, "Rotate left");
+				}
+			}
+			m_logger->debug(message);
+		}
+		m_droid->move(direction, rotation);
 		break;
 	default:
 		sprintf(message,"Invalid move with data command = %s\n", operation);

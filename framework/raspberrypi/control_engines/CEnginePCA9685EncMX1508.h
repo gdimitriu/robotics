@@ -75,6 +75,7 @@ public:
 	virtual void setEnginePower(unsigned int power);
 	/* move of specific distance in cm + is forward - is backward */
 	virtual void moveDistance(float distance);
+	virtual void moveWOEncoder(int direction);
 	/*
 	 * This will be use to rotate the droid
 	 * use for left direction = -1 or right = 1
@@ -91,6 +92,10 @@ public:
 	 * this will rotate the well with the number of encoder ticks into a thread
 	 */
 	friend void* CEnginePCA9685EncMX1508_moveEncoderNr(void *engine);
+	/*
+	 * this will move without encoder
+	 */
+	friend void* CEnginePCA9685EncMX1508_moveWOEncoder(void *engine);
 	/*
 	 * get the actual distance that the droid had move
 	*/
@@ -131,6 +136,7 @@ protected:
 	/* clear/reset the encoder value */
 	virtual void clearEncoder();
 	virtual void startMoving();
+	virtual void startMovingWOEncoder();
 	int isStopped();
 private:
 	/* maximum power of the engine between 0 and 4095 */
@@ -159,6 +165,7 @@ private:
 	pthread_mutex_t m_isrMutex;
 	pthread_cond_t m_isrCond;
 	int m_stopped;
+	int m_requestedDirection;
 };
 
 #endif /* CONTROLL_ENGINES_CEnginePCA9685EncMX1508_H_ */

@@ -69,6 +69,7 @@ CEnginePCA9685EncMX1508::CEnginePCA9685EncMX1508(unsigned int engineNr, unsigned
 	m_goSchedParam.__sched_priority = sched_get_priority_max(SCHED_FIFO);
 	pthread_attr_setschedparam(&m_goThAttr, &m_goSchedParam);
 	m_stopped = 1;
+	m_requestedDirection = 1;
 }
 
 void CEnginePCA9685EncMX1508::setMaxEnginePower(unsigned int newPower) {
@@ -235,9 +236,33 @@ void CEnginePCA9685EncMX1508::startMoving() {
 		m_pwmDriver->setPWM(m_enginePin2, 0, 0);
 	}
 }
+
+void CEnginePCA9685EncMX1508::startMovingWOEncoder() {
+	if (m_requestedDirection > 0) {
+		m_pwmDriver->setPWM(m_enginePin2, 0, 0);
+	} else if (m_requestedDirection < 0) {
+		m_pwmDriver->setPWM(m_enginePin1, 0, 0);
+	}
+	pthread_barrier_wait(m_startBarrier);
+	if (m_requestedDirection > 0) {
+		m_pwmDriver->setPWM(m_enginePin1, 0, m_actualPower);
+	} else if (m_requestedDirection < 0) {
+		m_pwmDriver->setPWM(m_enginePin2, 0, m_actualPower);
+	} else {
+		m_pwmDriver->setPWM(m_enginePin1, 0, 0);
+		m_pwmDriver->setPWM(m_enginePin2, 0, 0);
+	}
+}
+
 void CEnginePCA9685EncMX1508_moveCleanup(void *arg) {
 	pthread_mutex_t *mutex = (pthread_mutex_t *)arg;
 	pthread_mutex_unlock(mutex);
+}
+
+void* CEnginePCA9685EncMX1508_moveWOEncoder(void *engine) {
+	CEnginePCA9685EncMX1508 *currentEngine = (CEnginePCA9685EncMX1508*) engine;
+	currentEngine->startMovingWOEncoder();
+	return 0;
 }
 
 void* CEnginePCA9685EncMX1508_moveDistance(void *engine) {
@@ -265,6 +290,21 @@ void* CEnginePCA9685EncMX1508_moveDistance(void *engine) {
 	}
 	pthread_cleanup_pop(0);
 	return 0;
+}
+
+void CEnginePCA9685EncMX1508::moveWOEncoder(int direction) {
+	if (m_logger != NULL && m_logger->isDebug() == 1) {
+		std::string message("Moving in direction ");
+		if (direction < 0)
+			message +="backward";
+		else if (direction > 0)
+			message +="forward";
+		message +="\n";
+		m_logger->debug(message);
+	}
+	m_actualPower = m_enginePower;
+	m_requestedDirection = direction;
+	pthread_create(&m_goTh, &m_goThAttr, CEnginePCA9685EncMX1508_moveWOEncoder, this);
 }
 
 void CEnginePCA9685EncMX1508::moveDistance(float distance) {

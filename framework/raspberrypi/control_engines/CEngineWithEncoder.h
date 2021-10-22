@@ -60,6 +60,7 @@ public:
 	virtual void setLogger(CLogger *logger);
 	void setStartBarrier(pthread_barrier_t *barrier);
 	void setMoveBarrier(CResetableBarrier *moveBarrier);
+	virtual void moveWOEncoder(int direction) =0;
 	/*
 	 * get the actual distance that the droid had move
 	 */

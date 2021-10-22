@@ -54,6 +54,8 @@ public:
 	 * encoderNr is positive for right and negative for left
 	 */
 	virtual void rotate(int encoderNr);
+	virtual void moveWOEncoder(int direction);
+	virtual void rotateWOEncoder(int direction);
 	/*
 	 * get the actual distance that the droid had move
 	*/

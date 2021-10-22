@@ -47,6 +47,7 @@ public:
 	virtual void dumpInfo();
 	/* rotate left(-1)/nothing(0)/right(1) and then move distance */
 	virtual void move(float distance, int rotation, int check);
+	virtual void move(int direction, int rotation);
 	virtual void fullStop();
 	CLogger* getLogger();
 	/*
