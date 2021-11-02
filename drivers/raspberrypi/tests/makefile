@@ -3,7 +3,7 @@ AR = arm-linux-gnueabihf-ar
 LIBS = -L$(PREFIX_GPIO) -lpthread -lpigpio -lrt
 INCLUDES = -I$(PREFIX_GPIO)
 OBJECTS = 
-EXECUTABLES = led_gpio detecti2c trigger_gpio ble_serial_receive ble_serial_sndrecv ble_serial_send hc-sr04
+EXECUTABLES = led_gpio detecti2c trigger_gpio ble_serial_receive ble_serial_sndrecv ble_serial_send hc-sr04 esp01receive
 
 all: $(EXECUTABLES)
 	cd isr_cpp && make
@@ -31,6 +31,8 @@ ble_serial_send:ble_serial_send.c
 hc-sr04:hc-sr04.cpp
 	arm-linux-gnueabihf-g++ -fPIC -o hc-sr04 hc-sr04.cpp $(LIBS) $(INCLUDES) -lm -std=gnu++11 
 
+esp01receive: esp01receive.c
+	$(CC) -fPIC -o esp01receive esp01receive.c $(LIBS) $(INCLUDES)
 clean:
 	for object in $(EXECUTABLES);\
 	do \
