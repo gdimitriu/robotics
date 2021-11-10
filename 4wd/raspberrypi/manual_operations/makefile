@@ -7,8 +7,8 @@ LIBS = -lpthread -lpigpio -lrt -lengines -ldroiddrivers -ldroid -lgrabber -lcame
 
 LIB_DIRS = -L$(PREFIX_GPIO) -L$(PREFIX_DRIVERS)/lib -I$(PREFIX_FRAMEWORK)/lib
 INCLUDE_DIRS = -I$(PREFIX_GPIO) -I$(PREFIX_DRIVERS)/include  -I$(PREFIX_FRAMEWORK)/include -I../include -I$(PREFIX_RASPICAM)/src
-OBJECTS = CCommand.o CCommCommands.o CBLECommand.o CBLECommandHC05.o CMoveCommand.o  CSettingCommand.o CCommandStd.o CManualDroid.o
-HEADERS = CCommand.h CCommCommands.h CCommandStd.h CBLECommand.h CBLECommandHC05.h CMoveCommand.h CSettingCommand.h CManualDroid.h
+OBJECTS = CCommand.o CCommCommands.o CBLECommand.o CBLECommandHC05.o CMoveCommand.o  CSettingCommand.o CCommandStd.o CManualDroid.o CCommandEsp01.o
+HEADERS = CCommand.h CCommCommands.h CCommandStd.h CBLECommand.h CBLECommandHC05.h CMoveCommand.h CSettingCommand.h CManualDroid.h CCommandEsp01.h
 EXECUTABLES =  
 FLAGS = -std=gnu++11 -ggdb
 
@@ -34,6 +34,10 @@ CBLECommandHC05.o:CBLECommandHC05.cpp CBLECommandHC05.h CCommand.o CCommCommands
 CBLECommand.o:CBLECommand.cpp CBLECommand.h CCommand.o CCommCommands.o
 	$(CXX) -fPIC -fpermissive -Wwrite-strings -o CBLECommand.o -c CBLECommand.cpp $(LIBS) $(LIB_DIRS) $(INCLUDE_DIRS) $(FLAGS) -Wno-write-strings
 	cp CBLECommand.h ../include
+
+CCommandEsp01.o: CCommandEsp01.cpp CCommandEsp01.h CCommand.o CCommCommands.o
+	$(CXX) -fPIC -fpermissive -Wwrite-strings -o CCommandEsp01.o -c CCommandEsp01.cpp $(LIBS) $(LIB_DIRS) $(INCLUDE_DIRS) $(FLAGS) -Wno-write-strings
+	cp CCommandEsp01.h ../include
 	
 CMoveCommand.o:CMoveCommand.cpp CMoveCommand.h CCommand.o
 	$(CXX) -fPIC -o CMoveCommand.o -c CMoveCommand.cpp $(LIBS) $(LIB_DIRS) $(INCLUDE_DIRS) $(FLAGS)

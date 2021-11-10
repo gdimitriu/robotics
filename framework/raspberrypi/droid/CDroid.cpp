@@ -303,11 +303,14 @@ void CDroid::rotate(int nrEncoder, int check) {
 void CDroid::move(int direction, int rotation) {
 	if (m_logger != NULL && m_logger->isDebug() == 1) {
 		std::string message("Move ");
+		if (direction == 0 && rotation == 0) {
+			message +=" by inertia";
+		}
 		if (direction < 0)
 			message +=" backward";
 		else if (direction > 0)
 			message +=" forward";
-		if (rotation < 0)
+		else if (rotation < 0)
 			message +=" left";
 		else if (rotation > 0)
 			message +=" right";
@@ -328,6 +331,9 @@ void CDroid::move(int direction, int rotation) {
 		m_controlEngines->moveWOEncoder(direction);
 	else if (rotation != 0)
 		m_controlEngines->rotateWOEncoder(rotation);
+	else if (direction == 0 && rotation == 0) {
+		m_controlEngines->moveWOEncoder(direction);
+	}
 }
 
 void CDroid::move(float distance) {

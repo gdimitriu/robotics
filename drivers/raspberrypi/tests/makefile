@@ -4,6 +4,7 @@ LIBS = -L$(PREFIX_GPIO) -lpthread -lpigpio -lrt
 INCLUDES = -I$(PREFIX_GPIO)
 OBJECTS = 
 EXECUTABLES = led_gpio detecti2c trigger_gpio ble_serial_receive ble_serial_sndrecv ble_serial_send hc-sr04 esp01receive
+FLAGS = -std=gnu++11 -ggdb
 
 all: $(EXECUTABLES)
 	cd isr_cpp && make

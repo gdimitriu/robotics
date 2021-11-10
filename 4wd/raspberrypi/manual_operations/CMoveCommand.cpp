@@ -186,18 +186,19 @@ int CMoveCommand::executeDataCommand(char *operation) {
 		removeCommandPrefix(operation);
 		sscanf(operation, "%d,%d", &direction, &rotation);
 		if (m_logger->isDebug()) {
-			if (rotation == 0) {
+			if (rotation == 0 && direction == 0) {
+				sprintf(message, "Coast all engines\n");
+			} else	if (rotation == 0) {
 				if (direction > 0) {
-					sprintf(message, "Move forward");
+					sprintf(message, "Move forward\n");
 				} else if (direction < 0) {
-					sprintf(message, "Move backward");
+					sprintf(message, "Move backward\n");
 				}
-			}
-			if (direction == 0) {
+			} else if (direction == 0) {
 				if (rotation > 0) {
-					sprintf(message, "Rotate right");
+					sprintf(message, "Rotate right\n");
 				} else if (rotation < 0) {
-					sprintf(message, "Rotate left");
+					sprintf(message, "Rotate left\n");
 				}
 			}
 			m_logger->debug(message);

@@ -29,6 +29,20 @@
 
 void printData(int serialHandler) {
 	char buffer[255];
+	char sendBuffer[255];
+	if (serDataAvailable(serialHandler) > 0) {
+		memset(buffer, 0, sizeof(buffer));
+		int readnr = serRead(serialHandler, buffer, 255);
+		buffer[readnr + 1] = '\0';
+		printf("%s\n", buffer);
+		fflush(stdout);
+	}
+}
+
+void recvData(int serialHandler) {
+	char buffer[255];
+	char sendBuffer[255];
+	int i,j;
 	if (serDataAvailable(serialHandler) > 0) {
 		memset(buffer, 0, sizeof(buffer));
 		int readnr = serRead(serialHandler, buffer, 255);
@@ -38,8 +52,28 @@ void printData(int serialHandler) {
 			gpioTerminate();
 			exit(0);
 		}
-		printf("%s\n", buffer);
+		printf("received<<%s<<endReceive\n", buffer);
 		fflush(stdout);
+		int commandPos = 0;
+		for (i = 0 ;i < readnr; i++) {
+			if (buffer[i] == ':') {
+				commandPos = i + 1;
+				break;
+			}
+		}
+		for (i = commandPos,j=0; i < readnr; i++, j++) {
+			if (buffer[i] == '#') {
+				buffer[j] = buffer[i];
+				buffer[++j] = '\0';
+				break;
+			}
+			buffer[j] = buffer[i];
+		}
+		memset(&buffer[j],'\0',sizeof(buffer)-sizeof(char)*j);
+		printf("%s\n", buffer);
+		memset(sendBuffer, 0, sizeof(sendBuffer));
+		sprintf(sendBuffer,"AT+CIPCLOSE=0");
+		serWrite(serialHandler,sendBuffer,strlen(sendBuffer));
 	}
 }
 
@@ -95,8 +129,15 @@ int main(int argc, char **argv) {
 	fflush(stdout);
 	sleep(1);
 	printData(serialHandler);
+//	sprintf(message,"%s\r\n","AT+CIPRECVMODE=0");
+//	serWrite(serialHandler, message, strlen(message));
+//	printf("Sucessfully send %s",message);
+//	fflush(stdout);
+//	sleep(1);
+//	printData(serialHandler);
+//
 	while (1) {
-		printData(serialHandler);
+		recvData(serialHandler);
 		sleep(1);
 	}
 }
