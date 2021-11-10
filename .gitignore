@@ -5,3 +5,10 @@
 *.so
 *.a
 *.o
+*.class
+*.jar
+.idea
+out/
+build/
+gradle/
+.gradle
