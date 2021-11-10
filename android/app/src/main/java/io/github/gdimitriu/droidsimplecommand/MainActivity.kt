@@ -9,6 +9,7 @@ import android.util.Log
 import android.view.MotionEvent
 import android.widget.Button
 import android.widget.EditText
+import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import java.io.OutputStreamWriter
@@ -17,6 +18,8 @@ import java.net.Socket
 import java.net.URL
 
 private const val TAG = "DroidSimpleCommand"
+@DelicateCoroutinesApi
+@Suppress("BlockingMethodInNonBlockingContext")
 class MainActivity : AppCompatActivity() {
 
     private lateinit var forwardButton : Button
@@ -40,15 +43,15 @@ class MainActivity : AppCompatActivity() {
         ipEditText = findViewById(R.id.address)
         portEditText = findViewById(R.id.port)
 
-        var ipAddressValue : String = "192.168.4.1"
-        var portValue : String = "8080"
+        var ipAddressValue = "192.168.4.1"
+        var portValue = "8080"
 
         forwardButton.setOnTouchListener { view, motionEvent ->
-            var event = motionEvent as MotionEvent
+            val event = motionEvent as MotionEvent
             if (event.actionMasked == MotionEvent.ACTION_DOWN) {
-                Log.e(TAG, "Move forward")
-                GlobalScope.launch() {
-                    val s:Socket = Socket(ipAddressValue, portValue.toInt())
+                Log.d(TAG, "Move forward")
+                GlobalScope.launch {
+                    val s = Socket(ipAddressValue, portValue.toInt())
                     s.tcpNoDelay= true
                     val outputStreamWriter = OutputStreamWriter(s.getOutputStream())
                     outputStreamWriter.write("M1,0#\n")
@@ -58,9 +61,9 @@ class MainActivity : AppCompatActivity() {
                 }
                 return@setOnTouchListener true
             } else if (event.actionMasked == MotionEvent.ACTION_UP) {
-                Log.e(TAG, "Stop")
-                GlobalScope.launch() {
-                    val s:Socket = Socket(ipAddressValue, portValue.toInt())
+                Log.d(TAG, "Stop")
+                GlobalScope.launch {
+                    val s = Socket(ipAddressValue, portValue.toInt())
                     s.tcpNoDelay= true
                     val outputStreamWriter = OutputStreamWriter(s.getOutputStream())
                     outputStreamWriter.write("M0,0#\n")
@@ -73,11 +76,11 @@ class MainActivity : AppCompatActivity() {
             return@setOnTouchListener false
         }
         backwardButton.setOnTouchListener { view, motionEvent ->
-            var event = motionEvent as MotionEvent
+            val event = motionEvent as MotionEvent
             if (event.actionMasked == MotionEvent.ACTION_DOWN) {
-                Log.e(TAG, "Move backward")
-                GlobalScope.launch() {
-                    val s:Socket = Socket(ipAddressValue, portValue.toInt())
+                Log.d(TAG, "Move backward")
+                GlobalScope.launch {
+                    val s = Socket(ipAddressValue, portValue.toInt())
                     s.tcpNoDelay= true
                     val outputStreamWriter = OutputStreamWriter(s.getOutputStream())
                     outputStreamWriter.write("M-1,0#\n")
@@ -87,9 +90,9 @@ class MainActivity : AppCompatActivity() {
                 }
                 return@setOnTouchListener true
             } else if (event.actionMasked == MotionEvent.ACTION_UP) {
-                Log.e(TAG, "Stop")
-                GlobalScope.launch() {
-                    val s:Socket = Socket(ipAddressValue, portValue.toInt())
+                Log.d(TAG, "Stop")
+                GlobalScope.launch {
+                    val s = Socket(ipAddressValue, portValue.toInt())
                     s.tcpNoDelay= true
                     val outputStreamWriter = OutputStreamWriter(s.getOutputStream())
                     outputStreamWriter.write("M0,0#\n")
@@ -102,11 +105,11 @@ class MainActivity : AppCompatActivity() {
             return@setOnTouchListener false
         }
         leftButton.setOnTouchListener { view, motionEvent ->
-            var event = motionEvent as MotionEvent
+            val event = motionEvent as MotionEvent
             if (event.actionMasked == MotionEvent.ACTION_DOWN) {
-                Log.e(TAG, "Move left")
-                GlobalScope.launch() {
-                    val s:Socket = Socket(ipAddressValue, portValue.toInt())
+                Log.d(TAG, "Move left")
+                GlobalScope.launch {
+                    val s = Socket(ipAddressValue, portValue.toInt())
                     s.tcpNoDelay= true
                     val outputStreamWriter = OutputStreamWriter(s.getOutputStream())
                     outputStreamWriter.write("M0,-1#\n")
@@ -116,9 +119,9 @@ class MainActivity : AppCompatActivity() {
                 }
                 return@setOnTouchListener true
             } else if (event.actionMasked == MotionEvent.ACTION_UP) {
-                Log.e(TAG, "Stop")
-                GlobalScope.launch() {
-                    val s:Socket = Socket(ipAddressValue, portValue.toInt())
+                Log.d(TAG, "Stop")
+                GlobalScope.launch {
+                    val s = Socket(ipAddressValue, portValue.toInt())
                     s.tcpNoDelay= true
                     val outputStreamWriter = OutputStreamWriter(s.getOutputStream())
                     outputStreamWriter.write("M0,0#\n")
@@ -130,11 +133,11 @@ class MainActivity : AppCompatActivity() {
             return@setOnTouchListener false
         }
         rightButton.setOnTouchListener { view, motionEvent ->
-            var event = motionEvent as MotionEvent
+            val event = motionEvent as MotionEvent
             if (event.actionMasked == MotionEvent.ACTION_DOWN) {
-                Log.e(TAG, "Move right")
-                GlobalScope.launch() {
-                    val s:Socket = Socket(ipAddressValue, portValue.toInt())
+                Log.d(TAG, "Move right")
+                GlobalScope.launch {
+                    val s = Socket(ipAddressValue, portValue.toInt())
                     s.tcpNoDelay= true
                     val outputStreamWriter = OutputStreamWriter(s.getOutputStream())
                     outputStreamWriter.write("M0,1#\n")
@@ -144,9 +147,9 @@ class MainActivity : AppCompatActivity() {
                 }
                 return@setOnTouchListener true
             } else if (event.actionMasked == MotionEvent.ACTION_UP) {
-                Log.e(TAG, "Stop")
-                GlobalScope.launch() {
-                    val s:Socket = Socket(ipAddressValue, portValue.toInt())
+                Log.d(TAG, "Stop")
+                GlobalScope.launch {
+                    val s = Socket(ipAddressValue, portValue.toInt())
                     s.tcpNoDelay= true
                     val outputStreamWriter = OutputStreamWriter(s.getOutputStream())
                     outputStreamWriter.write("M0,0#\n")
@@ -159,10 +162,10 @@ class MainActivity : AppCompatActivity() {
             return@setOnTouchListener false
         }
         stopButton.setOnClickListener { view ->
-            Log.e(TAG, "Full stop")
-            GlobalScope.launch() {
+            Log.d(TAG, "Full stop")
+            GlobalScope.launch {
 
-                val s:Socket = Socket(ipAddressValue, portValue.toInt())
+                val s = Socket(ipAddressValue, portValue.toInt())
                 s.tcpNoDelay= true
                 val outputStreamWriter = OutputStreamWriter(s.getOutputStream())
                 outputStreamWriter.write("b#\n")
