@@ -6,7 +6,7 @@
     <string name="droid_left">Left</string>
     <string name="droid_right">Right</string>
     <string name="droid_default_ip">192.168.4.1</string>
-    <string name="droid_port_title">Droid http/https Port</string>
+    <string name="droid_port_title">Droid Port</string>
     <string name="droid_address_title">Droid Address</string>
     <string name="droid_default_port">8080</string>
 </resources>
