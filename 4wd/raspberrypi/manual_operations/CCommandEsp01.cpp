@@ -130,9 +130,9 @@ void CCommandEsp01::startReceiving() {
 //			cout << "received<<" << receiveBuffer << "<<endreceive"<< std::endl;
 			str.assign(receiveBuffer);
 			if (str.find('#') != string::npos) {
-				memset(sendBuffer, 0, sizeof(sendBuffer));
-				sprintf(sendBuffer, "AT+CIPCLOSE=0");
-				serWrite(m_serialHandler, sendBuffer, strlen(sendBuffer));
+//				memset(sendBuffer, 0, sizeof(sendBuffer));
+//				sprintf(sendBuffer, "AT+CIPCLOSE=0");
+//				serWrite(m_serialHandler, sendBuffer, strlen(sendBuffer));
 				int commandPos = 0;
 				for (int i = 0; i < recvPosition; i++) {
 					if (receiveBuffer[i] == ':') {
