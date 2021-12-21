@@ -27,9 +27,11 @@ class MainActivity : AppCompatActivity() {
     private lateinit var leftButton : Button
     private lateinit var rightButton : Button
     private lateinit var stopButton: Button
+    private lateinit var connectButton: Button;
 
     private lateinit var ipEditText: EditText
     private lateinit var portEditText: EditText
+    private var socket: Socket? = null
 
     @SuppressLint("ClickableViewAccessibility")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -42,6 +44,7 @@ class MainActivity : AppCompatActivity() {
         stopButton = findViewById(R.id.stop)
         ipEditText = findViewById(R.id.address)
         portEditText = findViewById(R.id.port)
+        connectButton = findViewById(R.id.connect)
 
         var ipAddressValue = "192.168.4.1"
         var portValue = "8080"
@@ -50,27 +53,11 @@ class MainActivity : AppCompatActivity() {
             val event = motionEvent as MotionEvent
             if (event.actionMasked == MotionEvent.ACTION_DOWN) {
                 Log.d(TAG, "Move forward")
-                GlobalScope.launch {
-                    val s = Socket(ipAddressValue, portValue.toInt())
-                    s.tcpNoDelay= true
-                    val outputStreamWriter = OutputStreamWriter(s.getOutputStream())
-                    outputStreamWriter.write("M1,0#\n")
-                    outputStreamWriter.flush()
-                    outputStreamWriter.close()
-                    s.close()
-                }
+                sendCommandToDroid("M1,0#\n")
                 return@setOnTouchListener true
             } else if (event.actionMasked == MotionEvent.ACTION_UP) {
                 Log.d(TAG, "Stop")
-                GlobalScope.launch {
-                    val s = Socket(ipAddressValue, portValue.toInt())
-                    s.tcpNoDelay= true
-                    val outputStreamWriter = OutputStreamWriter(s.getOutputStream())
-                    outputStreamWriter.write("M0,0#\n")
-                    outputStreamWriter.flush()
-                    outputStreamWriter.close()
-                    s.close()
-                }
+                sendCommandToDroid("M0,0#\n")
                 return@setOnTouchListener true
             }
             return@setOnTouchListener false
@@ -79,27 +66,11 @@ class MainActivity : AppCompatActivity() {
             val event = motionEvent as MotionEvent
             if (event.actionMasked == MotionEvent.ACTION_DOWN) {
                 Log.d(TAG, "Move backward")
-                GlobalScope.launch {
-                    val s = Socket(ipAddressValue, portValue.toInt())
-                    s.tcpNoDelay= true
-                    val outputStreamWriter = OutputStreamWriter(s.getOutputStream())
-                    outputStreamWriter.write("M-1,0#\n")
-                    outputStreamWriter.flush()
-                    outputStreamWriter.close()
-                    s.close()
-                }
+                sendCommandToDroid("M-1,0#\n")
                 return@setOnTouchListener true
             } else if (event.actionMasked == MotionEvent.ACTION_UP) {
                 Log.d(TAG, "Stop")
-                GlobalScope.launch {
-                    val s = Socket(ipAddressValue, portValue.toInt())
-                    s.tcpNoDelay= true
-                    val outputStreamWriter = OutputStreamWriter(s.getOutputStream())
-                    outputStreamWriter.write("M0,0#\n")
-                    outputStreamWriter.flush()
-                    outputStreamWriter.close()
-                    s.close()
-                }
+                sendCommandToDroid("M0,0#\n")
                 return@setOnTouchListener true
             }
             return@setOnTouchListener false
@@ -108,26 +79,11 @@ class MainActivity : AppCompatActivity() {
             val event = motionEvent as MotionEvent
             if (event.actionMasked == MotionEvent.ACTION_DOWN) {
                 Log.d(TAG, "Move left")
-                GlobalScope.launch {
-                    val s = Socket(ipAddressValue, portValue.toInt())
-                    s.tcpNoDelay= true
-                    val outputStreamWriter = OutputStreamWriter(s.getOutputStream())
-                    outputStreamWriter.write("M0,-1#\n")
-                    outputStreamWriter.flush()
-                    outputStreamWriter.close()
-                    s.close()
-                }
+                sendCommandToDroid("M0,-1#\n")
                 return@setOnTouchListener true
             } else if (event.actionMasked == MotionEvent.ACTION_UP) {
                 Log.d(TAG, "Stop")
-                GlobalScope.launch {
-                    val s = Socket(ipAddressValue, portValue.toInt())
-                    s.tcpNoDelay= true
-                    val outputStreamWriter = OutputStreamWriter(s.getOutputStream())
-                    outputStreamWriter.write("M0,0#\n")
-                    outputStreamWriter.flush()
-                    outputStreamWriter.close()
-                    s.close()                }
+                sendCommandToDroid("M0,0#\n")
                 return@setOnTouchListener true
             }
             return@setOnTouchListener false
@@ -136,52 +92,24 @@ class MainActivity : AppCompatActivity() {
             val event = motionEvent as MotionEvent
             if (event.actionMasked == MotionEvent.ACTION_DOWN) {
                 Log.d(TAG, "Move right")
-                GlobalScope.launch {
-                    val s = Socket(ipAddressValue, portValue.toInt())
-                    s.tcpNoDelay= true
-                    val outputStreamWriter = OutputStreamWriter(s.getOutputStream())
-                    outputStreamWriter.write("M0,1#\n")
-                    outputStreamWriter.flush()
-                    outputStreamWriter.close()
-                    s.close()
-                }
+                sendCommandToDroid("M0,1#\n")
                 return@setOnTouchListener true
             } else if (event.actionMasked == MotionEvent.ACTION_UP) {
                 Log.d(TAG, "Stop")
-                GlobalScope.launch {
-                    val s = Socket(ipAddressValue, portValue.toInt())
-                    s.tcpNoDelay= true
-                    val outputStreamWriter = OutputStreamWriter(s.getOutputStream())
-                    outputStreamWriter.write("M0,0#\n")
-                    outputStreamWriter.flush()
-                    outputStreamWriter.close()
-                    s.close()
-                }
+                sendCommandToDroid("M0,0#\n")
                 return@setOnTouchListener true
             }
             return@setOnTouchListener false
         }
         stopButton.setOnClickListener { view ->
             Log.d(TAG, "Full stop")
+            sendCommandToDroid("b#\n")
+        }
+        connectButton.setOnClickListener { view ->
+            Log.d(TAG, "Connect to droid")
             GlobalScope.launch {
-
-                val s = Socket(ipAddressValue, portValue.toInt())
-                s.tcpNoDelay= true
-                val outputStreamWriter = OutputStreamWriter(s.getOutputStream())
-                outputStreamWriter.write("b#\n")
-                outputStreamWriter.flush()
-                outputStreamWriter.close()
-                s.close()
-/*                var url = URL("http://${ipAddressValue}:${portValue}")
-                var httpURLConnection = url.openConnection() as HttpURLConnection
-                httpURLConnection.doOutput = true
-                httpURLConnection.doInput = true
-                val outputStreamWriter = OutputStreamWriter(httpURLConnection.outputStream)
-                outputStreamWriter.write("b#\n")
-                outputStreamWriter.flush()
-                outputStreamWriter.close()
-                Log.e(TAG, httpURLConnection.responseCode.toString())
-                httpURLConnection.disconnect() */
+                socket = Socket(ipAddressValue, portValue.toInt())
+                socket?.tcpNoDelay = true
             }
         }
 
@@ -215,4 +143,31 @@ class MainActivity : AppCompatActivity() {
         }
         ipEditText.addTextChangedListener(addressWatcher)
     }
+
+    private fun sendCommandToDroid(message: String) {
+        GlobalScope.launch {
+            if (socket != null) {
+                val outputStreamWriter = OutputStreamWriter(socket!!.getOutputStream())
+                outputStreamWriter.write(message)
+                outputStreamWriter.flush()
+            }
+        }
+    }
+    /*
+    this is not used
+    private fun sendHttpConnection() {
+        GlobalScope.launch {
+                var url = URL("http://${ipAddressValue}:${portValue}")
+                var httpURLConnection = url.openConnection() as HttpURLConnection
+                httpURLConnection.doOutput = true
+                httpURLConnection.doInput = true
+                val outputStreamWriter = OutputStreamWriter(httpURLConnection.outputStream)
+                outputStreamWriter.write("b#\n")
+                outputStreamWriter.flush()
+                outputStreamWriter.close()
+                Log.e(TAG, httpURLConnection.responseCode.toString())
+                httpURLConnection.disconnect()
+        }
+    }
+     */
 }
