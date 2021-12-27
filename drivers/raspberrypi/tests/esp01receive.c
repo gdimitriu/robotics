@@ -29,7 +29,6 @@
 
 void printData(int serialHandler) {
 	char buffer[255];
-	char sendBuffer[255];
 	if (serDataAvailable(serialHandler) > 0) {
 		memset(buffer, 0, sizeof(buffer));
 		int readnr = serRead(serialHandler, buffer, 255);
@@ -43,6 +42,7 @@ void recvData(int serialHandler) {
 	char buffer[255];
 	char sendBuffer[255];
 	int i,j;
+	int connectionId;
 	if (serDataAvailable(serialHandler) > 0) {
 		memset(buffer, 0, sizeof(buffer));
 		int readnr = serRead(serialHandler, buffer, 255);
@@ -55,6 +55,24 @@ void recvData(int serialHandler) {
 		printf("received<<%s<<endReceive\n", buffer);
 		fflush(stdout);
 		int commandPos = 0;
+		for (i = 0; i < readnr; i++) {
+			if (buffer[i] == ',') {
+				commandPos = i + 1;
+				break;
+			}
+		}
+		memset(sendBuffer, 0, sizeof(sendBuffer));
+		for (i = commandPos, j= 0; i < readnr; i++, j++) {
+			if (buffer[i] != ',')
+				sendBuffer[j] = buffer[i];
+			else {
+				sendBuffer[j] = '\0';
+				break;
+			}
+		}
+		connectionId = atoi(sendBuffer);
+		printf("ConnectionId = %d\n", connectionId);
+		commandPos = 0;
 		for (i = 0 ;i < readnr; i++) {
 			if (buffer[i] == ':') {
 				commandPos = i + 1;
@@ -71,9 +89,25 @@ void recvData(int serialHandler) {
 		}
 		memset(&buffer[j],'\0',sizeof(buffer)-sizeof(char)*j);
 		printf("%s\n", buffer);
-		memset(sendBuffer, 0, sizeof(sendBuffer));
-		sprintf(sendBuffer,"AT+CIPCLOSE=0");
-		serWrite(serialHandler,sendBuffer,strlen(sendBuffer));
+		if (strlen(buffer) == 2) {
+			usleep(20000);
+			memset(sendBuffer, 0, sizeof(sendBuffer));
+			sprintf(sendBuffer,"AT+CIPSEND=%d,%d\r\n", connectionId, 5);
+			serWrite(serialHandler,sendBuffer,strlen(sendBuffer));
+			printf("Send CIPSEND\n");
+			fflush(stdout);
+			usleep(20000);
+			printData(serialHandler);
+			sprintf(sendBuffer,"200\r\n");
+			serWrite(serialHandler,sendBuffer,strlen(sendBuffer));
+			usleep(20000);
+			printData(serialHandler);
+//			sprintf(sendBuffer,"+++");
+//			serWrite(serialHandler,sendBuffer,strlen(sendBuffer));
+//			printf("Send final\n");
+//			fflush(stdout);
+//			printData(serialHandler);
+		}
 	}
 }
 
