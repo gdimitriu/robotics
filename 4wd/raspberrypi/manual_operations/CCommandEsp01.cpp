@@ -110,7 +110,7 @@ void CCommandEsp01::startReceiving() {
 				}
 			}
 			buffer[readnr] = '\0';
-
+			cout<<"Buffer=<<"<<buffer<<"<<END"<<std::endl;
 			if (recvPosition > 0) {
 				for (int i = 0; i < readnr; i++, recvPosition++) {
 					if (buffer[i] != '\0')
@@ -127,13 +127,25 @@ void CCommandEsp01::startReceiving() {
 						break;
 				}
 			}
-//			cout << "received<<" << receiveBuffer << "<<endreceive"<< std::endl;
 			str.assign(receiveBuffer);
 			if (str.find('#') != string::npos) {
-//				memset(sendBuffer, 0, sizeof(sendBuffer));
-//				sprintf(sendBuffer, "AT+CIPCLOSE=0");
-//				serWrite(m_serialHandler, sendBuffer, strlen(sendBuffer));
 				int commandPos = 0;
+				int connectionId = 0;
+				for (int i = 0; i < recvPosition; i++) {
+					if (buffer[i] == ',') {
+						commandPos = i + 1;
+						break;
+					}
+				}
+				memset(sendBuffer, 0, sizeof(sendBuffer));
+				for (int i = commandPos, j= 0; i < recvPosition; i++, j++) {
+					if (buffer[i] != ',')
+						sendBuffer[j] = receiveBuffer[i];
+					else {
+						sendBuffer[j] = '\0';
+						break;
+					}
+				}
 				for (int i = 0; i < recvPosition; i++) {
 					if (receiveBuffer[i] == ':') {
 						commandPos = i + 1;
@@ -144,7 +156,6 @@ void CCommandEsp01::startReceiving() {
 					if (receiveBuffer[i] == '#') {
 						receiveBuffer[j] = receiveBuffer[i];
 						receiveBuffer[j + 1] = '\0';
-//							memset(&receiveBuffer[j + 1],'\0',sizeof(receiveBuffer)-sizeof(char)*j);
 						break;
 					}
 					receiveBuffer[j] = receiveBuffer[i];
@@ -156,9 +167,24 @@ void CCommandEsp01::startReceiving() {
 				recvPosition = 0;
 				if (receiveBuffer[strlen(receiveBuffer) - 1] == '#') {
 					str.assign(receiveBuffer);
-//					cout << "command<<" << receiveBuffer << "<<end command"<< std::endl;
-					processInputData(&str);
+					cout << "command<<" << receiveBuffer << "<<end command"<< std::endl;
+					int ret = processInputData(&str);
 					memset(receiveBuffer, 0, sizeof(receiveBuffer));
+					//send back data
+					if(ret == 1) {
+						usleep(20000);
+						memset(sendBuffer, 0, sizeof(sendBuffer));
+						char *message = getSettingCommand()->getRepliedMessage();
+						sprintf(sendBuffer,"AT+CIPSEND=%d,%d\r\n", connectionId, strlen(message) + 2);
+						cout<<"Send back<<"<<sendBuffer<<"<<END"<<std::endl;
+						serWrite(m_serialHandler,sendBuffer,strlen(sendBuffer));
+						usleep(20000);
+						justConsumeData();
+						usleep(20000);
+						memset(sendBuffer, 0, sizeof(sendBuffer));
+						sprintf(sendBuffer,"%s\r\n",message);
+						serWrite(m_serialHandler,sendBuffer,strlen(sendBuffer));
+					}
 				} else {
 					cout << "command not<<"
 							<< receiveBuffer[strlen(receiveBuffer) - 1]

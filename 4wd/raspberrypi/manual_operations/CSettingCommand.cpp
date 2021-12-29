@@ -82,22 +82,30 @@ int CSettingCommand::executeSimpleCommand(char *operation) {
 		removeCommandPrefix(operation);
 		sprintf(message, "max power %u\n",m_droid->getMaxEnginePower());
 		m_logger->info(message);
-		break;
+		sprintf(message,"%u",m_droid->getMaxEnginePower());
+		setRepliedMessage(message);
+		return 1;
 	case 'v':
 		removeCommandPrefix(operation);
 		sprintf(message, "min power %u\n",m_droid->getMinEnginePower());
 		m_logger->info(message);
-		break;
+		sprintf(message,"%u",m_droid->getMinEnginePower());
+		setRepliedMessage(message);
+		return 1;
 	case 'd':
 		removeCommandPrefix(operation);
 		sprintf(message, "min power distance %lu\n",m_droid->getLowPowerDistance());
 		m_logger->info(message);
-		break;
+		sprintf(message,"%lu",m_droid->getLowPowerDistance());
+		setRepliedMessage(message);
+		return 1;
 	case 's':
 		removeCommandPrefix(operation);
 		sprintf(message, "stop distance %lu\n",m_droid->getStopDistance());
 		m_logger->info(message);
-		break;
+		sprintf(message,"%lu",m_droid->getStopDistance());
+		setRepliedMessage(message);
+		return 1;
 	default:
 		sprintf(message, "Invalid settings with data command = %s\n", operation);
 		m_logger->error(message);
@@ -121,7 +129,9 @@ int CSettingCommand::executeDataCommand(char *operation) {
 			m_logger->debug(message);
 		}
 		m_droid->setMaxEnginePower(uintValue);
-		break;
+		sprintf(message,"OK");
+		setRepliedMessage(message);
+		return 1;
 	case 'v':
 		removeCommandPrefix(operation);
 		sscanf(operation, "%u", &uintValue);
@@ -131,7 +141,9 @@ int CSettingCommand::executeDataCommand(char *operation) {
 			m_logger->debug(message);
 		}
 		m_droid->setMinEnginePower(uintValue);
-		break;
+		sprintf(message,"OK");
+		setRepliedMessage(message);
+		return 1;
 	case 'd':
 		removeCommandPrefix(operation);
 		sscanf(operation, "%lu", &ulongValue);
@@ -141,7 +153,9 @@ int CSettingCommand::executeDataCommand(char *operation) {
 			m_logger->debug(message);
 		}
 		m_droid->setLowPowerDistance(ulongValue);
-		break;
+		sprintf(message,"OK");
+		setRepliedMessage(message);
+		return 1;
 	case 's':
 		removeCommandPrefix(operation);
 		sscanf(operation, "%u", &uintValue);
@@ -150,12 +164,14 @@ int CSettingCommand::executeDataCommand(char *operation) {
 					m_droid->getStopDistance(), uintValue);
 			m_logger->debug(message);
 		}
-			m_droid->setStopDistance(uintValue);
-			break;
+		m_droid->setStopDistance(uintValue);
+		sprintf(message,"OK");
+		setRepliedMessage(message);
+		return 1;
 	default:
 		sprintf(message, "Invalid settings with data command = %s\n", operation);
 		m_logger->error(message);
-		return 1;
+		return -1;
 	}
 	return 0;
 }

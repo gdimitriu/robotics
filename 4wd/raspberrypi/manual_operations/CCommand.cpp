@@ -91,3 +91,11 @@ void CCommand::removeCommandPrefix(char *operation) {
 void CCommand::setReverseType(int reverse) {
 	m_reverseType = reverse;
 }
+
+char* CCommand::getRepliedMessage() {
+	return m_repliedMessage;
+}
+
+void CCommand::setRepliedMessage(char *message) {
+	strcpy(m_repliedMessage,message);
+}

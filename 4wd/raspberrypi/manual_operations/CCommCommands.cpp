@@ -74,38 +74,41 @@ void CCommCommands::setDroid(CDroid *droid) {
 	m_droid = droid;
 }
 
-void CCommCommands::processInputData(string *input, int reverse) {
+int CCommCommands::processInputData(string *input, int reverse) {
 	int status;
 	if (input->empty() || input->size() == 1)
-		return;
+		return 0;
 	if (input->back() != '#') {
 		char message[255];
 		memset(message,0,255);
 		sprintf(message,"Operation not known because is not end with # = %s\n", input->c_str());
 		m_logger->error(message);
-		return;
+		return 0;
 	}
 	string *command;
 	m_moveCommand->setReverseType(reverse);
 	if (m_moveOperations->find(input->at(0)) != m_moveOperations->end()) {
 		status = m_moveCommand->execute(input->c_str());
+		return status;
 	} else if (m_settingOperations->find(input->at(0)) != m_settingOperations->end()) {
 		status = m_settingCommand->execute(input->c_str());
+		return status;
 	} else if (m_localOperations.find(input->at(0)) != m_localOperations.end()) {
 		executeLocal(input->c_str());
-		return;
+		return 0;
 	} else {
 		char message[255];
 		memset(message,0,255);
 		sprintf(message,"Operation not known = %s\n", input->c_str());
 		m_logger->error(message);
 		m_moveCommand->setReverseType(0);
-		return;
+		return 0;
 	}
 	if (status == 0 && m_isRecording) {
 		command = new string(*input);
 		m_recordMovement.push_back(command);
 	}
+	return 0;
 }
 
 int CCommCommands::executeLocal(const char *operation) {
@@ -281,4 +284,8 @@ void CCommCommands::removeCommandPrefix(char *operation) {
 		operation[i] = operation[i+1];
 	}
 	operation[size] = '\0';
+}
+
+CCommand* CCommCommands::getSettingCommand() {
+	return m_settingCommand;
 }

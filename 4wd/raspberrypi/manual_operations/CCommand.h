@@ -64,6 +64,7 @@ public:
 	 * 2 for full reverse
 	 */
 	void setReverseType(int reverse);
+	char* getRepliedMessage();
 protected:
 	/*
 	 * execute the operation without data
@@ -91,6 +92,8 @@ protected:
 	 * 2 for full reverse
 	 */
 	int m_reverseType;
+	char m_repliedMessage[255];
+	void setRepliedMessage(char *message);
 };
 
 #endif /* MANUAL_OPERATIONS_CCOMMAND_H_ */
