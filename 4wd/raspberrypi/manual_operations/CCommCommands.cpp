@@ -47,6 +47,7 @@ CCommCommands::CCommCommands(CCommand *move, CCommand *setting) {
 	m_menu->append("LfilePath# load record from the file\t;\n");
 	m_menu->append("TfilePath# take a picture into the file\t;\n");
 	m_menu->append("Go/c# grab the object using claw (o for open c for close)\t;\n");
+	m_menu->append("p# print the menu\t;\n");
 	m_isRecording = false;
 	m_localOperations.insert('R'); //start/stop recording of movement
 	m_localOperations.insert('P'); //play the recording of movement or play in reverse the recording
@@ -54,6 +55,7 @@ CCommCommands::CCommCommands(CCommand *move, CCommand *setting) {
 	m_localOperations.insert('S'); //save record as file
 	m_localOperations.insert('L'); //load record file
 	m_localOperations.insert('G');//grab
+	m_localOperations.insert('p');//print menu
 	m_droid = NULL;
 }
 
@@ -269,6 +271,11 @@ int CCommCommands::executeLocal(const char *operation) {
 			m_droid->closeClaw();
 		}
 		free(newOperation);
+		break;
+	case 'p':
+		m_moveCommand->printMenu();
+		m_settingCommand->printMenu();
+		printMenu();
 		break;
 	default:
 		sprintf(message, "Invalid Command with data command = %s\n", operation);

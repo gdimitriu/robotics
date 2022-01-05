@@ -33,20 +33,15 @@
 #include <CMoveCommand.h>
 #include <CSettingCommand.h>
 #include <CLoggerBle.h>
+#include <CLoggerFile.h>
 
 int main(int argc, char **argv) {
 	if (argc != 2) {
 		std::cerr<<"Usage="<<argv[0]<<" configFile\n";
 		exit(1);
 	}
-	if (gpioInitialise() < 0) {
-		perror("gpio init failed");
-		exit(1);
-	}
-	char buff[255];
-	CBLECommand *commStd = new CBLECommand(new CMoveCommand(new CLoggerBle("/dev/rfcomm0",38400)), new CSettingCommand(new CLoggerBle("/dev/rfcomm0",38400)));
+	CBLECommand *commStd = new CBLECommand(new CMoveCommand(new CLoggerFile("/var/log/droid/move.log",'a')), new CSettingCommand(new CLoggerFile("/var/log/droid/settings.log",'a')));
 	CManualDroid *droid = new CManualDroid(argv[1], 0, commStd);
-	droid->dumpInfo();
 	droid->startReceiving();
 	delete droid;
 	gpioTerminate();

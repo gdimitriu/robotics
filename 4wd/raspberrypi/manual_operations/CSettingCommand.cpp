@@ -63,7 +63,8 @@ CSettingCommand::~CSettingCommand() {
 
 void CSettingCommand::setDroid(CDroid *droid) {
 	m_droid = droid;
-	m_logger = droid->getLogger();
+	if (m_logger == NULL)
+		m_logger = droid->getLogger();
 }
 
 set<char>* CSettingCommand::getOperationsPrefix() {

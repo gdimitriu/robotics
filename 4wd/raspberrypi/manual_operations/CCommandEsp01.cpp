@@ -45,7 +45,9 @@ void CCommandEsp01::justConsumeData() {
 	if (serDataAvailable(m_serialHandler) > 0) {
 		memset(buffer, 0, sizeof(buffer));
 		int readnr = serRead(m_serialHandler, buffer, 255);
+#ifdef DEBUG_MODE
 		cout << "from esp<<" << buffer << "<<enddata" << std::endl;
+#endif
 	}
 }
 
@@ -110,7 +112,9 @@ void CCommandEsp01::startReceiving() {
 				}
 			}
 			buffer[readnr] = '\0';
+#ifdef DEBUG_MODE
 			cout<<"Buffer=<<"<<buffer<<"<<END"<<std::endl;
+#endif
 			if (recvPosition > 0) {
 				for (int i = 0; i < readnr; i++, recvPosition++) {
 					if (buffer[i] != '\0')
@@ -163,11 +167,15 @@ void CCommandEsp01::startReceiving() {
 				if (strcmp(receiveBuffer, "exit#") == 0) {
 					break;
 				}
-//				cout << "received: " << receiveBuffer << " endreceive"<< std::endl;
+#ifdef DEBUG_MODE
+				cout << "received: " << receiveBuffer << " endreceive"<< std::endl;
+#endif
 				recvPosition = 0;
 				if (receiveBuffer[strlen(receiveBuffer) - 1] == '#') {
 					str.assign(receiveBuffer);
+#ifdef DEBUG_MODE
 					cout << "command<<" << receiveBuffer << "<<end command"<< std::endl;
+#endif
 					int ret = processInputData(&str);
 					memset(receiveBuffer, 0, sizeof(receiveBuffer));
 					//send back data
@@ -176,7 +184,9 @@ void CCommandEsp01::startReceiving() {
 						memset(sendBuffer, 0, sizeof(sendBuffer));
 						char *message = getSettingCommand()->getRepliedMessage();
 						sprintf(sendBuffer,"AT+CIPSEND=%d,%d\r\n", connectionId, strlen(message) + 2);
+#ifdef DEBUG_MODE
 						cout<<"Send back<<"<<sendBuffer<<"<<END"<<std::endl;
+#endif
 						serWrite(m_serialHandler,sendBuffer,strlen(sendBuffer));
 						usleep(20000);
 						justConsumeData();
@@ -185,11 +195,14 @@ void CCommandEsp01::startReceiving() {
 						sprintf(sendBuffer,"%s\r\n",message);
 						serWrite(m_serialHandler,sendBuffer,strlen(sendBuffer));
 					}
-				} else {
+				}
+#ifdef DEBUG_MODE
+				else {
 					cout << "command not<<"
 							<< receiveBuffer[strlen(receiveBuffer) - 1]
 							<< "<<end command" << std::endl;
 				}
+#endif
 			}
 
 		}

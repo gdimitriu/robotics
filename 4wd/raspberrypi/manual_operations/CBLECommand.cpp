@@ -28,18 +28,21 @@
 #include <string.h>
 #include <iostream>
 
-CBLECommand::CBLECommand(CCommand *move, CCommand *setting) : CCommCommands(move,setting) {
+CBLECommand::CBLECommand(CCommand *move, CCommand *setting) :
+		CCommCommands(move, setting) {
 	m_port = "/dev/rfcomm0";
 	m_boudrate = 38400;
-	m_serialHandler = serOpen(m_port, m_boudrate, 0);
+	m_serialHandler = -1;
 }
 
 CBLECommand::~CBLECommand() {
-	serClose(m_serialHandler);
+	if (m_serialHandler >= 0) {
+		serClose(m_serialHandler);
+	}
 }
 
 void CBLECommand::printMenu() {
-	serWrite(m_serialHandler,"Menu\n",7);
+	serWrite(m_serialHandler, "Menu\n", 7);
 	m_moveCommand->printMenu();
 	m_settingCommand->printMenu();
 	CCommCommands::printMenu();
@@ -48,20 +51,28 @@ void CBLECommand::printMenu() {
 void CBLECommand::startReceiving() {
 	char buffer[255];
 	string str;
+	char sendBuffer[255];
+	m_serialHandler = serOpen(m_port, m_boudrate, 0);
 	do {
 		if (serDataAvailable(m_serialHandler) > 0) {
 			memset(buffer, 0, sizeof(buffer));
 			int readnr = serRead(m_serialHandler, buffer, 255);
-			for(int i = 0; i < readnr; i++) {
+			for (int i = 0; i < readnr; i++) {
 				if (buffer[i] == '\n' || buffer[i] == '\r') {
 					buffer[i] = '\0';
 				}
 			}
-			if (strcmp(buffer,"exit#") == 0 ) {
+			if (strcmp(buffer, "exit#") == 0) {
 				break;
 			}
 			str.assign(buffer);
-			processInputData(&str);
+			int ret = processInputData(&str);
+			if (ret == 1) {
+				char *message = getSettingCommand()->getRepliedMessage();
+				memset(sendBuffer, 0, sizeof(sendBuffer));
+				sprintf(sendBuffer,"%s\r\n",message);
+				serWrite(m_serialHandler,sendBuffer,strlen(sendBuffer));
+			}
 		}
-	} while(strcmp(buffer,"exit#") != 0);
+	} while (strcmp(buffer, "exit#") != 0);
 }
