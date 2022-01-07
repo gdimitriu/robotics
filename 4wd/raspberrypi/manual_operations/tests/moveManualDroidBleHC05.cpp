@@ -45,7 +45,9 @@ int main(int argc, char **argv) {
 	}
 	char buff[255];
 	CBLECommandHC05 *commStd = new CBLECommandHC05(new CMoveCommand(new CLoggerBleHC5()), new CSettingCommand(new CLoggerBleHC5()));
-	CManualDroid *droid = new CManualDroid(argv[1], 0, commStd);
+	vector<CCommCommands *> *commands = new vector<CCommCommands *>();
+	commands->push_back(commStd);
+	CManualDroid *droid = new CManualDroid(argv[1], 0, commands);
 	droid->dumpInfo();
 	droid->startReceiving();
 	delete droid;

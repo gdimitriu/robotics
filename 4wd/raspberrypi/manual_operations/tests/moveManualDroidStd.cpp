@@ -41,7 +41,9 @@ int main(int argc, char **argv) {
 	}
 	char buff[255];
 	CCommandStd *commStd = new CCommandStd(new CMoveCommand(new CLoggerStdout()), new CSettingCommand(new CLoggerStdout()));
-	CManualDroid *droid = new CManualDroid(argv[1], 0, commStd);
+	vector<CCommCommands *> *commands = new vector<CCommCommands *>();
+	commands->push_back(commStd);
+	CManualDroid *droid = new CManualDroid(argv[1], 0, commands);
 	droid->dumpInfo();
 	droid->startReceiving();
 	delete droid;

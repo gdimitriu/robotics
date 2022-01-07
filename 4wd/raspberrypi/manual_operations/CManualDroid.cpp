@@ -24,21 +24,56 @@
  */
 
 #include "CManualDroid.h"
+using namespace std;
 
-CManualDroid::CManualDroid(char *droidCfgFile, int isOnHost, CCommCommands *command) : CDroid(droidCfgFile, isOnHost) {
-	m_command = command;
-	m_command->setDroid(this);
+CManualDroid::CManualDroid(char *droidCfgFile, int isOnHost,vector<CCommCommands *> *commands ) : CDroid(droidCfgFile, isOnHost) {
+	m_commands = commands;
+	for(vector<CCommCommands *>::iterator it = m_commands->begin(); it != m_commands->end(); ++it) {
+		(*it)->setDroid(this);
+	}
+	m_threads = new pthread_t(m_commands->size());
 }
 
 CManualDroid::~CManualDroid() {
-	delete m_command;
+	stopReceiving();
+	for(vector<CCommCommands *>::iterator it = m_commands->begin(); it != m_commands->end(); ++it) {
+		delete (*it);
+	}
+	delete m_commands;
+	pthread_attr_destroy(&m_attr);
+	delete m_threads;
 }
 
 void CManualDroid::dumpInfo() {
-	m_command->printMenu();
+	(*m_commands)[0]->printMenu();
+}
+
+struct CommandCallStructure {
+	CManualDroid *droidCommandCenter;
+	CCommCommands *command;
+};
+
+void *manualDroidCommandExecute(void *command) {
+	CommandCallStructure *cmd = ((CommandCallStructure *)command);
+	cmd->command->startReceiving();
+	cmd->droidCommandCenter->stopReceiving();
+	delete cmd;
+	return NULL;
+}
+
+void CManualDroid::stopReceiving() {
+	for (int i = 0 ;i < m_commands->size(); i++)
+		pthread_cancel(m_threads[i]);
 }
 
 void CManualDroid::startReceiving() {
-	m_command->startReceiving();
+	pthread_attr_init(&m_attr);
+	for(int i = 0; i < m_commands->size(); i++) {
+		CommandCallStructure *arg = new CommandCallStructure();
+		arg->droidCommandCenter = this;
+		arg->command = m_commands->at(i);
+		pthread_create(&m_threads[i],&m_attr, manualDroidCommandExecute,(void *)arg);
+	}
+	for (int i = 0 ;i < m_commands->size(); i++)
+		pthread_join(m_threads[i], NULL);
 }
-

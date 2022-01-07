@@ -3,7 +3,7 @@ AR = arm-linux-gnueabihf-ar
 LIBS = -L$(PREFIX_GPIO) -lpthread -lpigpio -lrt
 INCLUDES = -I$(PREFIX_GPIO)
 OBJECTS = 
-EXECUTABLES = led_gpio detecti2c trigger_gpio ble_serial_receive ble_serial_sndrecv ble_serial_send hc-sr04 esp01receive
+EXECUTABLES = led_gpio detecti2c trigger_gpio ble_serial_receive ble_serial_sndrecv ble_serial_send hc-sr04 esp01receive testBleFile
 FLAGS = -std=gnu++11 -ggdb
 
 all: $(EXECUTABLES)
@@ -34,6 +34,9 @@ hc-sr04:hc-sr04.cpp
 
 esp01receive: esp01receive.c
 	$(CC) -fPIC -o esp01receive esp01receive.c $(LIBS) $(INCLUDES)
+
+testBleFile:testBleFile.c
+	$(CC) -fPIC -o testBleFile testBleFile.c $(LIBS) $(INCLUDES)
 clean:
 	for object in $(EXECUTABLES);\
 	do \

@@ -40,9 +40,14 @@ int main(int argc, char **argv) {
 		std::cerr<<"Usage="<<argv[0]<<" configFile\n";
 		exit(1);
 	}
-	CBLECommand *commStd = new CBLECommand(new CMoveCommand(new CLoggerFile("/var/log/droid/move.log",'a')), new CSettingCommand(new CLoggerFile("/var/log/droid/settings.log",'a')));
-	CManualDroid *droid = new CManualDroid(argv[1], 0, commStd);
+	CLogger *moveLogger = new CLoggerFile("/var/log/droid/move.log",'a');
+	CLogger *settingsLogger = new CLoggerFile("/var/log/droid/settings.log",'a');
+	moveLogger->setType(2);
+	settingsLogger->setType(2);
+	CBLECommand *commStd = new CBLECommand(new CMoveCommand(moveLogger), new CSettingCommand(settingsLogger));
+	vector<CCommCommands *> *commands = new vector<CCommCommands *>();
+	commands->push_back(commStd);
+	CManualDroid *droid = new CManualDroid(argv[1], 0, commands);
 	droid->startReceiving();
 	delete droid;
-	gpioTerminate();
 }

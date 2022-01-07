@@ -90,6 +90,7 @@ void CCommandEsp01::printMenu() {
 }
 
 void CCommandEsp01::startReceiving() {
+	pthread_setcanceltype(PTHREAD_CANCEL_ASYNCHRONOUS, 0);
 	char buffer[1024];
 	char receiveBuffer[2048];
 	string str;
@@ -204,8 +205,8 @@ void CCommandEsp01::startReceiving() {
 				}
 #endif
 			}
-
 		}
+		pthread_testcancel();
 	} while (strcmp(receiveBuffer, "exit#") != 0);
 }
 

@@ -27,15 +27,21 @@
 #define MANUAL_OPERATIONS_CMANUALDROID_H_
 #include <CDroid.h>
 #include <CCommCommands.h>
+#include <vector>
+#include <pthread.h>
 
 class CManualDroid : public CDroid {
 public:
-	CManualDroid(char *droidCfgFile, int isOnHost, CCommCommands *command);
+	CManualDroid(char *droidCfgFile, int isOnHost,vector<CCommCommands *> *commands);
 	virtual ~CManualDroid();
 	virtual void dumpInfo();
 	virtual void startReceiving();
+	virtual void stopReceiving();
 protected:
-	CCommCommands *m_command;
+	friend void *manualDroidCommandExecute(void *command);
+	vector<CCommCommands *> *m_commands;
+	pthread_attr_t m_attr;
+	pthread_t *m_threads;
 };
 
 #endif /* MANUAL_OPERATIONS_CMANUALDROID_H_ */
