@@ -33,7 +33,6 @@ CManualDroid::CManualDroid(char *droidCfgFile, int isOnHost,vector<CCommCommands
 	}
 	m_threads = new pthread_t(m_commands->size());
 }
-
 CManualDroid::~CManualDroid() {
 	stopReceiving();
 	for(vector<CCommCommands *>::iterator it = m_commands->begin(); it != m_commands->end(); ++it) {
@@ -65,6 +64,7 @@ void CManualDroid::stopReceiving() {
 	for (int i = 0 ;i < m_commands->size(); i++)
 		pthread_cancel(m_threads[i]);
 }
+<<<<<<< HEAD
 
 void CManualDroid::startReceiving() {
 	pthread_attr_init(&m_attr);
@@ -76,4 +76,8 @@ void CManualDroid::startReceiving() {
 	}
 	for (int i = 0 ;i < m_commands->size(); i++)
 		pthread_join(m_threads[i], NULL);
+=======
+void *commandExecute(void *command) {
+	((CCommCommands *)command)->startReceiving();
+>>>>>>> 16157d585a3a62076203d40b7c282dd6df205824
 }
