@@ -1,7 +1,7 @@
 /*
- * CCommandStdout.cpp
+ * testBleFile.c
  *
- *  Created on: Oct 5, 2020
+ *  Created on: Jan 7, 2022
  *      Author: Gabriel Dimitriu
  * Copyright (C) 2020 Gabriel Dimitriu
  * All rights reserved.
@@ -22,36 +22,17 @@
  * License along with Robotics; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
+#include <stdio.h>
+#include <unistd.h>
 
-#include "CCommandStd.h"
-
-#include <iostream>
-#include <string>
-using namespace std;
-CCommandStd::CCommandStd(CCommand *move, CCommand *setting) : CCommCommands(move, setting){
-
-}
-
-CCommandStd::~CCommandStd() {
-}
-
-void CCommandStd::printMenu() {
-	std::cout<<"Menu\n";
-	m_moveCommand->printMenu();
-	m_settingCommand->printMenu();
-	CCommCommands::printMenu();
-}
-
-void CCommandStd::startReceiving() {
-	string str;
-	string exitCond = "exit#";
-	pthread_setcanceltype(PTHREAD_CANCEL_ASYNCHRONOUS, 0);
-	do {
-		cin>>str;
-		if (str == exitCond) {
-			break;
+int main(int argc,char **argv) {
+	int fd = -1;
+	while(fd < 0) {
+		fd = open("/dev/rfcomm0");
+		if (fd < 0) {
+			printf("Is not open !");
+			fflush(stdout);
+			sleep(1);
 		}
-		processInputData(&str);
-		pthread_testcancel();
-	} while(str != exitCond);
+	}
 }

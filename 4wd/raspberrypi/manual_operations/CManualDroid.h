@@ -30,10 +30,11 @@
 
 class CManualDroid : public CDroid {
 public:
-	CManualDroid(char *droidCfgFile, int isOnHost, CCommCommands *command);
+	CManualDroid(char *droidCfgFile, int isOnHost ...);
 	virtual ~CManualDroid();
 	virtual void dumpInfo();
 	virtual void startReceiving();
+	friend void *commandExecute(void *command);
 protected:
 	CCommCommands *m_command;
 };

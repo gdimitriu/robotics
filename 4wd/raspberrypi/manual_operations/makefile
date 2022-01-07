@@ -9,10 +9,10 @@ LIB_DIRS = -L$(PREFIX_GPIO) -L$(PREFIX_DRIVERS)/lib -I$(PREFIX_FRAMEWORK)/lib
 INCLUDE_DIRS = -I$(PREFIX_GPIO) -I$(PREFIX_DRIVERS)/include  -I$(PREFIX_FRAMEWORK)/include -I../include -I$(PREFIX_RASPICAM)/src
 OBJECTS = CCommand.o CCommCommands.o CBLECommand.o CBLECommandHC05.o CMoveCommand.o  CSettingCommand.o CCommandStd.o CManualDroid.o CCommandEsp01.o
 HEADERS = CCommand.h CCommCommands.h CCommandStd.h CBLECommand.h CBLECommandHC05.h CMoveCommand.h CSettingCommand.h CManualDroid.h CCommandEsp01.h
-EXECUTABLES =  
+EXECUTABLES =  libdroidcommands.so
 FLAGS = -std=gnu++11 -ggdb
 
-all: $(OBJECTS)
+all: $(OBJECTS) $(EXECUTABLES)
 	cd tests && make
 
 CCommand.o:CCommand.cpp CCommand.h
@@ -51,6 +51,10 @@ CManualDroid.o:CManualDroid.cpp CManualDroid.h CCommCommands.o CSettingCommand.o
 	$(CXX) -fPIC -o CManualDroid.o -c CManualDroid.cpp $(LIBS) $(LIB_DIRS) $(INCLUDE_DIRS) $(FLAGS)
 	cp CManualDroid.h ../include
 	
+libdroidcommands.so: $(OBJECTS)
+	$(CXX) -shared -fPIC -o libdroidcommands.so $(OBJECTS)
+	cp libdroidcommands.so ../lib
+		
 clean:
 	cd tests && make clean
 	for object in $(EXECUTABLES);\
@@ -65,3 +69,4 @@ clean:
 	do \
 		if [ -f ../include/$$object ]; then rm ../include/$$object; fi; \
 	done
+	if [ -f ../lib/libdroidcommands.so ]; then rm ../lib/libdroidcommands.so; fi;

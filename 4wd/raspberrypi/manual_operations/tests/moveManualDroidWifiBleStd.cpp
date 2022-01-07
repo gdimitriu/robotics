@@ -1,7 +1,7 @@
 /*
- * moveDroidStdout.cpp
+ * moveManualDroidWifiBleStd.cpp
  *
- *  Created on: Nov 29, 2020
+ *  Created on: Jan 7, 2022
  *      Author: Gabriel Dimitriu
  * Copyright (C) 2020 Gabriel Dimitriu
  * All rights reserved.
@@ -22,30 +22,40 @@
  * License along with Robotics; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
-
-
 #include <iostream>
 #include <CManualDroid.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <CCommandStd.h>
 #include <CBLECommand.h>
+#include <CCommandEsp01.h>
 #include <CMoveCommand.h>
 #include <CSettingCommand.h>
 #include <CLoggerBle.h>
 #include <CLoggerFile.h>
+
 
 int main(int argc, char **argv) {
 	if (argc != 2) {
 		std::cerr<<"Usage="<<argv[0]<<" configFile\n";
 		exit(1);
 	}
+	char buff[255];
 	CLogger *moveLogger = new CLoggerFile("/var/log/droid/move.log",'a');
-	CLogger *settingsLogger = new CLoggerFile("/var/log/droid/settings.log",'a');
-	moveLogger->setType(2);
-	settingsLogger->setType(2);
-	CBLECommand *commStd = new CBLECommand(new CMoveCommand(moveLogger), new CSettingCommand(settingsLogger));
-	CManualDroid *droid = new CManualDroid(argv[1], 0, commStd);
+		CLogger *settingsLogger = new CLoggerFile("/var/log/droid/settings.log",'a');
+		moveLogger->setType(2);
+		settingsLogger->setType(2);
+
+	vector<CCommCommands *> *commands = new vector<CCommCommands *>();
+
+	CCommCommands *commStd = new CCommandStd(new CMoveCommand(moveLogger), new CSettingCommand(settingsLogger));
+	commands->push_back(commStd);
+	commStd = new CBLECommand(new CMoveCommand(moveLogger), new CSettingCommand(settingsLogger));
+	commands->push_back(commStd);
+	commStd = new CCommandEsp01(new CMoveCommand(moveLogger), new CSettingCommand(settingsLogger));
+	commands->push_back(commStd);
+	CManualDroid *droid = new CManualDroid(argv[1], 0, commands);
 	droid->startReceiving();
 	delete droid;
 }

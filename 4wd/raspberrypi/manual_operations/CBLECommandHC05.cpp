@@ -47,6 +47,7 @@ void CBLECommandHC05::printMenu() {
 void CBLECommandHC05::startReceiving() {
 	char buffer[255];
 	string str;
+	pthread_setcanceltype(PTHREAD_CANCEL_ASYNCHRONOUS, 0);
 	do {
 		if (serDataAvailable(m_serialHandler) > 0) {
 			memset(buffer, 0, sizeof(buffer));

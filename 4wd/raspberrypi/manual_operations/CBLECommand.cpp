@@ -27,6 +27,7 @@
 #include <pigpio.h>
 #include <string.h>
 #include <iostream>
+#include <fcntl.h>
 
 CBLECommand::CBLECommand(CCommand *move, CCommand *setting) :
 		CCommCommands(move, setting) {
@@ -52,6 +53,14 @@ void CBLECommand::startReceiving() {
 	char buffer[255];
 	string str;
 	char sendBuffer[255];
+	int fd = -1;
+	pthread_setcanceltype(PTHREAD_CANCEL_ASYNCHRONOUS, 0);
+	while(fd < 0) {
+		fd = open(m_port,O_RDWR);
+		if (fd < 0)
+			sleep(1);
+	}
+	close(fd);
 	m_serialHandler = serOpen(m_port, m_boudrate, 0);
 	do {
 		if (serDataAvailable(m_serialHandler) > 0) {
@@ -74,5 +83,6 @@ void CBLECommand::startReceiving() {
 				serWrite(m_serialHandler,sendBuffer,strlen(sendBuffer));
 			}
 		}
+		pthread_testcancel();
 	} while (strcmp(buffer, "exit#") != 0);
 }

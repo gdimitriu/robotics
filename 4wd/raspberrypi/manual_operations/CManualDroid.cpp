@@ -24,8 +24,10 @@
  */
 
 #include "CManualDroid.h"
+#include <pthread.h>
+#include <cstdarg>
 
-CManualDroid::CManualDroid(char *droidCfgFile, int isOnHost, CCommCommands *command) : CDroid(droidCfgFile, isOnHost) {
+CManualDroid::CManualDroid(char *droidCfgFile, int isOnHost...) : CDroid(droidCfgFile, isOnHost) {
 	m_command = command;
 	m_command->setDroid(this);
 }
@@ -41,4 +43,6 @@ void CManualDroid::dumpInfo() {
 void CManualDroid::startReceiving() {
 	m_command->startReceiving();
 }
-
+void *commandExecute(void *command) {
+	((CCommCommands *)command)->startReceiving();
+}

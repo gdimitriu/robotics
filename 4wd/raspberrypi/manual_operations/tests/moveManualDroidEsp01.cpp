@@ -41,7 +41,11 @@ int main(int argc, char **argv) {
 		exit(1);
 	}
 	char buff[255];
-	CCommandEsp01 *commStd = new CCommandEsp01(new CMoveCommand(new CLoggerFile("/var/log/droid/move.log",'a')), new CSettingCommand(new CLoggerFile("/var/log/droid/settings.log",'a')));
+	CLogger *moveLogger = new CLoggerFile("/var/log/droid/move.log",'a');
+		CLogger *settingsLogger = new CLoggerFile("/var/log/droid/settings.log",'a');
+		moveLogger->setType(2);
+		settingsLogger->setType(2);
+	CCommandEsp01 *commStd = new CCommandEsp01(new CMoveCommand(moveLogger), new CSettingCommand(settingsLogger));
 	CManualDroid *droid = new CManualDroid(argv[1], 0, commStd);
 	droid->startReceiving();
 	delete droid;
