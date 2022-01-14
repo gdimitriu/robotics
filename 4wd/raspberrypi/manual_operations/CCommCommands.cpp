@@ -30,6 +30,8 @@
 #include <iostream>
 #include <fstream>
 
+bool CCommCommands::m_isStopped = false;
+
 CCommCommands::CCommCommands(CCommand *move, CCommand *setting) {
 	m_moveCommand = move;
 	m_settingCommand = setting;
@@ -57,6 +59,7 @@ CCommCommands::CCommCommands(CCommand *move, CCommand *setting) {
 	m_localOperations.insert('G');//grab
 	m_localOperations.insert('p');//print menu
 	m_droid = NULL;
+	m_isStopped = false;
 }
 
 CCommCommands::~CCommCommands() {
@@ -295,4 +298,12 @@ void CCommCommands::removeCommandPrefix(char *operation) {
 
 CCommand* CCommCommands::getSettingCommand() {
 	return m_settingCommand;
+}
+
+void CCommCommands::stop() {
+	m_isStopped = true;
+}
+
+int CCommCommands::isStopped() {
+	return m_isStopped;
 }

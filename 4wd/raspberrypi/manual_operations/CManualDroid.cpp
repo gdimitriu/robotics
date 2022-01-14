@@ -61,6 +61,7 @@ void *manualDroidCommandExecute(void *command) {
 }
 
 void CManualDroid::stopReceiving() {
+	(*(m_commands->begin()))->stop();
 	for (int i = 0 ;i < m_commands->size(); i++)
 		pthread_cancel(m_threads[i]);
 }

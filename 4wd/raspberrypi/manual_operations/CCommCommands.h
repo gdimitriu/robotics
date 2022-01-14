@@ -39,6 +39,9 @@ public:
 	virtual void printMenu();
 	virtual void setDroid(CDroid *droid);
 	virtual int executeLocal(const char *operation);
+	virtual void stop();
+	static int isStopped();
+
 protected:
 	int processInputData(string *input, int reverse = 0);
 	void removeCommandPrefix(char *operation);
@@ -54,6 +57,7 @@ protected:
 	bool m_isRecording;
 	string *m_menu;
 	CDroid *m_droid;
+	static bool m_isStopped;
 };
 
 #endif /* MANUAL_OPERATIONS_CCOMMCOMMANDS_H_ */

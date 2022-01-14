@@ -55,10 +55,14 @@ void CBLECommand::startReceiving() {
 	char sendBuffer[255];
 	int fd = -1;
 	pthread_setcanceltype(PTHREAD_CANCEL_ASYNCHRONOUS, 0);
+	pthread_setcancelstate(PTHREAD_CANCEL_ENABLE,0);
 	while(fd < 0) {
 		fd = open(m_port,O_RDWR);
-		if (fd < 0)
+		if (fd < 0) {
+			if (isStopped())
+				return;
 			sleep(1);
+		}
 	}
 	close(fd);
 	m_serialHandler = serOpen(m_port, m_boudrate, 0);
@@ -72,6 +76,7 @@ void CBLECommand::startReceiving() {
 				}
 			}
 			if (strcmp(buffer, "exit#") == 0) {
+				stop();
 				break;
 			}
 			str.assign(buffer);
@@ -84,5 +89,5 @@ void CBLECommand::startReceiving() {
 			}
 		}
 		pthread_testcancel();
-	} while (strcmp(buffer, "exit#") != 0);
+	} while ((strcmp(buffer, "exit#") != 0) && !isStopped());
 }

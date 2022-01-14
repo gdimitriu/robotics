@@ -46,12 +46,14 @@ void CCommandStd::startReceiving() {
 	string str;
 	string exitCond = "exit#";
 	pthread_setcanceltype(PTHREAD_CANCEL_ASYNCHRONOUS, 0);
+	pthread_setcancelstate(PTHREAD_CANCEL_ENABLE,0);
 	do {
 		cin>>str;
 		if (str == exitCond) {
+			stop();
 			break;
 		}
 		processInputData(&str);
 		pthread_testcancel();
-	} while(str != exitCond);
+	} while((str != exitCond) && !isStopped());
 }

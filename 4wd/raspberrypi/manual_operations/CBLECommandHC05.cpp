@@ -48,6 +48,7 @@ void CBLECommandHC05::startReceiving() {
 	char buffer[255];
 	string str;
 	pthread_setcanceltype(PTHREAD_CANCEL_ASYNCHRONOUS, 0);
+	pthread_setcancelstate(PTHREAD_CANCEL_ENABLE,0);
 	do {
 		if (serDataAvailable(m_serialHandler) > 0) {
 			memset(buffer, 0, sizeof(buffer));
@@ -58,11 +59,12 @@ void CBLECommandHC05::startReceiving() {
 				}
 			}
 			if (strcmp(buffer,"exit#") == 0 ) {
+				stop();
 				break;
 			}
 			str.assign(buffer);
 			processInputData(&str);
 		}
 		pthread_testcancel();
-	} while(strcmp(buffer,"exit#") != 0);
+	} while((strcmp(buffer,"exit#") != 0) && !isStopped());
 }

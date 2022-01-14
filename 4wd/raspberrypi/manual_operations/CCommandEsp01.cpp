@@ -91,6 +91,7 @@ void CCommandEsp01::printMenu() {
 
 void CCommandEsp01::startReceiving() {
 	pthread_setcanceltype(PTHREAD_CANCEL_ASYNCHRONOUS, 0);
+	pthread_setcancelstate(PTHREAD_CANCEL_ENABLE,0);
 	char buffer[1024];
 	char receiveBuffer[2048];
 	string str;
@@ -166,6 +167,7 @@ void CCommandEsp01::startReceiving() {
 					receiveBuffer[j] = receiveBuffer[i];
 				}
 				if (strcmp(receiveBuffer, "exit#") == 0) {
+					stop();
 					break;
 				}
 #ifdef DEBUG_MODE
@@ -207,6 +209,6 @@ void CCommandEsp01::startReceiving() {
 			}
 		}
 		pthread_testcancel();
-	} while (strcmp(receiveBuffer, "exit#") != 0);
+	} while ((strcmp(receiveBuffer, "exit#") != 0) && !isStopped());
 }
 

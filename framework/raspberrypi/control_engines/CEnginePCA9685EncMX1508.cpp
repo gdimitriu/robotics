@@ -268,6 +268,7 @@ void* CEnginePCA9685EncMX1508_moveWOEncoder(void *engine) {
 void* CEnginePCA9685EncMX1508_moveDistance(void *engine) {
 
 	pthread_setcanceltype(PTHREAD_CANCEL_ASYNCHRONOUS, 0);
+	pthread_setcancelstate(PTHREAD_CANCEL_ENABLE,0);
 	CEnginePCA9685EncMX1508 *currentEngine = (CEnginePCA9685EncMX1508*) engine;
 	pthread_cleanup_push(CEnginePCA9685EncMX1508_moveCleanup, (void *)&(currentEngine->m_isrMutex));
 	currentEngine->startMoving();
@@ -334,6 +335,7 @@ void CEnginePCA9685EncMX1508::moveDistance(float distance) {
 
 void* CEnginePCA9685EncMX1508_moveEncoderNr(void *engine) {
 	pthread_setcanceltype(PTHREAD_CANCEL_ASYNCHRONOUS, 0);
+	pthread_setcancelstate(PTHREAD_CANCEL_ENABLE,0);
 	CEnginePCA9685EncMX1508 *currentEngine = (CEnginePCA9685EncMX1508*) engine;
 	pthread_cleanup_push(CEnginePCA9685EncMX1508_moveCleanup, (void *)&(currentEngine->m_isrMutex));
 	currentEngine->startMoving();
