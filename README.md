@@ -10,6 +10,7 @@ droids using Arduino, Onion Omega2+ and RaspberryPi Zero W
 ### 2 wheel drive droid using Onion Omega 2+
 [2wd_droid](2wd/onionOmega2/README.md)
 ![2wd_onion](2wd/onionOmega2/docs/2wd_onion.jpg)
+
 ### 4 wheel drive droid using Arduino
 [4wd_droid](4wd/arduino/readme.md)
 
@@ -22,3 +23,6 @@ x wheel drive droid using Raspberry PI Zero W [droid_framework](framework/raspbe
 - This could have multiple configuration for any kind of droid
 - It has configuration files that configure the droid using factories
 x wheel drive droid using Raspberry PI Zero W [droid_4wd](4wd/raspberrypi/README.md)
+
+### Zumo droid using Arduino
+![zumo_droid](zumo_droid/arduino/docs/zumo_droid.jpg)
