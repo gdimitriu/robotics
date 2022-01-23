@@ -29,7 +29,9 @@ Using ESP-01 android application could be used to move remotely (now only simple
 ![Logical lines](./docs/logical_lines.jpeg)
 ### ScreenShoot of the Android from DroidStandardCommand from the android/DroidSimpleCommand
 ![Android_application](./docs/DroidSimplecommand.png)
-![droid_picture](https://www.flickr.com/photos/194294698@N06/51836570327/in/album-72177720296153160)
+
+###Droid pictures
+![droid_picture](docs/4wd_droid_raspberrypi.jpg)
 
 ## Build:
 
