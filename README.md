@@ -16,6 +16,7 @@ droids using Arduino, Onion Omega2+ and RaspberryPi Zero W
 ![4wd_doid_chasy](4wd/arduino/docs/4wd_pixy_droid.jpg)
 
 ### Raspberry Pi Zero W droid using linux and RT
+![4wd_droid_raspberry](4wd/raspberrypi/docs/4wd_droid_raspberrypi.jpg)
 x wheel drive droid using Raspberry PI Zero W [droid_framework](framework/raspberrypi/README.md)
 - This is the framework that is used into 4wd droid using Raspberry Pi W (the 4wd droid using Arduino is the base chassy)
 - This could have multiple configuration for any kind of droid
