@@ -1,4 +1,6 @@
 #!/bin/bash
+TOOLCHAIN_TYPE=arm-linux
+export TOOLCHAIN_TYPE
 PREFIX_GPIO=/home/onion/raspberrypi/libs/pigpio
 PREFIX_DRIVERS=/home/onion/robotics/drivers/raspberrypi
 export PREFIX_GPIO

@@ -1,7 +1,3 @@
-CC = arm-linux-gnueabihf-gcc
-CXX = arm-linux-gnueabihf-g++
-
-AR = arm-linux-gnueabihf-ar
 LIBS = -L$(PREFIX_GPIO) -lpthread -lpigpio -lrt
 INCLUDES = -I$(PREFIX_GPIO)
 OBJECTS = CIsr.o

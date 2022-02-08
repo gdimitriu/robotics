@@ -1,13 +1,8 @@
-CC = arm-linux-gnueabihf-gcc
-CXX = arm-linux-gnueabihf-g++
-AR = arm-linux-gnueabihf-ar
-
-LIBS = -L$(PREFIX_GPIO) -L$(PREFIX_DRIVERS)/lib -lpthread -lpigpio -lrt -ladafruitpwmservo -lsettings -llogger -L../lib
 INCLUDES = -I$(PREFIX_GPIO) -I$(PREFIX_DRIVERS)/include -I../include
-OBJECTS = CEnginePCA9685EncMX1508.o CEngineWithEncoder.o CFactoryEnginePCA9685EncMX1508.o  CFactoryEngine.o \
-		CMasterControlEngines.o CResetableBarrier.o
-HEADERS = CEnginePCA9685EncMX1508.h CEngineWithEncoder.h CFactoryEnginePCA9685EncMX1508.h CFactoryEngine.h \
-		CMasterControlEngines.h CResetableBarrier.h
+SOURCES = CEnginePCA9685EncMX1508.cpp CEngineWithEncoder.cpp CFactoryEnginePCA9685EncMX1508.cpp CFactoryEngine.cpp \
+		CMasterControlEngines.cpp CResetableBarrier.cpp
+OBJECTS = $(SOURCES:%.cpp=%.o)
+HEADERS =  $(SOURCES:%.cpp=%.h)
 EXECUTABLES =  libengines.so
 FLAGS = -std=gnu++11 -ggdb
 

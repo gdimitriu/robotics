@@ -1,11 +1,9 @@
-CC = arm-linux-gnueabihf-g++
-AR = arm-linux-gnueabihf-ar
 INCLUDEPATHS = -I$(PREFIX_GPIO) -I../include
 
 all: Adafruit_PWMServoDriver.o
 
 Adafruit_PWMServoDriver.o : Adafruit_PWMServoDriver.cpp Adafruit_PWMServoDriver.h
-	$(CC) -fPIC -c $(INCLUDEPATHS) Adafruit_PWMServoDriver.cpp -o ../obj/Adafruit_PWMServoDriver.o
+	$(CXX) -fPIC -c $(INCLUDEPATHS) Adafruit_PWMServoDriver.cpp -o ../obj/Adafruit_PWMServoDriver.o
 	cp Adafruit_PWMServoDriver.h ../include	
 	
 clean :

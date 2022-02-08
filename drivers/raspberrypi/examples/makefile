@@ -1,20 +1,19 @@
-CC = arm-linux-gnueabihf-g++
 INCLUDEPATHS = -I$(PREFIX_GPIO) -I../include
 LIBS = -L$(PREFIX_GPIO) -L../lib -lpthread -lpigpio -lrt -ldroiddrivers
 
 all: testPCA9685Servo CalibrationServoPCA9685 gps_receive_test
 	
 testPCA9685Servo : testPCA9685Servo.cpp 
-	$(CC) -fPIC -o testPCA9685Servo testPCA9685Servo.cpp $(INCLUDEPATHS) $(LIBPATHS) $(LIBS)
+	$(CXX) -fPIC -o testPCA9685Servo testPCA9685Servo.cpp $(INCLUDEPATHS) $(LIBPATHS) $(LIBS)
 	cp testPCA9685Servo ../bin
 	
 
 CalibrationServoPCA9685 : CalibrationServoPCA9685.cpp
-	$(CC) -fPIC -o calibrationServoPCA9685 CalibrationServoPCA9685.cpp $(INCLUDEPATHS) $(LIBPATHS) $(LIBS)
+	$(CXX) -fPIC -o calibrationServoPCA9685 CalibrationServoPCA9685.cpp $(INCLUDEPATHS) $(LIBPATHS) $(LIBS)
 	cp calibrationServoPCA9685 ../bin
 	
 gps_receive_test : gps_receive_test.cpp
-	$(CC) -fPIC -o gps_receive_test $(INCLUDEPATHS) $(LIBPATHS) $(LIBS) gps_receive_test.cpp -lm
+	$(CXX) -fPIC -o gps_receive_test $(INCLUDEPATHS) $(LIBPATHS) $(LIBS) gps_receive_test.cpp -lm
 	cp gps_receive_test ../bin
 		
 clean :

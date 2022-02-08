@@ -8,12 +8,12 @@ libtof.a: tof.o
 	cp libtof.a ../lib
 
 libtof.so: tof.o
-	$(CC) -shared -o libtof.so tof.o
+	$(CXX) -shared -o libtof.so tof.o
 	cp libtof.so ../lib
 	cp tof.h ../include
 	
 tof.o: tof.c tof.h
-	$(CC) $(CFLAGS) tof.c
+	$(CXX) $(CFLAGS) tof.c
 
 clean:
 	rm *.o libtof.a libtof.so

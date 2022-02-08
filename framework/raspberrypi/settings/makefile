@@ -1,10 +1,7 @@
-CC = arm-linux-gnueabihf-gcc
-CXX = arm-linux-gnueabihf-g++
-AR = arm-linux-gnueabihf-ar
-
 INCLUDES = -I$(PREFIX_GPIO) -I$(PREFIX_DRIVERS)/include -I../include
-OBJECTS = CSettingLoading.o CFactoryLogger.o
-HEADERS = CSettingLoading.h CFactoryLogger.h
+SOURCES = CSettingLoading.cpp CFactoryLogger.cpp
+OBJECTS = $(SOURCES:%.cpp=%.o)
+HEADERS =  $(SOURCES:%.cpp=%.h)
 EXECUTABLES =  libsettings.so
 FLAGS = -std=gnu++11
 

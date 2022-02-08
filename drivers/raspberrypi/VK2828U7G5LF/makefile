@@ -1,8 +1,7 @@
-CC = arm-linux-gnueabihf-gcc
 all: VK2828U7G5LF.o
 	
 VK2828U7G5LF.o : VK2828U7G5LF.cpp VK2828U7G5LF.h
-	$(CC) -fPIC -c -I./ VK2828U7G5LF.cpp -I../include -o ../obj/VK2828U7G5LF.o
+	$(CXX) -fPIC -c -I./ VK2828U7G5LF.cpp -I../include -o ../obj/VK2828U7G5LF.o
 	cp VK2828U7G5LF.h ../include
 	
 

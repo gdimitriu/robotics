@@ -1,15 +1,9 @@
-CC = arm-linux-gnueabihf-gcc
-CXX = arm-linux-gnueabihf-g++
-AR = arm-linux-gnueabihf-ar
-
-LIBS = -L$(PREFIX_GPIO) -L$(PREFIX_DRIVERS)/lib -lpthread -lpigpio -lrt -ladafruitpwmservo -lsettings -llogger -L../lib
 INCLUDES = -I$(PREFIX_GPIO) -I$(PREFIX_DRIVERS)/include -I../include
-OBJECTS = CMasterControlSensors.o CGenericSensor.o CSweepPCA9685.o CToFSweepPCA9685.o CFactoryToFSweepPCA9685.o \
-	CFactorySensor.o CFactorySensors.o CFixDigitalSensor.o CFactoryFixDigitalSensor.o CFactoryHCSR04SweepPCA9685.o \
-	CHCSR04SweepPCA9685.o
-HEADERS = CMasterControlSensors.h CGenericSensor.h CSweepPCA9685.h CToFSweepPCA9685.h CFactoryToFSweepPCA9685.h \
-	CFactorySensor.h CFactorySensors.h CFixDigitalSensor.h CFactoryFixDigitalSensor.h CFactoryHCSR04SweepPCA9685.h \
-	CHCSR04SweepPCA9685.h
+SOURCES = CMasterControlSensors.cpp CGenericSensor.cpp CSweepPCA9685.cpp CToFSweepPCA9685.cpp CFactoryToFSweepPCA9685.cpp \
+	CFactorySensor.cpp CFactorySensors.cpp CFixDigitalSensor.cpp CFactoryFixDigitalSensor.cpp CFactoryHCSR04SweepPCA9685.cpp \
+	CHCSR04SweepPCA9685.cpp
+OBJECTS = $(SOURCES:%.cpp=%.o)
+HEADERS =  $(SOURCES:%.cpp=%.h)
 EXECUTABLES =  libsensors.so
 FLAGS = -std=gnu++11 -ggdb
 

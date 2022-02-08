@@ -1,10 +1,9 @@
-CC = arm-linux-gnueabihf-g++
 DRIVERS = ../obj/Adafruit_PWMServoDriver.o ../obj/VK2828U7G5LF.o
 
 all: libdroiddrivers
 
 libdroiddrivers: $(DRIVERS)
-	$(CC) -shared -fPIC -o libdroiddrivers.so $(DRIVERS)
+	$(CXX) -shared -fPIC -o libdroiddrivers.so $(DRIVERS)
 		
 clean:
 	for object in $(DRIVERS);\

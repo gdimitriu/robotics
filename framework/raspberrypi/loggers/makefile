@@ -1,10 +1,7 @@
-CC = arm-linux-gnueabihf-gcc
-CXX = arm-linux-gnueabihf-g++
-AR = arm-linux-gnueabihf-ar
-
 INCLUDES = -I$(PREFIX_GPIO) -I$(PREFIX_DRIVERS)/include -I../include
-OBJECTS = CLogger.o CLoggerStdout.o CLoggerBle.o CLoggerBleHC5.o CLoggerFile.o
-HEADERS = CLogger.h CLoggerStdout.h CLoggerBle.h CLoggerBleHC5.h CLoggerFile.h
+SOURCES = CLogger.cpp CLoggerStdout.cpp CLoggerBle.cpp CLoggerBleHC5.cpp CLoggerFile.cpp
+OBJECTS = $(SOURCES:%.cpp=%.o)
+HEADERS =  $(SOURCES:%.cpp=%.h)
 EXECUTABLES =  libloggers.so
 FLAGS = -std=gnu++11 -DDEBUG_MODE
 

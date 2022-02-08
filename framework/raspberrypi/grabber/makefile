@@ -1,10 +1,7 @@
-CC = arm-linux-gnueabihf-gcc
-CXX = arm-linux-gnueabihf-g++
-AR = arm-linux-gnueabihf-ar
-
 INCLUDES = -I$(PREFIX_GPIO) -I$(PREFIX_DRIVERS)/include -I../include
-OBJECTS = CGrabber.o CGrabberController.o
-HEADERS = CGrabber.h CGrabberController.h
+SOURCES = CGrabber.cpp CGrabberController.cpp
+OBJECTS = $(SOURCES:%.cpp=%.o)
+HEADERS =  $(SOURCES:%.cpp=%.h)
 EXECUTABLES =  libgrabber.so
 FLAGS = -std=gnu++11
 
