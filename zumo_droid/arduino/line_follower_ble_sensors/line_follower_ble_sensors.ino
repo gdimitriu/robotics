@@ -79,7 +79,7 @@ void setup() {
   pinMode(RIGHT_LINE_SENSOR, INPUT_PULLUP);
   enableInterrupt(RxD, neoSSerial1ISR, CHANGE);
   sensors.setTypeAnalog();
-  sensors.setSamplesPerSensor(10);
+  sensors.setSamplesPerSensor(20);
   sensors.setSensorPins((const uint8_t[]) {A0,A1,A2},3);
   isValidInput = false;
   cleanupBT = false;
@@ -87,11 +87,11 @@ void setup() {
   BTSerial.begin(38400);
   BTSerial.println("Starting...");
   printMenu();
-  int i;
-  for(i = 0; i < 250;i++) {
-    sensors.calibrate();
-    delay(20);
-  }
+//  int i;
+//  for(i = 0; i < 250;i++) {
+//    sensors.calibrate();
+//    delay(20);
+//  }
   lineSensors[0] = 0;
   lineSensors[1] = 0;
   lineSensors[2] = 0;
@@ -144,13 +144,13 @@ boolean makeMove() {
       sensors.readCalibrated(lineSensors);
       BTSerial.print("sensor 0=");BTSerial.print(lineSensors[0]);
       BTSerial.print("sensor 1=");BTSerial.print(lineSensors[1]);
-      BTSerial.print("sensor 2=");BTSerial.print(lineSensors[2]);
+      BTSerial.print("sensor 2=");BTSerial.println(lineSensors[2]);
     } else if (strcmp(inData,"R") == 0) {
       BTSerial.println("Read of line sensors");
       sensors.readLineBlack(lineSensors);
       BTSerial.print("sensor 0=");BTSerial.print(lineSensors[0]);
       BTSerial.print("sensor 1=");BTSerial.print(lineSensors[1]);
-      BTSerial.print("sensor 2=");BTSerial.print(lineSensors[2]);
+      BTSerial.print("sensor 2=");BTSerial.println(lineSensors[2]);
     } else {
       makeCleanup(); 
       isValidInput = false;

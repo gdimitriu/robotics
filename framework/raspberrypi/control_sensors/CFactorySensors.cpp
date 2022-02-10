@@ -24,7 +24,6 @@
  */
 
 #include "CFactorySensors.h"
-#include <CFactorySensor.h>
 #include <CFactoryToFSweepPCA9685.h>
 #include <CFactoryFixDigitalSensor.h>
 #include <CFactoryHCSR04SweepPCA9685.h>

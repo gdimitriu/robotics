@@ -1,5 +1,6 @@
+SHELL = /bin/sh
+
 CFLAGS=-fPIC -c -Wall -O2 -fPIC
-CC=arm-linux-gnueabihf-g++
 
 all: libtof.a libtof.so
 

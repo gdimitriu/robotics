@@ -1,9 +1,9 @@
 /*
- * CCamera.cpp
+ * CCameraFactory.h
  *
- *  Created on: May 10, 2021
+ *  Created on: Feb 9, 2022
  *      Author: Gabriel Dimitriu
- * Copyright (C) 2021 Gabriel Dimitriu
+ * Copyright (C) 2022 Gabriel Dimitriu
  * All rights reserved.
  *
  * This file is part of Robotics project.
@@ -23,17 +23,21 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#include "CCamera.h"
+#ifndef CAMERA_CFACTORYCAMERA_H_
+#define CAMERA_CFACTORYCAMERA_H_
 
-CCamera::CCamera() {
-	m_isDisabled = true;
-}
+#include <CSettingLoading.h>
+#include <CLogger.h>
+#include <CCamera.h>
 
-CCamera::~CCamera() {
-}
+class CFactoryCamera {
+public:
+	CFactoryCamera(CSettingLoading *settingsLoader,CLogger *logger);
+	virtual ~CFactoryCamera();
+	CCamera *createCamera();
+private:
+	CLogger *m_logger;
+	CSettingLoading *m_settingsLoader;
+};
 
-void CCamera::captureCameraImage(std::ofstream *pFile) {
-	if (m_isDisabled)
-		return;
-}
-
+#endif /* CAMERA_CFACTORYCAMERA_H_ */

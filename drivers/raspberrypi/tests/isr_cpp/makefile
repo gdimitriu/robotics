@@ -1,3 +1,5 @@
+SHELL = /bin/sh
+
 LIBS = -L$(PREFIX_GPIO) -lpthread -lpigpio -lrt
 INCLUDES = -I$(PREFIX_GPIO)
 OBJECTS = CIsr.o

@@ -1,3 +1,5 @@
+SHELL = /bin/sh
+
 INCLUDES = -I$(PREFIX_GPIO) -I$(PREFIX_DRIVERS)/include -I../include
 SOURCES = CMasterControlSensors.cpp CGenericSensor.cpp CSweepPCA9685.cpp CToFSweepPCA9685.cpp CFactoryToFSweepPCA9685.cpp \
 	CFactorySensor.cpp CFactorySensors.cpp CFixDigitalSensor.cpp CFactoryFixDigitalSensor.cpp CFactoryHCSR04SweepPCA9685.cpp \

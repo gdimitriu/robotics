@@ -1,3 +1,5 @@
+SHELL = /bin/sh
+
 INCLUDES = -I$(PREFIX_GPIO) -I$(PREFIX_DRIVERS)/include  -I$(PREFIX_FRAMEWORK)/include -I../include
 ifeq (raspberry, $(OS_TYPE))
 	INCLUDES += -I$(PREFIX_RASPICAM)/src
@@ -9,7 +11,7 @@ EXECUTABLES =  libdroidcommands.so
 FLAGS = -std=gnu++11 -ggdb
 
 all: $(OBJECTS) $(EXECUTABLES)
-	cd tests && make
+	cd tests && $(MAKE)
 
 CCommand.o:CCommand.cpp CCommand.h
 	$(CXX) -fPIC -o CCommand.o -c CCommand.cpp $(INCLUDES) $(FLAGS)
@@ -52,7 +54,7 @@ libdroidcommands.so: $(OBJECTS)
 	cp libdroidcommands.so ../lib
 		
 clean:
-	cd tests && make clean
+	cd tests && $(MAKE) clean
 	for object in $(EXECUTABLES);\
 	do \
 		if [ -f $$object ]; then rm $$object; fi; \

@@ -1,3 +1,4 @@
+SHELL = /bin/sh
 
 LIBS = -L$(PREFIX_GPIO) -lpthread -lpigpio -lrt
 INCLUDES = -I$(PREFIX_GPIO)
@@ -6,9 +7,9 @@ EXECUTABLES = led_gpio detecti2c trigger_gpio ble_serial_receive ble_serial_sndr
 FLAGS = -std=gnu++11 -ggdb
 
 all: $(EXECUTABLES)
-	cd isr_cpp && make
-	cd camera && make
-	cd mpu6050 && make
+	cd isr_cpp && $(MAKE)
+	cd camera && $(MAKE)
+	cd mpu6050 && $(MAKE)
 
 led_gpio:led_gpio.c
 	$(CC) -fPIC -o led_gpio led_gpio.c $(LIBS) $(INCLUDES)
@@ -36,6 +37,7 @@ esp01receive: esp01receive.c
 
 testBleFile:testBleFile.c
 	$(CC) -fPIC -o testBleFile testBleFile.c $(LIBS) $(INCLUDES)
+	
 clean:
 	for object in $(EXECUTABLES);\
 	do \
@@ -45,6 +47,6 @@ clean:
 	do \
 		if [ -f $$object ]; then rm $$object; fi; \
 	done
-	cd isr_cpp && make clean
-	cd camera && make clean
-	cd mpu6050 && make clean
+	cd isr_cpp && $(MAKE) clean
+	cd camera && $(MAKE) clean
+	cd mpu6050 && $(MAKE) clean

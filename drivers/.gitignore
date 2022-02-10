@@ -1,0 +1,15 @@
+*.dia~
+.cproject
+.settings
+.project
+*.so
+*.a
+*.o
+*.class
+*.jar
+.idea
+out/
+build/
+gradle/
+.gradle
+raspberrypipico/

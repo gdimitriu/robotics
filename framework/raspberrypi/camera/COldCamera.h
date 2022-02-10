@@ -1,9 +1,9 @@
 /*
- * CCamera.cpp
+ * COldCamera.h
  *
- *  Created on: May 10, 2021
+ *  Created on: Feb 9, 2022
  *      Author: Gabriel Dimitriu
- * Copyright (C) 2021 Gabriel Dimitriu
+ * Copyright (C) 2020 Gabriel Dimitriu
  * All rights reserved.
  *
  * This file is part of Robotics project.
@@ -23,17 +23,26 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
+#ifndef CAMERA_COLDCAMERA_H_
+#define CAMERA_COLDCAMERA_H_
+
 #include "CCamera.h"
+#include <raspicam_still.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <CLogger.h>
 
-CCamera::CCamera() {
-	m_isDisabled = true;
-}
+class COldCamera: public CCamera {
+public:
+	COldCamera(char *configLine, CLogger *settingLogger);
+	virtual ~COldCamera();
+	virtual void captureCameraImage(std::ofstream *pFile);
+private:
+	raspicam::RaspiCam_Still m_Camera;
+	int m_width;
+	int m_height;
+	int m_iso;
 
-CCamera::~CCamera() {
-}
+};
 
-void CCamera::captureCameraImage(std::ofstream *pFile) {
-	if (m_isDisabled)
-		return;
-}
-
+#endif /* CAMERA_COLDCAMERA_H_ */

@@ -1,3 +1,5 @@
+SHELL = /bin/sh
+
 INCLUDES = -I$(PREFIX_GPIO) -I$(PREFIX_DRIVERS)/include -I../include
 ifeq (raspberry,$(OS_TYPE))
 	INCLUDES += -I$(PREFIX_RASPICAM)/src

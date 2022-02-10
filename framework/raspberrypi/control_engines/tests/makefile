@@ -1,3 +1,5 @@
+SHELL = /bin/sh
+
 LIBS =  -lpthread -lpigpio -lrt -lengines -lsettings -lloggers -ldroiddrivers -lsensors -ltof
 LIB_DIRS = -L$(PREFIX_GPIO) -L$(PREFIX_DRIVERS)/lib -L../../lib
 INCLUDES = -I$(PREFIX_GPIO) -I$(PREFIX_DRIVERS)/include -I../../include

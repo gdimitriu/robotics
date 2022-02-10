@@ -1,3 +1,5 @@
+SHELL = /bin/sh
+
 ifeq (arm-linux,$(TOOLCHAIN_TYPE))
 	CC := arm-linux-gnueabihf-gcc
 	CXX := arm-linux-gnueabihf-g++
@@ -16,7 +18,7 @@ export AR
 export OS_TYPE
 
 all:
-	cd manual_operations && make
+	cd manual_operations && $(MAKE)
 clean:
-	cd manual_operations && make clean
+	cd manual_operations && $(MAKE) clean
 	

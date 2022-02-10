@@ -32,6 +32,7 @@
 #include <pigpio.h>
 #include <string.h>
 #include <list>
+#include <CFactoryCamera.h>
 
 CDroid::CDroid(char *droidCfgFile, int isOnHost) {
 	m_isOnHost = isOnHost;
@@ -166,8 +167,9 @@ void CDroid::initialize() {
 	} else {
 		m_maxLeftServoEncoder = m_maxRightServoEncoder = -1; // no sweep sensor in front
 	}
-	line = getLine();
-	m_camera = new CCamera(line, m_settingLogger);
+	CFactoryCamera * cameraFactory = new CFactoryCamera(settings,m_settingLogger);
+	m_camera = cameraFactory->createCamera();
+	delete cameraFactory;
 	m_moveBarrier.init(m_controlEngines->getEnginesNr() + 1);
 	m_controlEngines->setMoveBarrier(&m_moveBarrier);
 	struct sched_param goSchedParam;

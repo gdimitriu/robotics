@@ -1,3 +1,5 @@
+SHELL = /bin/sh
+
 INCLUDES = -I$(PREFIX_GPIO) -I$(PREFIX_DRIVERS)/include -I../include
 SOURCES = CGrabber.cpp CGrabberController.cpp
 OBJECTS = $(SOURCES:%.cpp=%.o)

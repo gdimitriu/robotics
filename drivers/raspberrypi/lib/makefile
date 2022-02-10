@@ -1,3 +1,5 @@
+SHELL = /bin/sh
+
 DRIVERS = ../obj/Adafruit_PWMServoDriver.o ../obj/VK2828U7G5LF.o
 
 all: libdroiddrivers

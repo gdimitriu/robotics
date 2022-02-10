@@ -26,23 +26,15 @@
 #ifndef CAMERA_CCAMERA_H_
 #define CAMERA_CCAMERA_H_
 
-#include <raspicam_still.h>
 #include <fstream>
-#include <stdlib.h>
-#include <unistd.h>
-#include <CLogger.h>
 
 class CCamera {
 public:
-	CCamera(char *configLine, CLogger *settingLogger);
+	CCamera();
 	virtual ~CCamera();
-	void captureCameraImage(std::ofstream *pFile);
-private:
-	raspicam::RaspiCam_Still m_Camera;
+	virtual void captureCameraImage(std::ofstream *pFile);
+protected:
 	bool m_isDisabled;
-	int m_width;
-	int m_height;
-	int m_iso;
 };
 
 #endif /* CAMERA_CCAMERA_H_ */

@@ -1,3 +1,5 @@
+SHELL = /bin/sh
+
 INCLUDES = -I$(PREFIX_GPIO) -I$(PREFIX_DRIVERS)/include -I../include
 SOURCES = CEnginePCA9685EncMX1508.cpp CEngineWithEncoder.cpp CFactoryEnginePCA9685EncMX1508.cpp CFactoryEngine.cpp \
 		CMasterControlEngines.cpp CResetableBarrier.cpp
@@ -7,7 +9,7 @@ EXECUTABLES =  libengines.so
 FLAGS = -std=gnu++11 -ggdb
 
 all: $(EXECUTABLES)
-	cd tests && make
+	cd tests && $(MAKE)
 	
 libengines.so: $(OBJECTS)
 	$(CXX) -shared -fPIC -o libengines.so $(OBJECTS)
@@ -52,5 +54,5 @@ clean:
 		if [ -f ../include/$$object ]; then rm ../include/$$object; fi; \
 	done
 	if [ -f ../lib/libengines.so ]; then rm ../lib/libengines.so; fi;
-	cd tests && make clean
+	cd tests && $(MAKE) clean
 	

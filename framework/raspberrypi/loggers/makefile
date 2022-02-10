@@ -1,3 +1,5 @@
+SHELL = /bin/sh
+
 INCLUDES = -I$(PREFIX_GPIO) -I$(PREFIX_DRIVERS)/include -I../include
 SOURCES = CLogger.cpp CLoggerStdout.cpp CLoggerBle.cpp CLoggerBleHC5.cpp CLoggerFile.cpp
 OBJECTS = $(SOURCES:%.cpp=%.o)

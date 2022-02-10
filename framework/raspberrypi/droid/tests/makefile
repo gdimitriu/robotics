@@ -1,3 +1,5 @@
+SHELL = /bin/sh
+
 LIBS = -L$(PREFIX_GPIO) -L$(PREFIX_DRIVERS)/lib -L../../lib -lpthread -lpigpio -lrt -ldroiddrivers -lloggers -ldroid -lengines -lsettings -lsensors -ltof -lgrabber -lcamera
 INCLUDES = -I$(PREFIX_GPIO) -I$(PREFIX_DRIVERS)/include -I../../include
 ifeq (raspberry,$(OS_TYPE))

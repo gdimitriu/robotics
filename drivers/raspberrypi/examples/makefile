@@ -1,3 +1,5 @@
+SHELL = /bin/sh
+
 INCLUDEPATHS = -I$(PREFIX_GPIO) -I../include
 LIBS = -L$(PREFIX_GPIO) -L../lib -lpthread -lpigpio -lrt -ldroiddrivers
 

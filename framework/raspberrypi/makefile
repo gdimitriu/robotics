@@ -1,3 +1,5 @@
+SHELL = /bin/sh
+
 ifeq (arm-linux,$(TOOLCHAIN_TYPE))
 	CC := arm-linux-gnueabihf-gcc
 	CXX := arm-linux-gnueabihf-g++
@@ -14,19 +16,19 @@ export CXX
 export AR
 export OS_TYPE
 all:
-	cd loggers && make
-	cd settings && make
-	cd control_sensors && make
-	cd control_engines && make
-	cd grabber && make
-	cd camera && make	
-	cd droid && make
+	cd loggers && $(MAKE)
+	cd settings && $(MAKE)
+	cd control_sensors && $(MAKE)
+	cd control_engines && $(MAKE)
+	cd grabber && $(MAKE)
+	cd camera && $(MAKE)
+	cd droid && $(MAKE)
 clean:
-	cd loggers && make clean
-	cd settings && make clean	
-	cd control_sensors && make clean
-	cd control_engines && make clean
-	cd grabber && make clean
-	cd camera && make clean
-	cd droid && make clean
+	cd loggers && $(MAKE) clean
+	cd settings && $(MAKE) clean	
+	cd control_sensors && $(MAKE) clean
+	cd control_engines && $(MAKE) clean
+	cd grabber && $(MAKE) clean
+	cd camera && $(MAKE) clean
+	cd droid && $(MAKE) clean
 	

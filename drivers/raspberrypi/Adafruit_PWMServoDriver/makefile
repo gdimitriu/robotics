@@ -1,3 +1,5 @@
+SHELL = /bin/sh
+
 INCLUDEPATHS = -I$(PREFIX_GPIO) -I../include
 
 all: Adafruit_PWMServoDriver.o

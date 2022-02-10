@@ -1,3 +1,5 @@
+SHELL = /bin/sh
+
 LIBS = -L$(PREFIX_GPIO) -lpthread -lpigpio -lrt -lwiringPi -lm -L$(PREFIX_WIRINGPI)
 INCLUDES = -I$(PREFIX_GPIO) -I$(PREFIX_WIRINGPI)
 OBJECTS = mpu6050wiringpi.o mpu6050.o
