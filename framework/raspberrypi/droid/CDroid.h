@@ -67,6 +67,14 @@ public:
 	*/
 	unsigned int getMinEnginePower();
 	/*
+	 * set the current engine power
+	 */
+	void setCurrentEnginePower(unsigned int newPower);
+	/*
+	 * get the current engine power
+	 */
+	unsigned int getCurrentEnginePower();
+	/*
 	 * get the low power distance
 	*/
 	unsigned long getLowPowerDistance();

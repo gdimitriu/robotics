@@ -187,12 +187,20 @@ void CDroid::setMinEnginePower(unsigned int newPower) {
 	m_controlEngines->setMinEnginePower(newPower);
 }
 
+void CDroid::setCurrentEnginePower(unsigned int newPower) {
+	m_controlEngines->setEnginePower(newPower);
+}
+
 unsigned int CDroid::getMaxEnginePower() {
 	return m_controlEngines->getMaxEnginePower();
 }
 
 unsigned int CDroid::getMinEnginePower() {
 	return m_controlEngines->getMinEnginePower();
+}
+
+unsigned int CDroid::getCurrentEnginePower() {
+	return m_controlEngines->getEnginePower();
 }
 
 unsigned long CDroid::getLowPowerDistance() {

@@ -44,6 +44,9 @@ void CSettingCommand::init() {
 	m_operations->insert('v');
 	m_operations->insert('d');
 	m_operations->insert('s');
+	m_operations->insert('c');
+	m_menu->append("c# print current power\t;\n");
+	m_menu->append("cxxx# change current power to xxx\t;\n");
 	m_menu->append("V# print max power\t;\n");
 	m_menu->append("Vxxx# change max power to xxx\t;\n");
 	m_menu->append("v# print min power\t;\n");
@@ -91,6 +94,13 @@ int CSettingCommand::executeSimpleCommand(char *operation) {
 		sprintf(message, "min power %u\n",m_droid->getMinEnginePower());
 		m_logger->info(message);
 		sprintf(message,"%u",m_droid->getMinEnginePower());
+		setRepliedMessage(message);
+		return 1;
+	case 'c':
+		removeCommandPrefix(operation);
+		sprintf(message, "current power %u\n",m_droid->getCurrentEnginePower());
+		m_logger->info(message);
+		sprintf(message,"%u",m_droid->getCurrentEnginePower());
 		setRepliedMessage(message);
 		return 1;
 	case 'd':
@@ -142,6 +152,18 @@ int CSettingCommand::executeDataCommand(char *operation) {
 			m_logger->debug(message);
 		}
 		m_droid->setMinEnginePower(uintValue);
+		sprintf(message,"OK");
+		setRepliedMessage(message);
+		return 1;
+	case 'c':
+		removeCommandPrefix(operation);
+		sscanf(operation, "%u", &uintValue);
+		if (m_logger->isDebug()) {
+			sprintf(message, "current power changed from %u to %u\n",
+					m_droid->getCurrentEnginePower(), uintValue);
+			m_logger->debug(message);
+		}
+		m_droid->setCurrentEnginePower(uintValue);
 		sprintf(message,"OK");
 		setRepliedMessage(message);
 		return 1;
