@@ -29,27 +29,45 @@
 #include <COldCamera.h>
 #endif
 
-CFactoryCamera::CFactoryCamera(CSettingLoading *settingsLoader,CLogger *logger) {
+CFactoryCamera::CFactoryCamera(std::ifstream *pfile,CLogger *logger) {
 	m_logger = logger;
-	m_settingsLoader = settingsLoader;
+	m_pFile = pfile;
+	m_buffSize = 256;
+	m_buffer = (char*) calloc(m_buffSize, sizeof(char));
 }
 
 CFactoryCamera::~CFactoryCamera() {
+	if (m_buffer != NULL)
+		free(m_buffer);
 }
 
+char* CFactoryCamera::getLine() {
+	memset(m_buffer, 0, m_buffSize * sizeof(char));
+	if (m_pFile->is_open()) {
+		m_pFile->getline(m_buffer, m_buffSize, '\n');
+		if (m_logger != NULL && m_logger->isDebug() == 1) {
+			std::string message("Reading line=");
+			message += m_buffer;
+			message += '\n';
+			m_logger->debug(message);
+		}
+		return m_buffer;
+	}
+	return NULL;
+}
 CCamera *CFactoryCamera::createCamera() {
 	char *line;
-	line = m_settingsLoader->getLine();
+	line = getLine();
 	if (strcmp("COldCamera",line)) {
 #ifdef HAS_OLD_CAMERA
-		line = m_settingsLoader->getLine();
+		line = getLine();
 		return new COldCamera(line,m_logger);
 #else
 		return new CCamera();
 #endif
 	} else {
 		//consume the data
-		line = m_settingsLoader->getLine();
+		line = getLine();
 		return new CCamera();
 	}
 	return NULL;

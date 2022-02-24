@@ -26,18 +26,22 @@
 #ifndef CAMERA_CFACTORYCAMERA_H_
 #define CAMERA_CFACTORYCAMERA_H_
 
-#include <CSettingLoading.h>
 #include <CLogger.h>
 #include <CCamera.h>
+#include <iostream>
+#include <fstream>
 
 class CFactoryCamera {
 public:
-	CFactoryCamera(CSettingLoading *settingsLoader,CLogger *logger);
+	CFactoryCamera(std::ifstream *pfile,CLogger *logger);
 	virtual ~CFactoryCamera();
 	CCamera *createCamera();
 private:
+	char* getLine();
+	std::ifstream *m_pFile;
 	CLogger *m_logger;
-	CSettingLoading *m_settingsLoader;
+	char *m_buffer;
+	unsigned int m_buffSize;
 };
 
 #endif /* CAMERA_CFACTORYCAMERA_H_ */

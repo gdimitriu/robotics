@@ -167,9 +167,13 @@ void CDroid::initialize() {
 	} else {
 		m_maxLeftServoEncoder = m_maxRightServoEncoder = -1; // no sweep sensor in front
 	}
-	CFactoryCamera * cameraFactory = new CFactoryCamera(settings,m_settingLogger);
-	m_camera = cameraFactory->createCamera();
-	delete cameraFactory;
+	if (!m_pFile->eof()) {
+		CFactoryCamera * cameraFactory = new CFactoryCamera(m_pFile,m_settingLogger);
+		m_camera = cameraFactory->createCamera();
+		delete cameraFactory;
+	} else {
+		m_camera = NULL;
+	}
 	m_moveBarrier.init(m_controlEngines->getEnginesNr() + 1);
 	m_controlEngines->setMoveBarrier(&m_moveBarrier);
 	struct sched_param goSchedParam;
