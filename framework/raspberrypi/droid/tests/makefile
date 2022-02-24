@@ -3,9 +3,11 @@ SHELL = /bin/sh
 LIBS = -L$(PREFIX_GPIO) -L$(PREFIX_DRIVERS)/lib -L../../lib -lpthread -lpigpio -lrt -ldroiddrivers -lloggers -ldroid -lengines -lsettings -lsensors -ltof -lgrabber -lcamera
 INCLUDES = -I$(PREFIX_GPIO) -I$(PREFIX_DRIVERS)/include -I../../include
 ifeq (raspberry,$(OS_TYPE))
-	RASPICAM_LIBS = -L$(PREFIX_RASPICAM)/build/src -L$(PREFIX_VC)/lib -lraspicam -lmmal -lmmal_core -lvcos -lmmal_util -lmmal_vc_client -lmmal_components -lvchiq_arm -lvcsm -lcontainers
-	LIBS += $(RASPICAM_LIBS)
-	INCLUDES += -I$(PREFIX_RASPICAM)/src
+	ifneq ($(origin $(PREFIX_RASPICAM)), undefined)
+		RASPICAM_LIBS = -L$(PREFIX_RASPICAM)/build/src -L$(PREFIX_VC)/lib -lraspicam -lmmal -lmmal_core -lvcos -lmmal_util -lmmal_vc_client -lmmal_components -lvchiq_arm -lvcsm -lcontainers
+		LIBS += $(RASPICAM_LIBS)
+		INCLUDES += -I$(PREFIX_RASPICAM)/src
+	endif
 endif
 OBJECTS = 
 HEADERS = 
