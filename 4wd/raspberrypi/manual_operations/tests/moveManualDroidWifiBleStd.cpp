@@ -30,6 +30,7 @@
 #include <CCommandStd.h>
 #include <CBLECommand.h>
 #include <CCommandEsp01.h>
+#include <CHttpCommand.h>
 #include <CMoveCommand.h>
 #include <CSettingCommand.h>
 #include <CLoggerBle.h>
@@ -49,12 +50,14 @@ int main(int argc, char **argv) {
 
 	vector<CCommCommands *> *commands = new vector<CCommCommands *>();
 
-	CCommCommands *commStd = new CCommandStd(new CMoveCommand(moveLogger), new CSettingCommand(settingsLogger));
-	commands->push_back(commStd);
-	commStd = new CBLECommand(new CMoveCommand(moveLogger), new CSettingCommand(settingsLogger));
-	commands->push_back(commStd);
-	commStd = new CCommandEsp01(new CMoveCommand(moveLogger), new CSettingCommand(settingsLogger));
-	commands->push_back(commStd);
+	CCommCommands *command = new CCommandStd(new CMoveCommand(moveLogger), new CSettingCommand(settingsLogger));
+	commands->push_back(command);
+	command = new CBLECommand(new CMoveCommand(moveLogger), new CSettingCommand(settingsLogger));
+	commands->push_back(command);
+	command = new CCommandEsp01(new CMoveCommand(moveLogger), new CSettingCommand(settingsLogger));
+	commands->push_back(command);
+	command = new CHttpCommand(new CMoveCommand(moveLogger), new CSettingCommand(settingsLogger));
+	commands->push_back(command);
 	CManualDroid *droid = new CManualDroid(argv[1], 0, commands);
 	droid->startReceiving();
 	delete droid;

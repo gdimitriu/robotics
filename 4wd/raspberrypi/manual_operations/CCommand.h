@@ -35,6 +35,7 @@ class CCommand {
 public:
 	CCommand();
 	CCommand(CLogger *logger);
+	CLogger *getLogger();
 	virtual ~CCommand();
 	/*
 	 * return the prefix of the supported operations

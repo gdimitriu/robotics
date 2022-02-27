@@ -307,3 +307,36 @@ void CCommCommands::stop() {
 int CCommCommands::isStopped() {
 	return m_isStopped;
 }
+
+vector<string *> CCommCommands::splitCommandsAndClearBuffer(char *buffer,int *index,int maxSize) {
+	vector<string *> *commands = new vector<string *>();
+	char tmpBuffer[1024];
+	bzero(tmpBuffer,sizeof(char)*1024);
+	int commPos = 0;
+	int lastCommand = 0;
+	for (int i = 0 ;i < strlen(buffer); i++) {
+		if (buffer[i]== '#') {
+			tmpBuffer[commPos] = buffer[i];
+			tmpBuffer[commPos + 1] = '\0';
+			commands->push_back(new string(tmpBuffer));
+			bzero(tmpBuffer,sizeof(char)*1024);
+			commPos = 0;
+			*index--;
+			lastCommand = i;
+		} else {
+			tmpBuffer[commPos] = buffer[i];
+			commPos++;
+			index--;
+		}
+	}
+	if (lastCommand < strlen(buffer)) {
+		bzero(buffer,sizeof(char)*maxSize);
+		for(int i = 0; i< commPos; i++) {
+			buffer[i] = tmpBuffer[i];
+		}
+		commPos++;
+		buffer[commPos] = '\0';
+		*index = commPos;
+	}
+	return commands;
+}

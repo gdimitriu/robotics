@@ -41,6 +41,9 @@ CCommand::~CCommand() {
 	// TODO Auto-generated destructor stub
 }
 
+CLogger *CCommand::getLogger() {
+	return m_logger;
+}
 int CCommand::isValidNumber(char *data) {
 	int size = strlen(data);
 	if (size == 0)
