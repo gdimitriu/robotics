@@ -27,6 +27,7 @@
 #include <string.h>
 #include <sys/socket.h>
 #include <sys/select.h>
+#include <netinet/tcp.h>
 #include <errno.h>
 
 extern int errno;
@@ -40,7 +41,7 @@ CHttpCommand::CHttpCommand(CCommand *move, CCommand *setting) : CCommCommands(mo
 	m_httpPort = HTTP_PORT;
 	m_serverAddr.sin_port = htons(m_httpPort);
 	m_logger = setting->getLogger();
-	m_clients = calloc(MAX_NR_CLIENTS,sizeof(int));
+	m_clients = (int *)calloc(MAX_NR_CLIENTS,sizeof(int));
 	m_buffer = (char **)calloc(MAX_NR_CLIENTS, sizeof(char *));
 	for (int i = 0; i < MAX_NR_CLIENTS; i++) {
 		m_buffer[i] = (char *)calloc(RECEIVE_FULL_BUF_LEN, sizeof(char));
@@ -88,6 +89,12 @@ void CHttpCommand::startReceiving() {
 		m_logger->error(message);
 		return;
 	}
+	if (listen(m_listenSocketFd,0) < 0) {
+		char message[255];
+		sprintf(message,"Could not listen Socket: %s\n",strerror(errno));
+		m_logger->error(message);
+		return;
+	}
 	int nready;
 	int maxfd,connectSocketFd;
 	int maxi;
@@ -102,7 +109,7 @@ void CHttpCommand::startReceiving() {
 		m_clients[i] = -1;
 	FD_ZERO(&m_allset);
 	FD_SET(m_listenSocketFd,&m_allset);
-	while(true) {
+	while(!isStopped()) {
 		pthread_testcancel();
 		m_rset = m_allset;
 		nready = select(maxfd + 1, &m_rset, NULL, NULL, NULL);
@@ -128,6 +135,8 @@ void CHttpCommand::startReceiving() {
 				continue;
 			}
 			FD_SET(connectSocketFd,&m_allset); //add new descriptor
+			int one = 1;
+			setsockopt(connectSocketFd, SOL_TCP, TCP_NODELAY, &one, sizeof(one));
 			if (connectSocketFd > maxfd)
 				maxfd = connectSocketFd;
 			if (i > maxi)
@@ -140,7 +149,14 @@ void CHttpCommand::startReceiving() {
 				continue;
 			if (FD_ISSET(connectSocketFd,&m_rset)) {
 				bzero(receiveBuffer, sizeof(char)*RECEIVE_BUF_LEN);
-				if ((receiveNr = read(connectSocketFd,receiveBuffer, RECEIVE_BUF_LEN)) == 0) {
+				receiveNr = read(connectSocketFd,receiveBuffer, RECEIVE_BUF_LEN);
+				if (receiveNr == 0) {
+					close(connectSocketFd);
+					m_possionInBuffer[clientId] = 0;
+					bzero(m_buffer[clientId],sizeof(char) * RECEIVE_FULL_BUF_LEN);
+					m_clients[clientId] = -1;
+					FD_CLR(connectSocketFd,&m_allset);
+				}else {
 					if (m_possionInBuffer[clientId] == 0) {
 						for(int i = 0; i < receiveNr; i++) {
 							m_buffer[clientId][i] = receiveBuffer[i];
@@ -148,7 +164,9 @@ void CHttpCommand::startReceiving() {
 						receiveBuffer[receiveNr] = '\0';
 						m_possionInBuffer[clientId] = receiveNr;
 					} else {
-
+						for (int i = 0; i <= receiveNr; i++, m_possionInBuffer[clientId]++) {
+							m_buffer[clientId][m_possionInBuffer[clientId]] = receiveBuffer[i];
+						}
 					}
 					str.assign(m_buffer[clientId]);
 					if (str.find('#') != string::npos) {
@@ -157,10 +175,11 @@ void CHttpCommand::startReceiving() {
 							if (string("exit#").compare(**it) == 0) {
 								stop();
 								freeCommands(commands);
+								FD_CLR(connectSocketFd,&m_allset);
 								delete commands;
 								return;
 							}
-							int ret = processInputData(&str);
+							int ret = processInputData(*it);
 							if(ret == 1) {
 								sendData(clientId);
 							}

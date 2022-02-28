@@ -48,7 +48,7 @@ protected:
 	 * return commands vector with full commands
 	 * in buffer remain the last uncomplited command with the correspoinding index
 	 */
-	vector<string *> splitCommandsAndClearBuffer(char *buffer,int *index,int maxSize);
+	vector<string *> *splitCommandsAndClearBuffer(char *buffer,int *index,int maxSize);
 	int processInputData(string *input, int reverse = 0);
 	void removeCommandPrefix(char *operation);
 	CCommand* getSettingCommand();

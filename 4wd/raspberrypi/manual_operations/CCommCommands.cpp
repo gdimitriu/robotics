@@ -86,7 +86,7 @@ int CCommCommands::processInputData(string *input, int reverse) {
 	if (input->back() != '#') {
 		char message[255];
 		memset(message,0,255);
-		sprintf(message,"Operation not known because is not end with # = %s\n", input->c_str());
+		sprintf(message,"Operation not known because is not end with # =<<%s<<END\n", input->c_str());
 		m_logger->error(message);
 		return 0;
 	}
@@ -308,33 +308,35 @@ int CCommCommands::isStopped() {
 	return m_isStopped;
 }
 
-vector<string *> CCommCommands::splitCommandsAndClearBuffer(char *buffer,int *index,int maxSize) {
+vector<string *> *CCommCommands::splitCommandsAndClearBuffer(char *buffer,int *index,int maxSize) {
 	vector<string *> *commands = new vector<string *>();
 	char tmpBuffer[1024];
 	bzero(tmpBuffer,sizeof(char)*1024);
 	int commPos = 0;
 	int lastCommand = 0;
-	for (int i = 0 ;i < strlen(buffer); i++) {
+	int actualSize = strlen(buffer);
+	for (int i = 0 ;i < actualSize; i++) {
 		if (buffer[i]== '#') {
 			tmpBuffer[commPos] = buffer[i];
 			tmpBuffer[commPos + 1] = '\0';
 			commands->push_back(new string(tmpBuffer));
 			bzero(tmpBuffer,sizeof(char)*1024);
 			commPos = 0;
-			*index--;
-			lastCommand = i;
+			lastCommand = i+1;
 		} else {
-			tmpBuffer[commPos] = buffer[i];
-			commPos++;
-			index--;
+			if (!(buffer[i] == '\n' || buffer[i] =='\r' || buffer[i] ==' ' || buffer[i] =='\t')) {
+				tmpBuffer[commPos] = buffer[i];
+				commPos++;
+			}
 		}
+		(*index)--;
 	}
-	if (lastCommand < strlen(buffer)) {
-		bzero(buffer,sizeof(char)*maxSize);
+	bzero(buffer,sizeof(char)*maxSize);
+	if (strlen(tmpBuffer) > 0) {
+		cout<<"Has more <<"<<tmpBuffer<<"<<END"<<std::endl;
 		for(int i = 0; i< commPos; i++) {
 			buffer[i] = tmpBuffer[i];
 		}
-		commPos++;
 		buffer[commPos] = '\0';
 		*index = commPos;
 	}

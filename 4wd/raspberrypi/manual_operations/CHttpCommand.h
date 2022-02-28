@@ -33,7 +33,7 @@
 #include <fcntl.h>
 #include <unistd.h>
 #include <CLogger.h>
-#define HTTP_PORT 576
+#define HTTP_PORT 8080
 #define MAX_NR_CLIENTS 2
 #define RECEIVE_FULL_BUF_LEN 2048
 #define RECEIVE_BUF_LEN RECEIVE_FULL_BUF_LEN/2
