@@ -31,7 +31,7 @@ CManualDroid::CManualDroid(char *droidCfgFile, int isOnHost,vector<CCommCommands
 	for(vector<CCommCommands *>::iterator it = m_commands->begin(); it != m_commands->end(); ++it) {
 		(*it)->setDroid(this);
 	}
-	m_threads = new pthread_t(m_commands->size());
+	m_threads = new pthread_t[m_commands->size()];
 }
 CManualDroid::~CManualDroid() {
 	stopReceiving();

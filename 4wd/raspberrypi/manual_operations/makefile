@@ -2,7 +2,9 @@ SHELL = /bin/sh
 
 INCLUDES = -I$(PREFIX_GPIO) -I$(PREFIX_DRIVERS)/include  -I$(PREFIX_FRAMEWORK)/include -I../include
 ifeq (raspberry, $(OS_TYPE))
-	INCLUDES += -I$(PREFIX_RASPICAM)/src
+	ifneq ($(origin $(PREFIX_RASPICAM)), undefined)
+		INCLUDES += -I$(PREFIX_RASPICAM)/src
+	endif
 endif
 SOURCES = CCommand.cpp CCommCommands.cpp CBLECommand.cpp CBLECommandHC05.cpp CMoveCommand.cpp  CSettingCommand.cpp CCommandStd.cpp CManualDroid.cpp CCommandEsp01.cpp CHttpCommand.cpp
 OBJECTS = $(SOURCES:%.cpp=%.o)

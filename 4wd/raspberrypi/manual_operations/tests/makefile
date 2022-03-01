@@ -4,9 +4,11 @@ LIBS = -lpthread -lpigpio -lrt -ldroiddrivers -lloggers -lsettings -ldroid -lsen
 LIB_DIRS = -L$(PREFIX_GPIO) -L$(PREFIX_DRIVERS)/lib -L$(PREFIX_FRAMEWORK)/lib -L../../lib
 INCLUDES = -I$(PREFIX_GPIO) -I$(PREFIX_DRIVERS)/include  -I$(PREFIX_FRAMEWORK)/include -I../ 
 ifeq (raspberry, $(OS_TYPE))
-	INCLUDES += -I$(PREFIX_RASPICAM)/src
-	RASPICAM_LIBS = -L$(PREFIX_RASPICAM)/build/src -L$(PREFIX_VC)/lib -lraspicam -lmmal -lmmal_core -lvcos -lmmal_util -lmmal_vc_client -lmmal_components -lvchiq_arm -lvcsm -lcontainers
-	LIBS += $(RASPICAM_LIBS)
+	ifneq ($(origin $(PREFIX_RASPICAM)), undefined)
+		INCLUDES += -I$(PREFIX_RASPICAM)/src
+		RASPICAM_LIBS = -L$(PREFIX_RASPICAM)/build/src -L$(PREFIX_VC)/lib -lraspicam -lmmal -lmmal_core -lvcos -lmmal_util -lmmal_vc_client -lmmal_components -lvchiq_arm -lvcsm -lcontainers
+		LIBS += $(RASPICAM_LIBS)
+	endif
 endif	
 
 EXECUTABLES = testMenuStdout testMenuBle moveManualDroidStd moveManualDroidBleHC05 moveManualDroidBle moveManualDroidEsp01 moveManualDroidWifiBleStd

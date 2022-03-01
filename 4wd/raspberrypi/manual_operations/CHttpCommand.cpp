@@ -51,7 +51,8 @@ CHttpCommand::CHttpCommand(CCommand *move, CCommand *setting) : CCommCommands(mo
 
 CHttpCommand::~CHttpCommand() {
 	if (m_listenSocketFd > 0) {
-		close(m_listenSocketFd);
+		if (m_listenSocketFd > 0)
+			close(m_listenSocketFd);
 		m_listenSocketFd = -1;
 	}
 	if (m_clients != NULL) {
@@ -62,7 +63,7 @@ CHttpCommand::~CHttpCommand() {
 		free(m_clients);
 	}
 	if (m_buffer != NULL) {
-		for (int i =0 ;i < MAX_NR_CLIENTS; i++)
+		for (int i = 0 ;i < MAX_NR_CLIENTS; i++)
 			free(m_buffer[i]);
 		free(m_buffer);
 	}
@@ -109,10 +110,18 @@ void CHttpCommand::startReceiving() {
 		m_clients[i] = -1;
 	FD_ZERO(&m_allset);
 	FD_SET(m_listenSocketFd,&m_allset);
+	struct timeval timeout;
 	while(!isStopped()) {
 		pthread_testcancel();
 		m_rset = m_allset;
-		nready = select(maxfd + 1, &m_rset, NULL, NULL, NULL);
+		timeout.tv_sec = 2;
+		timeout.tv_usec = 0;
+		nready = select(maxfd + 1, &m_rset, NULL, NULL, &timeout);
+		if (nready == 0) {
+			continue;
+		}
+		if (isStopped())
+			return;
 		if (FD_ISSET(m_listenSocketFd,&m_rset)) { //new client
 			clilen = sizeof(m_clientAddr);
 			connectSocketFd = accept(m_listenSocketFd,(struct sockaddr *)&m_clientAddr, &clilen);

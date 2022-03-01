@@ -42,13 +42,13 @@ int main(int argc, char **argv) {
 		std::cerr<<"Usage="<<argv[0]<<" configFile\n";
 		exit(1);
 	}
-	char buff[255];
 	CLogger *moveLogger = new CLoggerFile("/var/log/droid/move.log",'a');
-		CLogger *settingsLogger = new CLoggerFile("/var/log/droid/settings.log",'a');
-		moveLogger->setType(2);
-		settingsLogger->setType(2);
+	CLogger *settingsLogger = new CLoggerFile("/var/log/droid/settings.log",'a');
+	moveLogger->setType(2);
+	settingsLogger->setType(2);
 
 	vector<CCommCommands *> *commands = new vector<CCommCommands *>();
+	commands->reserve(4);
 
 	CCommCommands *command = new CCommandStd(new CMoveCommand(moveLogger), new CSettingCommand(settingsLogger));
 	commands->push_back(command);
