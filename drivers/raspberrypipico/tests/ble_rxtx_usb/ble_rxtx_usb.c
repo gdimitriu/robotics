@@ -11,6 +11,7 @@
 
 int main() {
 	char buffer[256];
+	char bufferSend[512];
 	int index = 0;
 
 	stdio_usb_init();
@@ -30,6 +31,11 @@ int main() {
 				buffer[index + 1] = '\0';
 				printf("%s\n", buffer);
 				index = 0;
+				if (uart_is_writable(uart1)) {
+					memset(bufferSend,'\0',sizeof(char)*512);
+					sprintf(bufferSend,"Received=%s\n",buffer);
+					uart_puts(uart1,bufferSend);
+				}
 				if (strcmp(buffer, "exit#") == 0) {
 					return 1 ;
 				}
