@@ -19,8 +19,8 @@
  * along with Robotics; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  */
-#define BLE_DEBUG_MODE true
-#define BLE_MOVE_DEBUG true
+//#define BLE_DEBUG_MODE true
+//#define BLE_MOVE_DEBUG true
 #include <EnableInterrupt.h>
 #include <NeoSWSerial.h>
 #include <QTRSensors.h>
@@ -35,6 +35,8 @@
 #define LEFT_LINE_SENSOR A0
 #define CENTER_LINE_SENSOR A1
 #define RIGHT_LINE_SENSOR A3
+
+#define BLE_DEBUG_MODE true
 
 bool isValidInput;
 char inData[20]; // Allocate some space for the string
@@ -234,12 +236,10 @@ boolean makeMove() {
           makeCleanup(); 
           return false;
         }
-#ifdef BLE_DEBUG_MODE        
         BTSerial.print("Change speed ");
         BTSerial.print(atol(inData));
         BTSerial.print(" from ");
         BTSerial.println(speedValue);
-#endif        
         speedValue = atol(inData);
         isValidInput = true;
       } else if(inData[0] == 'e') {
@@ -258,12 +258,10 @@ boolean makeMove() {
           makeCleanup(); 
           return false;
         }
-#ifdef BLE_DEBUG_MODE        
         BTSerial.print("Change Threshold Error ");
         BTSerial.print(atol(inData));
         BTSerial.print(" from ");
         BTSerial.println(thresholdError);
-#endif        
         thresholdError = atol(inData);
         isValidInput = true;
       } else if(inData[0] == 'p') {
@@ -282,12 +280,10 @@ boolean makeMove() {
           makeCleanup(); 
           return false;
         }
-#ifdef BLE_DEBUG_MODE        
         BTSerial.print("Change threshold position ");
         BTSerial.print(atol(inData));
         BTSerial.print(" from ");
         BTSerial.println(thresholdPosition);
-#endif        
         thresholdPosition = atol(inData);
         isValidInput = true;
       } else if(inData[0] == 'w') {
@@ -306,12 +302,10 @@ boolean makeMove() {
           makeCleanup(); 
           return false;
         }
-#ifdef BLE_DEBUG_MODE        
         BTSerial.print("Change white value ");
         BTSerial.print(atol(inData));
         BTSerial.print(" from ");
         BTSerial.println(whiteValue);
-#endif        
         whiteValue = atol(inData);
         isValidInput = true;
       } else {
