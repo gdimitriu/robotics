@@ -13,3 +13,5 @@ export PREFIX_FRAMEWORK
 #export PREFIX_VC 
 PREFIX_WIRINGPI=/home/onion/raspberrypi/libs/wiringpi
 export PREFIX_WIRINGPI
+PREFIX_SYSTEM=/home/onion/raspberrypi/libs/system
+export PREFIX_SYSTEM
