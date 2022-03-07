@@ -4,6 +4,7 @@ ifeq (arm-linux,$(TOOLCHAIN_TYPE))
 	CC := arm-linux-gnueabihf-gcc
 	CXX := arm-linux-gnueabihf-g++
 	AR := arm-linux-gnueabihf-ar
+	LD := arm-linux-gnueabihf-ld
 	OS_TYPE := raspberry
 else ifeq(raspberry,$(TOOLCHAIN_TYPE))
 	CC := gcc

@@ -10,6 +10,7 @@ all: $(EXECUTABLES)
 	cd isr_cpp && $(MAKE)
 	cd camera && $(MAKE)
 	cd mpu6050 && $(MAKE)
+	cd libcamera && $(MAKE)
 
 led_gpio:led_gpio.c
 	$(CC) -fPIC -o led_gpio led_gpio.c $(LIBS) $(INCLUDES)
