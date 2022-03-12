@@ -27,7 +27,7 @@
 #define MANUAL_OPERATIONS_CSETTINGCOMMAND_H_
 #include "CCommand.h"
 #include <CDroid.h>
-
+#define SETTING_REPLY_MESSAGE_LENGTH 512
 class CSettingCommand: public CCommand {
 public:
 	CSettingCommand();
@@ -49,6 +49,7 @@ public:
 protected:
 	virtual int executeSimpleCommand(char *operation);
 	virtual int executeDataCommand(char *operation);
+	virtual int createInfoMessage(char *message);
 private:
 	void init();
 	set<char> *m_operations;

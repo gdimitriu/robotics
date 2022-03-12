@@ -1,7 +1,7 @@
 SHELL = /bin/sh
 LIBS = -L$(PREFIX_GPIO) -lpthread -lpigpio -lrt
 INCLUDES = -I$(PREFIX_GPIO) -I../include/
-SOURCES = CCamera.cpp CFactoryCamera.cpp
+SOURCES = CCamera.cpp CFactoryCamera.cpp CStreamCamera.cpp
 OBJECTS = $(SOURCES:%.cpp=%.o)
 HEADERS =  $(SOURCES:%.cpp=%.h)
 DEPENDENCIES =
@@ -17,7 +17,7 @@ ifeq (raspberry, $(OS_TYPE))
 	endif
 endif 
 
-EXECUTABLES = libcamera.so
+EXECUTABLES = libdroidcamera.so
 
 
 all: $(EXECUTABLES)	
@@ -26,17 +26,22 @@ CCamera.o: CCamera.cpp CCamera.h
 	$(CXX) -fPIC -o CCamera.o -c CCamera.cpp $(INCLUDES) $(FLAGS)
 	cp CCamera.h ../include
 
-CFactoryCamera.o : CFactoryCamera.cpp CFactoryCamera.h CCamera.o $(DEPENDENCIES)
-	$(CXX) -fPIC -c -o CFactoryCamera.o CFactoryCamera.cpp $(INCLUDES) $(FLAGS)
-	cp CFactoryCamera.h ../include
-
 COldCamera.o : COldCamera.cpp COldCamera.h CCamera.o
 	$(CXX) -fPIC -c -o COldCamera.o COldCamera.cpp $(INCLUDES) $(FLAGS)
 	cp COldCamera.h ../include
+
+CStreamCamera.o : CStreamCamera.cpp CStreamCamera.h CCamera.o
+	$(CXX) -fPIC -c -o CStreamCamera.o CStreamCamera.cpp $(INCLUDES) $(FLAGS)
+	cp CStreamCamera.h ../include
+
+CFactoryCamera.o : CFactoryCamera.cpp CFactoryCamera.h CCamera.o CStreamCamera.o $(DEPENDENCIES)
+	$(CXX) -fPIC -c -o CFactoryCamera.o CFactoryCamera.cpp $(INCLUDES) $(FLAGS)
+	cp CFactoryCamera.h ../include
+
 	
-libcamera.so: $(OBJECTS)
-	$(CXX) -shared -fPIC -o libcamera.so $(OBJECTS)
-	cp libcamera.so ../lib
+libdroidcamera.so: $(OBJECTS)
+	$(CXX) -shared -fPIC -o libdroidcamera.so $(OBJECTS)
+	cp libdroidcamera.so ../lib
 	
 clean:
 	for object in $(EXECUTABLES);\
@@ -51,4 +56,5 @@ clean:
 	do \
 		if [ -f ../include/$$object ]; then rm ../include/$$object; fi; \
 	done
-	if [ -f ../lib/libcamera.so ]; then rm ../lib/libcamera.so; fi;
+	if [ -f ../lib/libdroidcamera.so ]; then rm ../lib/libdroidcamera.so; fi;
+	

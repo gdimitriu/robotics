@@ -28,6 +28,7 @@
 #ifdef HAS_OLD_CAMERA
 #include <COldCamera.h>
 #endif
+#include <CStreamCamera.h>
 
 CFactoryCamera::CFactoryCamera(std::ifstream *pfile,CLogger *logger) {
 	m_logger = logger;
@@ -58,13 +59,16 @@ char* CFactoryCamera::getLine() {
 CCamera *CFactoryCamera::createCamera() {
 	char *line;
 	line = getLine();
-	if (strcmp("COldCamera",line)) {
+	if (strcmp("COldCamera",line) == 0) {
 #ifdef HAS_OLD_CAMERA
 		line = getLine();
 		return new COldCamera(line,m_logger);
 #else
 		return new CCamera();
 #endif
+	} else if (strcmp("CStreamCamera",line) == 0) {
+		line = getLine();
+		return new CStreamCamera(line,m_logger);
 	} else {
 		//consume the data
 		line = getLine();

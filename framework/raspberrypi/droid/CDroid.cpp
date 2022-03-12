@@ -506,3 +506,21 @@ void CDroid::closeClaw() {
 		m_grabberController->closeClaw(0);
 	}
 }
+
+void CDroid::startStreaming() {
+	if (m_camera != NULL)
+		m_camera->startStreaming();
+}
+
+void CDroid::stopStreaming() {
+	if (m_camera != NULL)
+		m_camera->stopStreaming();
+}
+
+std::string * CDroid::getInfo() {
+	std::string *info = new std::string();
+	std::string *tmp = m_camera->getInfo();
+	(*info) +=*tmp;
+	delete tmp;
+	return info;
+}

@@ -1,9 +1,9 @@
 /*
- * CCamera.h
+ * CStreamCamera.h
  *
- *  Created on: May 10, 2021
+ *  Created on: Mar 10, 2022
  *      Author: Gabriel Dimitriu
- * Copyright (C) 2021 Gabriel Dimitriu
+ * Copyright (C) 2020 Gabriel Dimitriu
  * All rights reserved.
  *
  * This file is part of Robotics project.
@@ -23,21 +23,27 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef CAMERA_CCAMERA_H_
-#define CAMERA_CCAMERA_H_
+#ifndef CAMERA_CSTREAMCAMERA_H_
+#define CAMERA_CSTREAMCAMERA_H_
 
-#include <fstream>
+#include "CCamera.h"
+#include <CLogger.h>
+#include <string>
 
-class CCamera {
+class CStreamCamera: public CCamera {
 public:
-	CCamera();
-	virtual ~CCamera();
-	virtual void captureCameraImage(std::ofstream *pFile);
+	CStreamCamera(char *configLine, CLogger *settingLogger);
+	virtual ~CStreamCamera();
 	virtual void startStreaming();
 	virtual void stopStreaming();
 	virtual std::string* getInfo();
-protected:
-	bool m_isDisabled;
+private:
+	CLogger *m_logger;
+	pid_t m_streamingPid;
+	std::string m_connectionType;
+	uint m_streamingPort;
+	std::string m_codec;
+	uint m_frameRate;
 };
 
-#endif /* CAMERA_CCAMERA_H_ */
+#endif /* CAMERA_CSTREAMCAMERA_H_ */

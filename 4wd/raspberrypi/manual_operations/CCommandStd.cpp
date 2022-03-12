@@ -53,7 +53,9 @@ void CCommandStd::startReceiving() {
 			stop();
 			break;
 		}
-		processInputData(&str);
+		int ret = processInputData(&str);
+		if (ret == 1)
+			cout<<getSettingCommand()->getRepliedMessage()<<std::endl;
 		pthread_testcancel();
 	} while((str != exitCond) && !isStopped());
 }

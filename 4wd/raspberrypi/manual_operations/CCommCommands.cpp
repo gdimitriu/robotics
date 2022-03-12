@@ -47,17 +47,19 @@ CCommCommands::CCommCommands(CCommand *move, CCommand *setting) {
 	m_menu->append("PR# play the record of movement in full reverse order\t;\n");
 	m_menu->append("SfilePath# save record into the file\t;\n");
 	m_menu->append("LfilePath# load record from the file\t;\n");
-	m_menu->append("TfilePath# take a picture into the file\t;\n");
+	m_menu->append("T# Start streaming camera\t;\n");
+	m_menu->append("t# Stop streaming camera\t;\n");
 	m_menu->append("Go/c# grab the object using claw (o for open c for close)\t;\n");
 	m_menu->append("p# print the menu\t;\n");
 	m_isRecording = false;
 	m_localOperations.insert('R'); //start/stop recording of movement
 	m_localOperations.insert('P'); //play the recording of movement or play in reverse the recording
-	m_localOperations.insert('T');//take a picture
+	m_localOperations.insert('T'); //start streaming camera
+	m_localOperations.insert('t'); //stop streaming camera
 	m_localOperations.insert('S'); //save record as file
 	m_localOperations.insert('L'); //load record file
-	m_localOperations.insert('G');//grab
-	m_localOperations.insert('p');//print menu
+	m_localOperations.insert('G'); //grab
+	m_localOperations.insert('p'); //print menu
 	m_droid = NULL;
 	m_isStopped = false;
 }
@@ -132,18 +134,16 @@ int CCommCommands::executeLocal(const char *operation) {
 		removeCommandPrefix(newOperation);
 		//clear the #
 		newOperation[strlen(newOperation) -1] = '\0';
-		pFile = new std::ofstream(newOperation,std::ios::out | std::ios::app | std::ios::ate);
-		if (!pFile->good()) {
-			if (pFile->is_open())
-				pFile->close();
-			sprintf(message, "Invalid filename for saving = %s\n", newOperation);
-			m_logger->error(message);
-			free(newOperation);
-			return 1;
-		}
-		m_droid->captureCameraImage(pFile);
-		pFile->close();
-		delete pFile;
+		m_droid->startStreaming();
+		free(newOperation);
+		break;
+	case 't':
+		newOperation = (char *)calloc(strlen(operation) +1, sizeof(char));
+		strncpy(newOperation, operation, strlen(operation));
+		removeCommandPrefix(newOperation);
+		//clear the #
+		newOperation[strlen(newOperation) -1] = '\0';
+		m_droid->stopStreaming();
 		free(newOperation);
 		break;
 	case 'P':

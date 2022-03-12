@@ -130,8 +130,8 @@ int CMoveCommand::executeDataCommand(char *operation) {
 	float distance;
 	int rotation;
 	int direction;
-	char message[255];
-	memset(message, 0, 255 * sizeof(char));
+	char message[REPLY_MESSAGE_LENGTH];
+	memset(message, 0, REPLY_MESSAGE_LENGTH * sizeof(char));
 	switch (operation[0]) {
 	case 'm':
 		removeCommandPrefix(operation);

@@ -27,6 +27,9 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
+#include <arpa/inet.h>
+#include <sys/socket.h>
+#include <ifaddrs.h>
 
 CSettingCommand::CSettingCommand() {
 	init();
@@ -45,6 +48,7 @@ void CSettingCommand::init() {
 	m_operations->insert('d');
 	m_operations->insert('s');
 	m_operations->insert('c');
+	m_operations->insert('I');
 	m_menu->append("c# print current power\t;\n");
 	m_menu->append("cxxx# change current power to xxx\t;\n");
 	m_menu->append("V# print max power\t;\n");
@@ -55,6 +59,7 @@ void CSettingCommand::init() {
 	m_menu->append("dxxx# change low power distance to xxx\t;\n");
 	m_menu->append("s# print stop distance\t;\n");
 	m_menu->append("sxxx# change stop distance to xxx\t;\n");
+	m_menu->append("I# get connection and capability informations\t;\n");
 	m_droid = NULL;
 }
 
@@ -79,46 +84,48 @@ void CSettingCommand::printMenu() {
 }
 
 int CSettingCommand::executeSimpleCommand(char *operation) {
-	char message[255];
-	memset(message, 0, 255 * sizeof(char));
+	char message[REPLY_MESSAGE_LENGTH];
+	memset(message, 0, REPLY_MESSAGE_LENGTH * sizeof(char));
 	switch (operation[0]) {
 	case 'V':
-		removeCommandPrefix(operation);
-		sprintf(message, "max power %u\n",m_droid->getMaxEnginePower());
+		sprintf(message, "max power %u\n", m_droid->getMaxEnginePower());
 		m_logger->info(message);
-		sprintf(message,"%u",m_droid->getMaxEnginePower());
+		sprintf(message, "%u", m_droid->getMaxEnginePower());
 		setRepliedMessage(message);
 		return 1;
 	case 'v':
-		removeCommandPrefix(operation);
-		sprintf(message, "min power %u\n",m_droid->getMinEnginePower());
+		sprintf(message, "min power %u\n", m_droid->getMinEnginePower());
 		m_logger->info(message);
-		sprintf(message,"%u",m_droid->getMinEnginePower());
+		sprintf(message, "%u", m_droid->getMinEnginePower());
 		setRepliedMessage(message);
 		return 1;
 	case 'c':
-		removeCommandPrefix(operation);
-		sprintf(message, "current power %u\n",m_droid->getCurrentEnginePower());
+		sprintf(message, "current power %u\n",
+				m_droid->getCurrentEnginePower());
 		m_logger->info(message);
-		sprintf(message,"%u",m_droid->getCurrentEnginePower());
+		sprintf(message, "%u", m_droid->getCurrentEnginePower());
 		setRepliedMessage(message);
 		return 1;
 	case 'd':
-		removeCommandPrefix(operation);
-		sprintf(message, "min power distance %lu\n",m_droid->getLowPowerDistance());
+		sprintf(message, "min power distance %lu\n",
+				m_droid->getLowPowerDistance());
 		m_logger->info(message);
-		sprintf(message,"%lu",m_droid->getLowPowerDistance());
+		sprintf(message, "%lu", m_droid->getLowPowerDistance());
 		setRepliedMessage(message);
 		return 1;
 	case 's':
-		removeCommandPrefix(operation);
-		sprintf(message, "stop distance %lu\n",m_droid->getStopDistance());
+		sprintf(message, "stop distance %lu\n", m_droid->getStopDistance());
 		m_logger->info(message);
-		sprintf(message,"%lu",m_droid->getStopDistance());
+		sprintf(message, "%lu", m_droid->getStopDistance());
+		setRepliedMessage(message);
+		return 1;
+	case 'I':
+		createInfoMessage(message);
 		setRepliedMessage(message);
 		return 1;
 	default:
-		sprintf(message, "Invalid settings with data command = %s\n", operation);
+		sprintf(message, "Invalid settings with data command = %s\n",
+				operation);
 		m_logger->error(message);
 		return 1;
 	}
@@ -128,8 +135,8 @@ int CSettingCommand::executeSimpleCommand(char *operation) {
 int CSettingCommand::executeDataCommand(char *operation) {
 	unsigned int uintValue;
 	unsigned long ulongValue;
-	char message[255];
-	memset(message, 0, 255 * sizeof(char));
+	char message[REPLY_MESSAGE_LENGTH];
+	memset(message, 0, REPLY_MESSAGE_LENGTH * sizeof(char));
 	switch (operation[0]) {
 	case 'V':
 		removeCommandPrefix(operation);
@@ -140,7 +147,7 @@ int CSettingCommand::executeDataCommand(char *operation) {
 			m_logger->debug(message);
 		}
 		m_droid->setMaxEnginePower(uintValue);
-		sprintf(message,"OK");
+		sprintf(message, "OK");
 		setRepliedMessage(message);
 		return 1;
 	case 'v':
@@ -152,7 +159,7 @@ int CSettingCommand::executeDataCommand(char *operation) {
 			m_logger->debug(message);
 		}
 		m_droid->setMinEnginePower(uintValue);
-		sprintf(message,"OK");
+		sprintf(message, "OK");
 		setRepliedMessage(message);
 		return 1;
 	case 'c':
@@ -164,7 +171,7 @@ int CSettingCommand::executeDataCommand(char *operation) {
 			m_logger->debug(message);
 		}
 		m_droid->setCurrentEnginePower(uintValue);
-		sprintf(message,"OK");
+		sprintf(message, "OK");
 		setRepliedMessage(message);
 		return 1;
 	case 'd':
@@ -176,7 +183,7 @@ int CSettingCommand::executeDataCommand(char *operation) {
 			m_logger->debug(message);
 		}
 		m_droid->setLowPowerDistance(ulongValue);
-		sprintf(message,"OK");
+		sprintf(message, "OK");
 		setRepliedMessage(message);
 		return 1;
 	case 's':
@@ -188,14 +195,40 @@ int CSettingCommand::executeDataCommand(char *operation) {
 			m_logger->debug(message);
 		}
 		m_droid->setStopDistance(uintValue);
-		sprintf(message,"OK");
+		sprintf(message, "OK");
 		setRepliedMessage(message);
 		return 1;
 	default:
-		sprintf(message, "Invalid settings with data command = %s\n", operation);
+		sprintf(message, "Invalid settings with data command = %s\n",
+				operation);
 		m_logger->error(message);
 		return -1;
 	}
 	return 0;
+}
+
+int CSettingCommand::createInfoMessage(char *message) {
+	std::string *info = new string("wifi:");
+	struct ifaddrs *addrs, *tmp;
+	getifaddrs(&addrs);
+	tmp = addrs;
+
+	while (tmp) {
+		if (tmp->ifa_addr && tmp->ifa_addr->sa_family == AF_INET) {
+			if(strcmp(tmp->ifa_name,"lo") != 0) {
+				*info += inet_ntoa(((struct sockaddr_in*) tmp->ifa_addr)->sin_addr);
+				*info += ",";
+			}
+		}
+		tmp = tmp->ifa_next;
+	}
+	info->pop_back();
+	*info += "#";
+	std::string *droid = m_droid->getInfo();
+	*info += *droid;
+	delete droid;
+	strncpy(message, info->c_str(), info->length());
+	delete info;
+	return 1;
 }
 

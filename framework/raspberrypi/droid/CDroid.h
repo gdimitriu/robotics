@@ -38,7 +38,7 @@
 #include <pthread.h>
 #include <CGrabberController.h>
 #include <CCamera.h>
-
+#include <string>
 class CDroid {
 public:
 	CDroid(char *droidCfgFile, int isOnHost);
@@ -97,11 +97,14 @@ public:
 
 	void captureCameraImage(std::ofstream *pFile);
 
+	void startStreaming();
+	void stopStreaming();
 	/*
 	 * grab the object that is already in claw using 1/2 claw
 	 */
 	void openClaw();
 	void closeClaw();
+	std::string* getInfo();
 protected:
 	/*
 	 * nrEncoder + is right and - is left

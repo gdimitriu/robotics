@@ -37,3 +37,15 @@ void CCamera::captureCameraImage(std::ofstream *pFile) {
 		return;
 }
 
+void CCamera::startStreaming() {
+
+}
+
+void CCamera::stopStreaming() {
+
+}
+
+std::string* CCamera::getInfo() {
+	return new std::string("CCamera: disabled#");
+}
+

@@ -29,7 +29,7 @@
 #include <string>
 #include <CLogger.h>
 #include <CDroid.h>
-
+#define REPLY_MESSAGE_LENGTH 512
 using namespace std;
 class CCommand {
 public:
@@ -93,7 +93,7 @@ protected:
 	 * 2 for full reverse
 	 */
 	int m_reverseType;
-	char m_repliedMessage[255];
+	char m_repliedMessage[REPLY_MESSAGE_LENGTH];
 	void setRepliedMessage(char *message);
 };
 

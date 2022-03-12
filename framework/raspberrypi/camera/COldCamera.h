@@ -37,6 +37,7 @@ public:
 	COldCamera(char *configLine, CLogger *settingLogger);
 	virtual ~COldCamera();
 	virtual void captureCameraImage(std::ofstream *pFile);
+	virtual std::string* getInfo();
 private:
 	raspicam::RaspiCam_Still m_Camera;
 	int m_width;

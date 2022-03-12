@@ -27,10 +27,9 @@
 #include <stdio.h>
 #include <string.h>
 
-COldCamera::COldCamera(char * configLine, CLogger *settingLogger) {
+COldCamera::COldCamera(char * configLine, CLogger *settingLogger) : CCamera(){
 	char camera[255];
 	char onOff[255];
-	m_isDisabled = true;
 	if (strncmp("camera",configLine, 6) != 0) {
 		std::string message("Camera configuration is missing");
 		settingLogger->error(message);
@@ -69,4 +68,15 @@ void COldCamera::captureCameraImage(std::ofstream *pFile) {
 	delete data;
 }
 
+std::string* COldCamera::getInfo() {
+	std::string *info = new std::string("OldCamera:");
+	*info += m_isDisabled ? "off," : "on,";
+	*info += std::to_string(m_height);
+	*info += ",";
+	*info += std::to_string(m_width);
+	*info += ",";
+	*info += std::to_string(m_iso);
+	*info += "#";
+	return info;
+}
 
