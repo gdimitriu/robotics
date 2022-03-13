@@ -45,7 +45,7 @@ CCommCommands::CCommCommands(CCommand *move, CCommand *setting) {
 	m_menu->append("P# play the record of movement\t;\n");
 	m_menu->append("Pr# play the record of movement in reverse order only left right\t;\n");
 	m_menu->append("PR# play the record of movement in full reverse order\t;\n");
-	m_menu->append("SfilePath# save record into the file\t;\n");
+	m_menu->append("S# save record into the file\t;\n");
 	m_menu->append("LfilePath# load record from the file\t;\n");
 	m_menu->append("T# Start streaming camera\t;\n");
 	m_menu->append("t# Stop streaming camera\t;\n");
