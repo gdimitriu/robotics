@@ -62,6 +62,7 @@ CCommCommands::CCommCommands(CCommand *move, CCommand *setting) {
 	m_localOperations.insert('p'); //print menu
 	m_droid = NULL;
 	m_isStopped = false;
+	m_hasAck = false;
 }
 
 CCommCommands::~CCommCommands() {
@@ -136,7 +137,8 @@ int CCommCommands::executeLocal(const char *operation) {
 		newOperation[strlen(newOperation) -1] = '\0';
 		m_droid->startStreaming();
 		free(newOperation);
-		break;
+		m_hasAck = true;
+		return 0;
 	case 't':
 		newOperation = (char *)calloc(strlen(operation) +1, sizeof(char));
 		strncpy(newOperation, operation, strlen(operation));
@@ -145,7 +147,8 @@ int CCommCommands::executeLocal(const char *operation) {
 		newOperation[strlen(newOperation) -1] = '\0';
 		m_droid->stopStreaming();
 		free(newOperation);
-		break;
+		m_hasAck = false;
+		return 0;
 	case 'P':
 			newOperation = (char *)calloc(strlen(operation) +1, sizeof(char));
 			strncpy(newOperation, operation, strlen(operation));
@@ -179,11 +182,13 @@ int CCommCommands::executeLocal(const char *operation) {
 				m_droid->setBlockingOperation(false);
 			}
 			free(newOperation);
+			m_hasAck = false;
 			break;
 	case 'R':
 		if (strlen(operation) != 3) {
 			sprintf(message, "Invalid Command with data command = %s\n", operation);
 			m_logger->error(message);
+			m_hasAck = false;
 			return 1;
 		}
 		if (operation[1] == 's') {
@@ -192,18 +197,22 @@ int CCommCommands::executeLocal(const char *operation) {
 			}
 			m_recordMovement.clear();
 			m_isRecording = true;
+			m_hasAck = false;
 			return 0;
 		}
 		if (operation[1] == 'S') {
 			m_isRecording = false;
+			m_hasAck = false;
 			return 0;
 		}
 		if (operation[1] == 'c') {
 			m_isRecording = true;
+			m_hasAck = false;
 			return 0;
 		}
 		sprintf(message, "Invalid Command with data command = %s\n", operation);
 		m_logger->error(message);
+		m_hasAck = false;
 		return 1;
 	case 'S': {
 		cout<<"Receive S but ... "<<operation<<endl<<flush;
@@ -219,6 +228,7 @@ int CCommCommands::executeLocal(const char *operation) {
 			sprintf(message, "Invalid filename for saving = %s\n", newOperation);
 			m_logger->error(message);
 			free(newOperation);
+			m_hasAck = false;
 			return 1;
 		}
 		for (int i = 0; i < (m_recordMovement.size() - 1); i++) {
@@ -247,6 +257,7 @@ int CCommCommands::executeLocal(const char *operation) {
 				pFile->close();
 			sprintf(message, "Invalid filename for loading = %s\n", newOperation);
 			m_logger->error(message);
+			m_hasAck = false;
 			return 1;
 		}
 		while(!pFile->eof()) {
@@ -266,6 +277,7 @@ int CCommCommands::executeLocal(const char *operation) {
 		if (strlen(newOperation) == 0) {
 			sprintf(message, "Invalid Command with data command = %s\n", operation);
 			m_logger->error(message);
+			m_hasAck = false;
 			return 1;
 		}
 		if (newOperation[0] == 'o') {
@@ -279,12 +291,15 @@ int CCommCommands::executeLocal(const char *operation) {
 		m_moveCommand->printMenu();
 		m_settingCommand->printMenu();
 		printMenu();
+		m_hasAck = false;
 		break;
 	default:
 		sprintf(message, "Invalid Command with data command = %s\n", operation);
 		m_logger->error(message);
-		return 1;
+		m_hasAck = false;
+		return 0;
 	}
+	m_hasAck = false;
 	return result;
 }
 

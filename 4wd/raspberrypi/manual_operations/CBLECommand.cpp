@@ -86,6 +86,13 @@ void CBLECommand::startReceiving() {
 				memset(sendBuffer, 0, sizeof(sendBuffer));
 				sprintf(sendBuffer,"%s\r\n",message);
 				serWrite(m_serialHandler,sendBuffer,strlen(sendBuffer));
+			} else {
+				if (m_hasAck) {
+					memset(sendBuffer, 0, sizeof(sendBuffer));
+					sprintf(sendBuffer,"OK\r\n");
+					serWrite(m_serialHandler,sendBuffer,strlen(sendBuffer));
+					m_hasAck = false;
+				}
 			}
 		}
 		pthread_testcancel();

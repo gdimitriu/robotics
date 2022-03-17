@@ -197,6 +197,21 @@ void CCommandEsp01::startReceiving() {
 						memset(sendBuffer, 0, sizeof(sendBuffer));
 						sprintf(sendBuffer,"%s\r\n",message);
 						serWrite(m_serialHandler,sendBuffer,strlen(sendBuffer));
+					} else if(m_hasAck) {
+						usleep(20000);
+						memset(sendBuffer, 0, sizeof(sendBuffer));
+						sprintf(sendBuffer,"AT+CIPSEND=%d,%d\r\n", connectionId, 2 + 2);
+#ifdef DEBUG_MODE
+						cout<<"Send back<<"<<sendBuffer<<"<<END"<<std::endl;
+#endif
+						serWrite(m_serialHandler,sendBuffer,strlen(sendBuffer));
+						usleep(20000);
+						justConsumeData();
+						usleep(20000);
+						memset(sendBuffer, 0, sizeof(sendBuffer));
+						sprintf(sendBuffer,"OK\r\n");
+						serWrite(m_serialHandler,sendBuffer,strlen(sendBuffer));
+						m_hasAck = false;
 					}
 				}
 #ifdef DEBUG_MODE

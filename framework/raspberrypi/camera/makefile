@@ -31,7 +31,7 @@ COldCamera.o : COldCamera.cpp COldCamera.h CCamera.o
 	cp COldCamera.h ../include
 
 CStreamCamera.o : CStreamCamera.cpp CStreamCamera.h CCamera.o
-	$(CXX) -fPIC -c -o CStreamCamera.o CStreamCamera.cpp $(INCLUDES) $(FLAGS)
+	$(CXX) -fPIC -c -o CStreamCamera.o CStreamCamera.cpp $(INCLUDES) $(FLAGS) -fpermissive
 	cp CStreamCamera.h ../include
 
 CFactoryCamera.o : CFactoryCamera.cpp CFactoryCamera.h CCamera.o CStreamCamera.o $(DEPENDENCIES)

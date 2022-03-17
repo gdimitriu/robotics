@@ -189,7 +189,7 @@ void CHttpCommand::startReceiving() {
 								return;
 							}
 							int ret = processInputData(*it);
-							if(ret == 1) {
+							if(ret == 1 || m_hasAck) {
 								sendData(clientId);
 							}
 						}
@@ -211,8 +211,15 @@ void CHttpCommand::freeCommands(vector<string *> *commands) {
 }
 void CHttpCommand::sendData(int clientId) {
 	char sendBuffer[SEND_BUF_LEN];
-	char *message = getSettingCommand()->getRepliedMessage();
-	memset(sendBuffer, 0, sizeof(sendBuffer));
-	sprintf(sendBuffer,"%s\n",message);
-	write(m_clients[clientId],sendBuffer,strlen(sendBuffer));
+	if (!m_hasAck) {
+		char *message = getSettingCommand()->getRepliedMessage();
+		memset(sendBuffer, 0, sizeof(sendBuffer));
+		sprintf(sendBuffer,"%s\n",message);
+		write(m_clients[clientId],sendBuffer,strlen(sendBuffer));
+	} else {
+		memset(sendBuffer, 0, sizeof(sendBuffer));
+		sprintf(sendBuffer,"OK\n");
+		write(m_clients[clientId],sendBuffer,strlen(sendBuffer));
+		m_hasAck = false;
+	}
 }

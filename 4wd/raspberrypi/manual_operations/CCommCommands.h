@@ -64,6 +64,7 @@ protected:
 	string *m_menu;
 	CDroid *m_droid;
 	static bool m_isStopped;
+	bool m_hasAck;
 };
 
 #endif /* MANUAL_OPERATIONS_CCOMMCOMMANDS_H_ */

@@ -5,11 +5,12 @@ ifeq (arm-linux,$(TOOLCHAIN_TYPE))
 	CXX := arm-linux-gnueabihf-g++
 	AR := arm-linux-gnueabihf-ar
 	OS_TYPE := raspberry
-else ifeq(raspberry,$(TOOLCHAIN_TYPE))
-	CC := gcc
-	CXX := g++
-	AR := ar
-	OS_TYPE := raspberry
+else
+	ifeq(raspberry,$(TOOLCHAIN_TYPE))
+		CC := gcc
+		CXX := g++
+		AR := ar
+		OS_TYPE := raspberry
 endif
 
 export CC

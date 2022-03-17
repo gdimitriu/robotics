@@ -1,7 +1,7 @@
 /*
- * CStreamCamera.h
+ * testCamera.cpp
  *
- *  Created on: Mar 10, 2022
+ *  Created on: Mar 13, 2022
  *      Author: Gabriel Dimitriu
  * Copyright (C) 2020 Gabriel Dimitriu
  * All rights reserved.
@@ -22,30 +22,35 @@
  * License along with Robotics; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
+#include <unistd.h>
+#include <string.h>
+#include <stdlib.h>
+#include <sys/types.h>
+#include <sys/wait.h>
 
-#ifndef CAMERA_CSTREAMCAMERA_H_
-#define CAMERA_CSTREAMCAMERA_H_
+char ** argv;
 
-#include "CCamera.h"
-#include <CLogger.h>
-#include <string>
-#include <vector>
+int main() {
+	argv = (char **)calloc(12,sizeof(char *));
+	argv[0] = "libcamera-vid";
+	argv[1] = "-n";
+	argv[2]= "-t";
+	argv[3] ="0";
+	argv[4] = "--codec";
+	argv[5]= "mjpeg";
+	argv[6] = "--framerate";
+	argv[7] = "2";
+	argv[8] = "--listen";
+	argv[9] = "-o";
+	argv[10]= "tcp://0.0.0.0:8180";
+	argv[11] = NULL;
+	pid_t pid =fork();
+	if (pid > 0) {
+		waitpid(pid,NULL,0);
+		exit(1);
+	}
+	if (pid == 0)
+		execvp(argv[0],argv);
+}
 
-class CStreamCamera: public CCamera {
-public:
-	CStreamCamera(char *configLine, CLogger *settingLogger);
-	virtual ~CStreamCamera();
-	virtual void startStreaming();
-	virtual void stopStreaming();
-	virtual std::string* getInfo();
-private:
-	CLogger *m_logger;
-	pid_t m_streamingPid;
-	std::string m_connectionType;
-	uint m_streamingPort;
-	std::string m_codec;
-	uint m_frameRate;
-	std::vector<std::string *> *m_commandLine;
-};
 
-#endif /* CAMERA_CSTREAMCAMERA_H_ */

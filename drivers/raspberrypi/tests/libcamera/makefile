@@ -6,7 +6,7 @@ LIBS = -L$(PREFIX_GPIO) -lpthread -lpigpio -lrt $(LIBCAMERA_LIBS) $(BOOST_LIBS) 
 INCLUDES = -I$(PREFIX_GPIO) -I$(PREFIX_LIBCAMERA)/include -I$(PREFIX_BOOST)/include
 FLAGS = -std=c++17
 OBJECTS =  
-EXECUTABLES = libcamera_jpeg 
+EXECUTABLES = libcamera_jpeg testCamera
 
 all: $(EXECUTABLES)
 
@@ -14,7 +14,10 @@ libcamera_jpeg.o: libcamera_jpeg.cpp
 	$(CXX) -fPIC -c -o libcamera_jpeg.o libcamera_jpeg.cpp $(INCLUDES) $(LIBS) $(FLAGS)
 
 libcamera_jpeg: libcamera_jpeg.o
-	$(CXX) -fPIC -o libcamera_jpeg libcamera_jpeg.o $(INCLUDES) $(LIBS) $(FLAGS) 
+	$(CXX) -fPIC -o libcamera_jpeg libcamera_jpeg.o $(INCLUDES) $(LIBS) $(FLAGS)
+
+testCamera: testCamera.cpp
+	$(CXX) -fPIC -o testCamera testCamera.cpp $(INCLUDES) $(LIBS) $(FLAGS) 
 
 clean:
 	for object in $(EXECUTABLES);\
