@@ -29,7 +29,7 @@
 #include <string.h>
 #include <CCommandStd.h>
 #include <CBLECommand.h>
-#include <CCommandEsp01.h>
+#include <CSerialCommand.h>
 #include <CHttpCommand.h>
 #include <CMoveCommand.h>
 #include <CSettingCommand.h>
@@ -54,7 +54,7 @@ int main(int argc, char **argv) {
 	commands->push_back(command);
 	command = new CBLECommand(new CMoveCommand(moveLogger), new CSettingCommand(settingsLogger));
 	commands->push_back(command);
-	command = new CCommandEsp01(new CMoveCommand(moveLogger), new CSettingCommand(settingsLogger));
+	command = new CSerialCommand(new CMoveCommand(moveLogger), new CSettingCommand(settingsLogger));
 	commands->push_back(command);
 	command = new CHttpCommand(new CMoveCommand(moveLogger), new CSettingCommand(settingsLogger));
 	commands->push_back(command);

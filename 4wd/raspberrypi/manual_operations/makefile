@@ -6,7 +6,7 @@ ifeq (raspberry, $(OS_TYPE))
 		INCLUDES += -I$(PREFIX_RASPICAM)/src
 	endif
 endif
-SOURCES = CCommand.cpp CCommCommands.cpp CBLECommand.cpp CBLECommandHC05.cpp CMoveCommand.cpp  CSettingCommand.cpp CCommandStd.cpp CManualDroid.cpp CCommandEsp01.cpp CHttpCommand.cpp
+SOURCES = CCommand.cpp CCommCommands.cpp CBLECommand.cpp CBLECommandHC05.cpp CMoveCommand.cpp  CSettingCommand.cpp CCommandStd.cpp CManualDroid.cpp CCommandEsp01.cpp CHttpCommand.cpp CSerialCommand.cpp
 OBJECTS = $(SOURCES:%.cpp=%.o)
 HEADERS =  $(SOURCES:%.cpp=%.h)
 EXECUTABLES =  libdroidcommands.so
@@ -42,6 +42,10 @@ CCommandEsp01.o: CCommandEsp01.cpp CCommandEsp01.h CCommand.o CCommCommands.o
 CHttpCommand.o : CHttpCommand.cpp CHttpCommand.h CCommand.o CCommCommands.o
 	$(CXX) -fPIC -fpermissive -Wwrite-strings -o CHttpCommand.o -c CHttpCommand.cpp $(INCLUDES) $(FLAGS) -Wno-write-strings
 	cp CHttpCommand.h ../include
+	
+CSerialCommand.o : CSerialCommand.cpp CSerialCommand.h CCommand.o CCommCommands.o
+	$(CXX) -fPIC -fpermissive -Wwrite-strings -o CSerialCommand.o -c CSerialCommand.cpp $(INCLUDES) $(FLAGS) -Wno-write-strings
+	cp CSerialCommand.h ../include
 	
 CMoveCommand.o:CMoveCommand.cpp CMoveCommand.h CCommand.o
 	$(CXX) -fPIC -o CMoveCommand.o -c CMoveCommand.cpp $(INCLUDES) $(FLAGS)
