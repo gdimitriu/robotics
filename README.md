@@ -2,11 +2,6 @@
 ## droids
 droids using Arduino, Onion Omega2+ and RaspberryPi Zero W
 
-### 2 wheel drive droid (track droid) using Arduino
-[2wd_droid](2wd/arduino/radio_controlled_droid/readme.md)
-
-![2wd_droid_chasy](2wd/arduino/radio_controlled_droid/docs/track_droid.jpg)
-
 ### 2 wheel drive droid using Onion Omega 2+
 [2wd_droid](2wd/onionOmega2/README.md)
 ![2wd_onion](2wd/onionOmega2/docs/2wd_onion.jpg)
