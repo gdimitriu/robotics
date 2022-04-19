@@ -40,7 +40,7 @@ CManualDroid::~CManualDroid() {
 	}
 	delete m_commands;
 	pthread_attr_destroy(&m_attr);
-	delete m_threads;
+	delete[] m_threads;
 }
 
 void CManualDroid::dumpInfo() {
