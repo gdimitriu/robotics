@@ -1,6 +1,6 @@
 SHELL = /bin/sh
 
-LIBS = -L$(PREFIX_GPIO) -L$(PREFIX_DRIVERS)/lib -L../../lib -lpthread -lpigpio -lrt -ldroiddrivers -lloggers -ldroid -lengines -lsettings -lsensors -ltof -lgrabber -lcamera
+LIBS = -L$(PREFIX_GPIO) -L$(PREFIX_DRIVERS)/lib -L../../lib -lpthread -lpigpio -lrt -ldroiddrivers -lloggers -ldroid -lengines -lsettings -lsensors -ltof -lgrabber -ldroidcamera
 INCLUDES = -I$(PREFIX_GPIO) -I$(PREFIX_DRIVERS)/include -I../../include
 ifeq (raspberry,$(OS_TYPE))
 	ifneq ($(origin $(PREFIX_RASPICAM)), undefined)

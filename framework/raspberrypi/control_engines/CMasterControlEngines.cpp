@@ -75,7 +75,7 @@ CMasterControlEngines::~CMasterControlEngines() {
 	if (m_engines != NULL) {
 		for (int i = 0 ; i < m_enginesNr; i++)
 			delete m_engines[i];
-		delete m_engines;
+		delete[] m_engines;
 	}
 	pthread_barrier_destroy(&m_startBarrier);
 	if (m_logger != NULL) {

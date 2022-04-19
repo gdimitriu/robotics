@@ -77,12 +77,12 @@ CMasterControlSensors::~CMasterControlSensors() {
 	for (int i = 0; i < m_forwardSensorsNr; i++) {
 		delete m_forwardSensors[i];
 	}
-	delete m_forwardSensors;
+	delete[] m_forwardSensors;
 	m_forwardSensorsNr = 0;
 	for (int i = 0; i < m_backwardSensorsNr; i++) {
 		delete m_backwardSensors[i];
 	}
-	delete m_backwardSensors;
+	delete[] m_backwardSensors;
 	m_backwardSensorsNr = 0;
 	if (m_logger != NULL) {
 		delete m_logger;
