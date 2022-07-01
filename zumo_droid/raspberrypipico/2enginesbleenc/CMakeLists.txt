@@ -10,11 +10,11 @@ project(2enginesbleenc)
 pico_sdk_init()
 if (TARGET tinyusb_device)
 	add_executable(2enginesbleenc
-        2enginesbleenc.c
+        2enginesbleenc.c 2enginesmove.c
         )
 
 	# Pull in our pico_stdlib which pulls in commonly used features
-	target_link_libraries(2enginesbleenc pico_stdlib  hardware_pwm)
+	target_link_libraries(2enginesbleenc pico_stdlib  hardware_pwm pico_printf pico_mem_ops)
 
 	# enable usb output, disable uart output
     pico_enable_stdio_usb(2enginesbleenc 1)
