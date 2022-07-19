@@ -6,8 +6,8 @@
  */
 
 #include <stdio.h>
-#include "pico/stdlib.h"
-#include "hardware/gpio.h"
+#include <pico/stdlib.h>
+#include <hardware/gpio.h>
 
 static char event_str[128];
 #define LED_PIN 13

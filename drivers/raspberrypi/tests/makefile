@@ -11,6 +11,7 @@ all: $(EXECUTABLES)
 	cd camera && $(MAKE)
 	cd mpu6050 && $(MAKE)
 	cd libcamera && $(MAKE)
+	cd MFRC522 && $(MAKE)
 
 led_gpio:led_gpio.c
 	$(CC) -fPIC -o led_gpio led_gpio.c $(LIBS) $(INCLUDES)
@@ -51,3 +52,4 @@ clean:
 	cd isr_cpp && $(MAKE) clean
 	cd camera && $(MAKE) clean
 	cd mpu6050 && $(MAKE) clean
+	cd MFRC522 && $(MAKE) clean

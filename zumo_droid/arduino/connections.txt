@@ -1,0 +1,18 @@
+A0 - purple - left line sensor
+A1 - blue - middle line sensor
+A2 - green - right line sensor
+A4 - white - TOF sensor
+A5 - grey -  TOF sensor
+5V - white - TOF sensor
+GND - black - TOF sensor
+5V - yellow - line sensor
+GND - orange - line sensor
+nc - 2 greens from encoder
+gnd - blue regulator - ams33
+D3 - yellow + black - left encoder
+D12 - yellow - right encoder
+D5 - orange - MX159 - left engine pin 1
+D6 - green - MX159 - left engine pin 2
+D10 - yellow - MX159 - right engine pin 1
+D11 - grey - MX159 - right engine pin 2
+

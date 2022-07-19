@@ -491,16 +491,16 @@ void loop()
 #endif
       }
     }
-    //code==1 is our stop sign for 10000 ms
-    else if (pixy.line.barcodes->m_code==1) {
+    //code==6 is our stop sign for 10000 ms
+    else if (pixy.line.barcodes->m_code==6) {
 #if BLE_DEBUG_MODE
       BTSerial.println("stop");
 #endif
       go(0,0);
       delay(10000);
     }
-    //code==2 is our forward sign
-    else if (pixy.line.barcodes->m_code==2) {
+    //code==4 is our forward sign
+    else if (pixy.line.barcodes->m_code==4) {
 #if BLE_DEBUG_MODE
        Serial.println("forward");
 #endif

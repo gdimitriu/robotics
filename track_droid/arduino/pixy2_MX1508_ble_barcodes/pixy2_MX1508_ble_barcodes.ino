@@ -32,7 +32,7 @@
 #define BLE_DEBUG_MODE true
 
 #define MAX_POWER_ENGINE 255
-#define TURN_90 1200 //1300 on carpet
+unsigned int turn90=1200; //1300 on carpet
 #define MAX_CAMERA_BRIGHTNESS 255
 bool autoCalibrationDone = false;
 bool isStopped = false;
@@ -42,8 +42,9 @@ char inData[20]; // Allocate some space for the string
 char inChar; // Where to store the character read
 byte index = 0; // Index into array; where to store the character
 boolean cleanupBT;
-
+bool lightsOn = false;
 Pixy2I2C pixy;
+int currentPower = MAX_POWER_ENGINE;
 
 NeoSWSerial BTSerial(RxD, TxD);
 
@@ -114,9 +115,10 @@ void autocalibrationCamera()
   while(1) {
     res = pixy.line.getMainFeatures();
     //success get the barcode for forward move
-    if (pixy.line.barcodes->m_code==2) {
+    if (pixy.line.barcodes->m_code==4) {
       autoCalibrationDone = true;
       BTSerial.println("Autocalibration finish with success ...");
+      isStopped = true;
       return;
     } else if (newBrightness < MAX_CAMERA_BRIGHTNESS) {
       newBrightness +=5;
@@ -135,6 +137,7 @@ void autocalibrationCamera()
       } else {
         autoCalibrationDone = true;
         BTSerial.println("Autocalibration finished with no result keep full power led and maximum brightness ...");
+        isStopped = true;
         return;
       }
     }
@@ -142,6 +145,19 @@ void autocalibrationCamera()
     delay(10);
   }
 }
+
+boolean isValidNumber(char *data, int size)
+{
+  if (size == 0 ) return false;
+   if(!(data[0] == '+' || data[0] == '-' || isDigit(data[0]))) return false;
+
+   for(byte i=1;i<size;i++)
+   {
+       if(!(isDigit(data[i]) || data[i] == '.')) return false;
+   }
+   return true;
+}
+
 void makeMove() {
   if (index > 0) {
      inData[index-1] = '\0';
@@ -155,6 +171,44 @@ void makeMove() {
       BTSerial.println("start again");
 #endif
     go(0,0);
+  } else if (strcmp(inData,"l") == 0) {
+    lightsOn != lightsOn;
+    if (lightsOn)
+      pixy.setLamp(1, 1);
+  } else if (strcmp(inData,"a") == 0) {
+    autocalibrationCamera();
+  } else if (strcmp(inData,"L") == 0) {
+    go(-currentPower,currentPower);
+    delay(turn90);
+    go(0,0);
+  } else if (strcmp(inData,"R") == 0) {
+    go(currentPower,-currentPower);
+    delay(turn90);
+    go(0,0);
+  }
+  else if (strlen(inData) > 1) {
+    if (inData[0] == 'v') {
+       for (unsigned int i = 0 ; i < strlen(inData); i++) {
+          inData[i]=inData[i+1];
+        }
+        if (!isValidNumber(inData, index - 2)) {
+          makeCleanup();
+          return;
+        }
+        if (atoi(inData) > 0 && atoi(inData) < 256)
+          currentPower = atoi(inData);
+    } else if (inData[0] == 't') {
+        BTSerial.print("Turn90 ms");BTSerial.println(turn90);
+        for (unsigned int i = 0 ; i < strlen(inData); i++) {
+          inData[i]=inData[i+1];
+        }
+        if (!isValidNumber(inData, index - 2)) {
+          makeCleanup();
+          return;
+        }
+        if (atoi(inData) > 0 && atoi(inData) < 256)
+          turn90 = atoi(inData);
+    }
   }
   makeCleanup();
 }
@@ -174,7 +228,7 @@ void setup()
   BTSerial.println("Starting...");
   Serial.print("Starting...\n");
 //  pixy.setServos(380,500); //this if for barcodes in front on posts
-  pixy.setServos(380,0);
+  pixy.setServos(380,010);
   go(0,0);  
   // change to the line_tracking program.  Note, changeProg can use partial strings, so for example,
   // you can change to the line_tracking program by calling changeProg("line") instead of the whole
@@ -239,15 +293,15 @@ void loop()
     if (pixy.line.barcodes->m_code==0)
     {
       BTSerial.println("left");
-      go(-MAX_POWER_ENGINE,MAX_POWER_ENGINE);
-      delay(TURN_90);
+      go(-currentPower,currentPower);
+      delay(turn90);
       go(0,0);
       if (droidDirection == 1) {
         BTSerial.println("resuming forward");
-        go(MAX_POWER_ENGINE,MAX_POWER_ENGINE);
+        go(currentPower,currentPower);
       } else if (droidDirection == 2) {
         BTSerial.println("resuming backward");
-        go(-MAX_POWER_ENGINE,-MAX_POWER_ENGINE);
+        go(-currentPower,-currentPower);
       } else {
         BTSerial.println(droidDirection);
       }
@@ -256,35 +310,35 @@ void loop()
     else if (pixy.line.barcodes->m_code==5)
     {
       BTSerial.println("right");
-      go(MAX_POWER_ENGINE,-MAX_POWER_ENGINE);
-      delay(TURN_90);
+      go(currentPower,-currentPower);
+      delay(turn90);
       go(0,0);
       if (droidDirection == 1) {
         BTSerial.println("resuming forward");
-        go(MAX_POWER_ENGINE,MAX_POWER_ENGINE);
+        go(currentPower,currentPower);
       } else if (droidDirection == 2) {
         BTSerial.println("resuming backward");
-        go(-MAX_POWER_ENGINE,-MAX_POWER_ENGINE);
+        go(-currentPower,-currentPower);
       } else {
         BTSerial.println(droidDirection);
       }
     }
-    //code==1 is our stop sign for 10000 ms
-    else if (pixy.line.barcodes->m_code==1)
+    //code==6 is our stop sign for 10000 ms
+    else if (pixy.line.barcodes->m_code==6)
     {
       BTSerial.println("stop");
       go(0,0);
       delay(10000);
     }
-    //code==2 is our forward sign
-    else if (pixy.line.barcodes->m_code==2)
+    //code==4 is our forward sign
+    else if (pixy.line.barcodes->m_code==4)
     {
       Serial.println("forward");
       if (droidDirection != 1) {
         go(0,0);
       }
       droidDirection = 1;//forward
-      go(MAX_POWER_ENGINE,MAX_POWER_ENGINE);
+      go(currentPower,currentPower);
     }
     //code==3 is our backward sign
     else if (pixy.line.barcodes->m_code==3)
@@ -294,7 +348,7 @@ void loop()
         go(0,0);
       }
       droidDirection = 2;//backward
-      go(-MAX_POWER_ENGINE,-MAX_POWER_ENGINE);
+      go(-currentPower,-currentPower);
     }
   }
 }

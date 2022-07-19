@@ -27,7 +27,6 @@ void setup()
 {
     //enable serial
     Serial.begin(38400);
-    Serial.println("Starting...");
     //init the PWM driver
     pwmDriver.begin();
     pwmDriver.setOscillatorFrequency(27000000);
@@ -50,7 +49,6 @@ void setup()
     if (hasRFID) {
       initRFID();
     }
-    Serial.println("Started.");
 }
 
 boolean isValidNumber(char *data, int size)
@@ -75,7 +73,180 @@ boolean makeCleanup() {
   Serial.flush();
 }
 
-void makeMove() {
+bool setMaxPowerCommand(char *buffer) {
+  sprintf(buffer,"OK\r\n");
+  Serial.print(buffer);
+  Serial.flush();
+  //remove V from command
+  for (uint8_t i = 0 ; i < strlen(inData); i++) {
+    inData[i]=inData[i+1];
+  }
+  if (!isValidNumber(inData, index - 2)) {
+    isValidInput = false;
+    makeCleanup();
+    return false;
+  }
+  if (atol(inData) > ABSOLUTE_MAX_POWER || atol(inData) < 0) {
+    isValidInput = false;
+    makeCleanup();
+    return false;
+  }
+  maxPower = atol(inData);
+  makeCleanup();
+  isValidInput = true;
+  return true;
+}
+
+bool setMinPowerCommand(char *buffer) {
+  sprintf(buffer,"OK\r\n");
+  Serial.print(buffer);
+  Serial.flush();
+  //remove v from command
+  for (uint8_t i = 0 ; i < strlen(inData); i++) {
+    inData[i]=inData[i+1];
+  }
+  if (!isValidNumber(inData, index - 2)) {
+    isValidInput = false;
+    makeCleanup();
+    return false;
+  }
+  if (atol(inData) > maxPower || atol(inData) < 0) {
+    isValidInput = false;
+    makeCleanup();
+    return false;
+  }
+  minPower = atol(inData);
+  makeCleanup();
+  isValidInput = true;
+  return true;
+}
+
+bool setCurrentPowerCommand(char *buffer) {
+  sprintf(buffer,"OK\r\n");
+  Serial.print(buffer);
+  Serial.flush();
+  //remove c from command
+  for (uint8_t i = 0 ; i < strlen(inData); i++) {
+    inData[i]=inData[i+1];
+  }
+  if (!isValidNumber(inData, index - 2)) {
+    isValidInput = false;
+    makeCleanup();
+    return false;
+  }
+  if (atol(inData) > maxPower || atol(inData) < 0) {
+    isValidInput = false;
+    makeCleanup();
+    return false;
+  }
+  currentPower = atol(inData);
+  makeCleanup();
+  isValidInput = true;
+  return true;
+}
+
+bool processPlatformUnsupoprtedCommand(char *buffer) {
+  sprintf(buffer,"OK\r\n");
+  Serial.print(buffer);
+  Serial.flush();
+  makeCleanup();
+  isValidInput = true;
+  return true;
+}
+
+bool moveOrRotateUntilNextCommand(char *buffer) {
+  //remove M from command
+  for (uint8_t i = 0 ; i < strlen(inData); i++) {
+    inData[i]=inData[i+1];
+  }
+  inData[strlen(inData)] = '\0';
+  int position;
+  for (uint8_t i = 0; i < strlen(inData); i++) {
+    if (inData[i] == ',') {
+      position = i;
+      break;
+    }
+  }
+  char buf[10];
+  for (int i = 0; i < 10; i++) {
+    buf[i] = '\0';
+  }
+  for (int i = 0 ; i < position; i++) {
+    buf[i] = inData[i];
+  }
+  int moveData = atoi(buf);
+  for (int i = 0; i < 10; i++) {
+    buf[i] = '\0';
+  }
+  int idx = 0;
+  for (int i = position + 1; i < strlen(inData); i++) {
+    buf[idx] = inData[i];
+    idx++;
+  }
+  int rotateData = atoi(buf);
+  if (moveData == 0 && rotateData == 0) {
+    go(0,0);
+  } else if (rotateData == 0) {
+    if (moveData < 0) {
+      go(-currentPower,-currentPower);
+    } else {
+      go(currentPower, currentPower);
+    }
+  } else {
+    if (rotateData < 0) {
+      go(-currentPower,currentPower);
+    } else {
+      go(currentPower, -currentPower);
+    }
+  }
+  makeCleanup();
+  isValidInput = true;
+  return true;
+}
+
+bool moveOrRoatateWithDistanceCommand(char *buffer) {
+  //remove m from command
+  for (uint8_t i = 0 ; i < strlen(inData); i++) {
+    inData[i]=inData[i+1];
+  }
+  inData[strlen(inData)] = '\0';
+  int position;
+  for (uint8_t i = 0; i < strlen(inData); i++) {
+    if (inData[i] == ',') {
+      position = i;
+      break;
+    }
+  }
+  char buf[10];
+  for (int i = 0; i < 10; i++) {
+    buf[i] = '\0';
+  }
+  for (int i = 0 ; i < position; i++) {
+    buf[i] = inData[i];
+  }
+  int moveData = atoi(buf);
+  for (int i = 0; i < 10; i++) {
+    buf[i] = '\0';
+  }
+  int idx = 0;
+  for (int i = position + 1; i < strlen(inData); i++) {
+    buf[idx] = inData[i];
+    idx++;
+  }
+  int rotateData = atoi(buf);
+  if (moveData == 0 && rotateData == 0) {
+    go(0,0);
+  } else if (rotateData == 0) {
+    moveLinear(moveData);
+  } else {
+    rotateDegree(rotateData);
+  }
+  makeCleanup();
+  isValidInput = true;
+  return true;
+}
+
+bool makeMove() {
   char buffer[SERIAL_BUFFER];
   for (int i = 0; i < SERIAL_BUFFER; i++) {
     buffer[i] = '\0';
@@ -109,10 +280,10 @@ void makeMove() {
       Serial.print(buffer);
       Serial.flush();
     } else if (inData[0] == 'b') {
+      sprintf(buffer,"OK\r\n");
+      Serial.print(buffer);
+      Serial.flush();
       breakAllEngines();
-      isValidInput = false;
-      makeCleanup();
-      return false;
     } else if (inData[0] == 'C') {
       sprintf(buffer,"%d:%d:%d:%d\r\n",getLeftFrontEncoderCount(),getRightFrontEncoderCount(),getLeftBackEncoderCount(),getRightBackEncoderCount());
       Serial.print(buffer);
@@ -130,179 +301,27 @@ void makeMove() {
       sprintf(buffer,"%d\r\n",0);
       Serial.print(buffer);
       Serial.flush();
+      makeCleanup();
       isValidInput = false;
+      return false;
     }
   } else {
       if (inData[0] == 'V') {
-        sprintf(buffer,"OK\r\n");
-        Serial.print(buffer);
-        Serial.flush();
-        //remove V from command
-        for (uint8_t i = 0 ; i < strlen(inData); i++) {
-          inData[i]=inData[i+1];
-        }
-        if (!isValidNumber(inData, index - 2)) {
-          isValidInput = false;
-          makeCleanup();
-          return false;
-        }
-        if (atol(inData) > ABSOLUTE_MAX_POWER || atol(inData) < 0) {
-          isValidInput = false;
-          makeCleanup();
-          return false;
-        }
-        maxPower = atol(inData);
-        makeCleanup();
-        isValidInput = true;
-        return true;
+        return setMaxPowerCommand(buffer);
       } else if (inData[0] == 'v') {
-        sprintf(buffer,"OK\r\n");
-        Serial.print(buffer);
-        Serial.flush();
-        //remove v from command
-        for (uint8_t i = 0 ; i < strlen(inData); i++) {
-          inData[i]=inData[i+1];
-        }
-        if (!isValidNumber(inData, index - 2)) {
-          isValidInput = false;
-          makeCleanup();
-          return false;
-        }
-        if (atol(inData) > maxPower || atol(inData) < 0) {
-          isValidInput = false;
-          makeCleanup();
-          return false;
-        }
-        minPower = atol(inData);
-        makeCleanup();
-        isValidInput = true;
-        return true;
+        return setMinPowerCommand(buffer);
       } else if (inData[0] == 'c') {
-        sprintf(buffer,"OK\r\n");
-        Serial.print(buffer);
-        Serial.flush();
-        //remove c from command
-        for (uint8_t i = 0 ; i < strlen(inData); i++) {
-          inData[i]=inData[i+1];
-        }
-        if (!isValidNumber(inData, index - 2)) {
-          isValidInput = false;
-          makeCleanup();
-          return false;
-        }
-        if (atol(inData) > maxPower || atol(inData) < 0) {
-          isValidInput = false;
-          makeCleanup();
-          return false;
-        }
-        currentPower = atol(inData);
-        makeCleanup();
-        isValidInput = true;
-        return true;
+        return setCurrentPowerCommand(buffer);
       } else if (inData[0] == 'd') {
-        sprintf(buffer,"OK\r\n");
-        Serial.print(buffer);
-        Serial.flush();
         //this does not support low power distance
-        makeCleanup();
-        isValidInput = true;
-        return true;
+        return processPlatformUnsupoprtedCommand(buffer);
       } else if (inData[0] == 's') {
-        sprintf(buffer,"OK\r\n");
-        Serial.print(buffer);
-        Serial.flush();
         //this does not support stop distance
-        makeCleanup();
-        isValidInput = true;
-        return true;
+        return processPlatformUnsupoprtedCommand(buffer);
       } else if (inData[0] == 'M') {
-        //remove M from command
-        for (uint8_t i = 0 ; i < strlen(inData); i++) {
-          inData[i]=inData[i+1];
-        }
-        inData[strlen(inData)] = '\0';
-        int position;
-        for (uint8_t i = 0; i < strlen(inData); i++) {
-          if (inData[i] == ',') {
-            position = i;
-            break;
-          }
-        }
-        char buf[10];
-        for (int i = 0; i < 10; i++) {
-          buf[i] = '\0';
-        }
-        for (int i = 0 ; i < position; i++) {
-          buf[i] = inData[i];
-        }
-        int moveData = atoi(buf);
-        for (int i = 0; i < 10; i++) {
-          buf[i] = '\0';
-        }
-        int idx = 0;
-        for (int i = position + 1; i < strlen(inData); i++) {
-          buf[idx] = inData[i];
-          idx++;
-        }
-        int rotateData = atoi(buf);
-        if (moveData == 0 && rotateData == 0) {
-          go(0,0);
-        } else if (rotateData == 0) {
-          if (moveData < 0) {
-            go(-currentPower,-currentPower);
-          } else {
-            go(currentPower, currentPower);
-          }
-        } else {
-          if (rotateData < 0) {
-            go(-currentPower,currentPower);
-          } else {
-            go(currentPower, -currentPower);
-          }
-        }
-        makeCleanup();
-        isValidInput = true;
-        return true;
+        return moveOrRotateUntilNextCommand(buffer);
       } else if (inData[0] == 'm') {
-        //remove m from command
-        for (uint8_t i = 0 ; i < strlen(inData); i++) {
-          inData[i]=inData[i+1];
-        }
-        inData[strlen(inData)] = '\0';
-        int position;
-        for (uint8_t i = 0; i < strlen(inData); i++) {
-          if (inData[i] == ',') {
-            position = i;
-            break;
-          }
-        }
-        char buf[10];
-        for (int i = 0; i < 10; i++) {
-          buf[i] = '\0';
-        }
-        for (int i = 0 ; i < position; i++) {
-          buf[i] = inData[i];
-        }
-        int moveData = atoi(buf);
-        for (int i = 0; i < 10; i++) {
-          buf[i] = '\0';
-        }
-        int idx = 0;
-        for (int i = position + 1; i < strlen(inData); i++) {
-          buf[idx] = inData[i];
-          idx++;
-        }
-        int rotateData = atoi(buf);
-        if (moveData == 0 && rotateData == 0) {
-          go(0,0);
-        } else if (rotateData == 0) {
-          moveLinear(moveData);
-        } else {
-          rotateDegree(rotateData);
-        }
-        makeCleanup();
-        isValidInput = true;
-        return true;
+        return moveOrRoatateWithDistanceCommand(buffer);
       } else {
         sprintf(buffer,"%d\r\n",0);
         Serial.print(buffer);
@@ -312,6 +331,7 @@ void makeMove() {
         return false;
       }
     }
+    isValidInput = true;
     makeCleanup();
     return true;
 }
