@@ -15,7 +15,6 @@ Adafruit_PWMServoDriver pwmDriver = Adafruit_PWMServoDriver(0x40);
 int maxPower = ABSOLUTE_MAX_POWER;
 int currentPower = maxPower;
 int minPower = 2000;
-
 // for input data from ble
 boolean cleanupSerial;
 bool isValidInput;
@@ -44,7 +43,6 @@ void setup()
     enableInterrupt(leftBackEncoderPin, isrLeftBackEncoder, RISING);
     enableInterrupt(rightBackEncoderPin, isrRightBackEncoder, RISING);
     cleanupSerial = false;
-    maxPower=4000;
     engineSetup();
     if (hasRFID) {
       initRFID();
@@ -73,10 +71,13 @@ boolean makeCleanup() {
   Serial.flush();
 }
 
-bool setMaxPowerCommand(char *buffer) {
-  sprintf(buffer,"OK\r\n");
-  Serial.print(buffer);
+void sendOK() {
+  Serial.println("OK");
   Serial.flush();
+}
+
+bool setMaxPowerCommand() {
+  sendOK();
   //remove V from command
   for (uint8_t i = 0 ; i < strlen(inData); i++) {
     inData[i]=inData[i+1];
@@ -97,10 +98,8 @@ bool setMaxPowerCommand(char *buffer) {
   return true;
 }
 
-bool setMinPowerCommand(char *buffer) {
-  sprintf(buffer,"OK\r\n");
-  Serial.print(buffer);
-  Serial.flush();
+bool setMinPowerCommand() {
+  sendOK();
   //remove v from command
   for (uint8_t i = 0 ; i < strlen(inData); i++) {
     inData[i]=inData[i+1];
@@ -121,10 +120,8 @@ bool setMinPowerCommand(char *buffer) {
   return true;
 }
 
-bool setCurrentPowerCommand(char *buffer) {
-  sprintf(buffer,"OK\r\n");
-  Serial.print(buffer);
-  Serial.flush();
+bool setCurrentPowerCommand() {
+  sendOK();
   //remove c from command
   for (uint8_t i = 0 ; i < strlen(inData); i++) {
     inData[i]=inData[i+1];
@@ -145,16 +142,14 @@ bool setCurrentPowerCommand(char *buffer) {
   return true;
 }
 
-bool processPlatformUnsupoprtedCommand(char *buffer) {
-  sprintf(buffer,"OK\r\n");
-  Serial.print(buffer);
-  Serial.flush();
+bool processPlatformUnsupoprtedCommand() {
+  sendOK();
   makeCleanup();
   isValidInput = true;
   return true;
 }
 
-bool moveOrRotateUntilNextCommand(char *buffer) {
+bool moveOrRotateUntilNextCommand() {
   //remove M from command
   for (uint8_t i = 0 ; i < strlen(inData); i++) {
     inData[i]=inData[i+1];
@@ -204,7 +199,7 @@ bool moveOrRotateUntilNextCommand(char *buffer) {
   return true;
 }
 
-bool moveOrRoatateWithDistanceCommand(char *buffer) {
+bool moveOrRoatateWithDistanceCommand() {
   //remove m from command
   for (uint8_t i = 0 ; i < strlen(inData); i++) {
     inData[i]=inData[i+1];
@@ -279,10 +274,7 @@ bool makeMove() {
       sprintf(buffer,"%d\r\n",0);
       Serial.print(buffer);
       Serial.flush();
-    } else if (inData[0] == 'b') {
-      sprintf(buffer,"OK\r\n");
-      Serial.print(buffer);
-      Serial.flush();
+    } else if (inData[0] == 'b') { 
       breakAllEngines();
     } else if (inData[0] == 'C') {
       sprintf(buffer,"%d:%d:%d:%d\r\n",getLeftFrontEncoderCount(),getRightFrontEncoderCount(),getLeftBackEncoderCount(),getRightBackEncoderCount());
@@ -307,21 +299,21 @@ bool makeMove() {
     }
   } else {
       if (inData[0] == 'V') {
-        return setMaxPowerCommand(buffer);
+        return setMaxPowerCommand();
       } else if (inData[0] == 'v') {
-        return setMinPowerCommand(buffer);
+        return setMinPowerCommand();
       } else if (inData[0] == 'c') {
-        return setCurrentPowerCommand(buffer);
+        return  setCurrentPowerCommand();
       } else if (inData[0] == 'd') {
         //this does not support low power distance
-        return processPlatformUnsupoprtedCommand(buffer);
+        return processPlatformUnsupoprtedCommand();
       } else if (inData[0] == 's') {
         //this does not support stop distance
-        return processPlatformUnsupoprtedCommand(buffer);
+        return processPlatformUnsupoprtedCommand();
       } else if (inData[0] == 'M') {
-        return moveOrRotateUntilNextCommand(buffer);
+        return moveOrRotateUntilNextCommand();
       } else if (inData[0] == 'm') {
-        return moveOrRoatateWithDistanceCommand(buffer);
+        return moveOrRoatateWithDistanceCommand();
       } else {
         sprintf(buffer,"%d\r\n",0);
         Serial.print(buffer);
@@ -350,23 +342,34 @@ void loop()
   }
   while(Serial.available() > 0) // Don't read unless there you know there is data
   {
-     if(index < SERIAL_BUFFER - 1) // One less than the size of the array
+     if(index < 19) // One less than the size of the array
      {
         inChar = Serial.read(); // Read a character
-        inData[index] = inChar; // Store it
-        index++; // Increment where to write next
+        if (inChar=='\r' || inChar=='\n' || inChar =='\0' || inChar < 35 || inChar > 122) {
+          continue;
+        }
+        //commands start with a letter capital or small
+        if (index == 0 && !((inChar >64 && inChar <91) || (inChar > 96 && inChar<123))) {
+          continue;
+        }    
+        inData[index++] = inChar; // Store it
         inData[index] = '\0'; // Null terminate the string
+        if (inChar == '#') {
+          break;
+        }
      } else {
         makeCleanup();
         cleanupSerial = true;
-    }
-  }
-  if (inChar == '#') {
-     makeMove();
-     return;
+     }
+ }
+ if (index >= 1) {
+  if (inData[index - 1] == '#') {
+    makeMove();
   } else if (cleanupSerial) {
-     makeCleanup();
-     cleanupSerial = false;
+    makeCleanup();
+    cleanupSerial = false;
+  } else {
+    delay(10);
   }
-    delay(5);
+ }
 }

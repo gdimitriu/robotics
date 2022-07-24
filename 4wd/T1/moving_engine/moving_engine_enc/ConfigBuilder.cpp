@@ -7,14 +7,14 @@ unsigned int leftBackEncoderPin = 4;
 unsigned int rightBackEncoderPin = 2;
 unsigned int ssPin = 10;
 
-unsigned int leftFrontMotorPin1 = 2;
-unsigned int leftFrontMotorPin2 = 3;
-unsigned int rightFrontMotorPin1 = 0;
-unsigned int rightFrontMotorPin2 = 1;
-unsigned int leftBackMotorPin1 = 13;
-unsigned int leftBackMotorPin2 = 12;
-unsigned int rightBackMotorPin1 = 15;
-unsigned int rightBackMotorPin2 = 14;
+unsigned int leftFrontMotorPin1 = 14;
+unsigned int leftFrontMotorPin2 = 15;
+unsigned int rightFrontMotorPin1 = 13;
+unsigned int rightFrontMotorPin2 = 12;
+unsigned int leftBackMotorPin1 = 0;
+unsigned int leftBackMotorPin2 = 1;
+unsigned int rightBackMotorPin1 = 2;
+unsigned int rightBackMotorPin2 = 3;
 
 
 int countRotate90Left = 1;
