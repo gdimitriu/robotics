@@ -1,0 +1,3 @@
+https://github.com/Qengineering/Libcamera-OpenCV-RPi-Bullseye-32OS
+https://www.raspberrypi.com/documentation/accessories/camera.html#libcamera-vid
+
