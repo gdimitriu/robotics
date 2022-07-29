@@ -1,12 +1,25 @@
 #API
 https://raspberrypi.github.io/pico-sdk-doxygen/modules.html
 https://github.com/raspberrypi/pico-sdk
+https://github.com/raspberrypi/pico-examples/tree/picow
+https://github.com/earlephilhower/arduino-pico
 https://github.com/raspberrypi/pico-examples/tree/master/i2c/mpu6050_i2c
 https://github.com/raspberrypi/pico-examples/tree/master/pwm/led_fade
+https://arduino-pico.readthedocs.io/en/latest/multicore.html
+
 
 https://www.electronicshub.org/getting-started-with-raspberry-pi-pico/
 https://www.raspberrypi.org/documentation/rp2040/getting-started/#board-specifications
 https://www.raspberrypi.org/documentation/rp2040/getting-started/#getting-started-with-c 
 https://datasheets.raspberrypi.org/pico/getting-started-with-pico.pdf
 https://datasheets.raspberrypi.org/pico/pico-datasheet.pdf
+
+
+## PYTHON
+https://github.com/raspberrypi/pico-micropython-examples
+
+
+### EXAMPLES
+https://www.hivemq.com/blog/mqtt-raspberrypi-part03-sending-sensor-data-hivemqcloud-pico/
+
 
