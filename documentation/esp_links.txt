@@ -9,6 +9,8 @@ https://docs.espressif.com/projects/esp8266-rtos-sdk/en/latest/get-started/eclip
 https://docs.espressif.com/projects/esp8266-rtos-sdk/en/latest/api-reference/peripherals/uart.html
 https://docs.espressif.com/projects/esp-idf/en/latest/esp32/api-reference/peripherals/gpio.html
 https://www.esp8266.com/
+https://www.instructables.com/Avoid-Hard-Coding-WiFi-Credentials-on-Your-ESP8266/
+
 
 #boards
 https://randomnerdtutorials.com/esp8266-pinout-reference-gpios/

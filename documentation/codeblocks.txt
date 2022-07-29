@@ -1,0 +1,4 @@
+https://wiki.codeblocks.org/index.php/Code::Blocks_and_Makefiles
+https://forums.codeblocks.org/index.php?topic=21813.0
+https://forums.codeblocks.org/index.php?topic=4229.0
+https://forums.codeblocks.org/index.php?topic=13333.0
