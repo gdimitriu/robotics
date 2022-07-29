@@ -1,9 +1,20 @@
+### POWER
 https://ro.pinterest.com/pin/294985844328363928/
+https://ro.pinterest.com/pin/AZ58Rbe2KsOHdYHzaHcPt7PEJ65VrtntffYhQudbbbLkhmKwAKFLZRw/
+https://www.apogeeweb.net/circuitry/1n4148-1n4007-1n5819-difference.html
+https://www.analog.com/en/parametricsearch/11503#/
+
 
 ### ESP ETC
 https://ro.pinterest.com/pin/140806223790327/
 
-### MOTIONS SENSOR CAMERA
+#### MOTIONS SENSOR CAMERA
 https://ro.pinterest.com/pin/162551867791485527/
 https://www.instructables.com/IoT-Motion-Detector-With-NodeMCU-and-BLYNK/
 
+### ETC
+https://www.instructables.com/Easy-Infrared-Proximity-Sensor/
+https://techatronic.com/
+
+### RASPBERRY PICO
+https://mjrobot.org/2021/03/12/tinyml-motion-recognition-using-raspberry-pi-pico/
