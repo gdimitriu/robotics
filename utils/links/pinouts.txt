@@ -5,4 +5,6 @@ https://peppe8o.com/raspberry-pi-pico-pinout/
 https://randomnerdtutorials.com/esp8266-pinout-reference-gpios/
 
 
-
+#### ONION OMEGA ####
+http://docs.onion.io/omega2-docs/omega2p.html
+http://docs.onion.io/omega2-docs/using-gpios.html#using-gpios

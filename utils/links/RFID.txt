@@ -1,0 +1,4 @@
+https://www.optimusdigital.ro/ro/wireless-rfid/67-modul-cititor-rfid-mfrc522.html?search_query=Modul+RFID+RC522+%28similar+cu+MFRC522%29&results=1
+
+https://github.com/chihebabid/CMFRC522
+https://github.com/paguz/RPi-RFID
