@@ -1,45 +1,25 @@
 #include <Wire.h>
 #include <Adafruit_PWMServoDriver.h>
+#include <EnableInterrupt.h>
 #include "configuration.h"
 #include "MoveEngines.h"
+
 extern Adafruit_PWMServoDriver pwmDriver; 
 
 //variables for encoders
 float wheelRadius = 3.5f;
 int encoderWheelSteps = 20;
 
-static volatile long left_front_encoder_count = 0;
-static volatile long right_front_encoder_count = 0;
-static volatile long left_back_encoder_count = 0;
-static volatile long right_back_encoder_count = 0;
+static volatile uint16_t  left_front_encoder_count = 0;
+static volatile uint16_t  right_front_encoder_count = 0;
+static volatile uint16_t  left_back_encoder_count = 0;
+static volatile uint16_t  right_back_encoder_count = 0;
 
 static float PPI_front_left;
 static float PPI_front_right;
 static float PPI_back_left;
 static float PPI_back_right;
-
-void engineSetup() {
-  PPI_front_left = encoderWheelSteps/(2*PI*wheelRadius);
-  PPI_front_right = encoderWheelSteps/(2*PI*wheelRadius);
-  PPI_back_left = encoderWheelSteps/(2*PI*wheelRadius);
-  PPI_back_right = encoderWheelSteps/(2*PI*wheelRadius);
-}
-
-long getLeftFrontEncoderCount() {
-  return left_front_encoder_count;
-}
-
-long getRightFrontEncoderCount() {
-  return right_front_encoder_count;
-}
-
-long getLeftBackEncoderCount() {
-  return left_back_encoder_count;
-}
-
-long getRightBackEncoderCount() {
-  return right_back_encoder_count;
-}
+bool encoderEnabled = false;
 /*
  * isr for encoder pins
  */
@@ -56,6 +36,63 @@ void isrLeftBackEncoder() {
 
 void isrRightBackEncoder() {
   right_back_encoder_count++;
+}
+
+void resetCounters() {
+  left_front_encoder_count = 0;
+  right_front_encoder_count = 0;
+  left_back_encoder_count = 0;
+  right_back_encoder_count = 0;
+}
+
+void disableEncoders() {
+  if (!encoderEnabled)
+    return;
+  disableInterrupt(leftFrontEncoderPin);
+  disableInterrupt(rightFrontEncoderPin);
+  disableInterrupt(leftBackEncoderPin);
+  disableInterrupt(rightBackEncoderPin);  
+  encoderEnabled = false;
+}
+
+void enableEncoders() {
+  if (encoderEnabled)
+    return;
+  enableInterrupt(leftFrontEncoderPin, isrLeftFrontEncoder, RISING);
+  enableInterrupt(rightFrontEncoderPin, isrRightFrontEncoder, RISING);
+  enableInterrupt(leftBackEncoderPin, isrLeftBackEncoder, RISING);
+  enableInterrupt(rightBackEncoderPin, isrRightBackEncoder, RISING);
+  encoderEnabled = true;
+  resetCounters();
+}
+
+void engineSetup() {
+  PPI_front_left = encoderWheelSteps/(2*PI*wheelRadius);
+  PPI_front_right = encoderWheelSteps/(2*PI*wheelRadius);
+  PPI_back_left = encoderWheelSteps/(2*PI*wheelRadius);
+  PPI_back_right = encoderWheelSteps/(2*PI*wheelRadius);
+  //enable encoders ISR
+  pinMode(leftFrontEncoderPin, INPUT_PULLUP);
+  pinMode(rightFrontEncoderPin, INPUT_PULLUP);
+  pinMode(leftBackEncoderPin, INPUT_PULLUP);
+  pinMode(rightBackEncoderPin, INPUT_PULLUP);
+  encoderEnabled = false;
+}
+
+uint16_t getLeftFrontEncoderCount() {
+  return left_front_encoder_count;
+}
+
+uint16_t getRightFrontEncoderCount() {
+  return right_front_encoder_count;
+}
+
+uint16_t getLeftBackEncoderCount() {
+  return left_back_encoder_count;
+}
+
+uint16_t getRightBackEncoderCount() {
+  return right_back_encoder_count;
 }
 
 void stopLeftEngines() {
@@ -123,12 +160,6 @@ void go(int speedLeft, int speedRight) {
   }
 }
 
-void resetCounters() {
-  left_front_encoder_count = 0;
-  right_front_encoder_count = 0;
-  left_back_encoder_count = 0;
-  right_back_encoder_count = 0;
-}
 
 void moveLinear(float distance) {
   float currentLeftFrontPosition = 0.0f;

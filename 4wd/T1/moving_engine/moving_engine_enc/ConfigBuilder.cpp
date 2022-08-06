@@ -2,8 +2,8 @@
 #include "configuration.h"
 
 unsigned int leftFrontEncoderPin = 5;
-unsigned int rightFrontEncoderPin = 3;
 unsigned int leftBackEncoderPin = 4;
+unsigned int rightFrontEncoderPin = 3;
 unsigned int rightBackEncoderPin = 2;
 unsigned int ssPin = 10;
 

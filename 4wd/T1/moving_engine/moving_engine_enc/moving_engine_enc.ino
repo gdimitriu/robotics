@@ -1,7 +1,6 @@
 #include <Wire.h>
 #include <SPI.h>
 #include <Adafruit_PWMServoDriver.h>
-#include <EnableInterrupt.h>
 #include "configuration.h"
 #include "MoveEngines.h"
 #include "rfid.h"
@@ -33,15 +32,6 @@ void setup()
     Wire.setClock(400000);
     SPI.begin(); // Init SPI bus
     isValidInput = false;
-    //enable encoders ISR
-    pinMode(leftFrontEncoderPin, INPUT_PULLUP);
-    pinMode(rightFrontEncoderPin, INPUT_PULLUP);
-    pinMode(leftBackEncoderPin, INPUT_PULLUP);
-    pinMode(rightBackEncoderPin, INPUT_PULLUP);
-    enableInterrupt(leftFrontEncoderPin, isrLeftFrontEncoder, RISING);
-    enableInterrupt(rightFrontEncoderPin, isrRightFrontEncoder, RISING);
-    enableInterrupt(leftBackEncoderPin, isrLeftBackEncoder, RISING);
-    enableInterrupt(rightBackEncoderPin, isrRightBackEncoder, RISING);
     cleanupSerial = false;
     engineSetup();
     if (hasRFID) {
@@ -150,6 +140,7 @@ bool processPlatformUnsupoprtedCommand() {
 }
 
 bool moveOrRotateUntilNextCommand() {
+  disableEncoders();
   //remove M from command
   for (uint8_t i = 0 ; i < strlen(inData); i++) {
     inData[i]=inData[i+1];
@@ -200,6 +191,7 @@ bool moveOrRotateUntilNextCommand() {
 }
 
 bool moveOrRoatateWithDistanceCommand() {
+  enableEncoders();
   //remove m from command
   for (uint8_t i = 0 ; i < strlen(inData); i++) {
     inData[i]=inData[i+1];
@@ -281,6 +273,7 @@ bool makeMove() {
       Serial.print(buffer);
       Serial.flush();
     } else if (inData[0] == 'R') {
+      enableEncoders();
 #ifdef SERIAL_DEBUG_MODE      
       sprintf(buffer,"%d:%d:%d:%d\r\n",getLeftFrontEncoderCount(),getRightFrontEncoderCount(),getLeftBackEncoderCount(),getRightBackEncoderCount());
 #else
