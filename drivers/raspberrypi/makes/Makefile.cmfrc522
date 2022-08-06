@@ -1,0 +1,14 @@
+SHELL = /bin/sh
+
+INCLUDEPATHS = -I$(PREFIX_GPIO) -I../include
+
+all: CMFRC522.o
+
+CMFRC522.o : CMFRC522.cpp CMFRC522.h
+	$(CXX) -fPIC -c $(INCLUDEPATHS) CMFRC522.cpp -o ../obj/CMFRC522.o
+	cp CMFRC522.h ../include	
+	
+clean :
+	if [ -f ../obj/CMFRC522.o ]; then rm ../obj/CMFRC522.o; fi;
+	if [ -f ../include/CMFRC522.h ]; then rm ../include/CMFRC522.h; fi;
+	

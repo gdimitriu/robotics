@@ -2,3 +2,6 @@ https://www.optimusdigital.ro/ro/wireless-rfid/67-modul-cititor-rfid-mfrc522.htm
 
 https://github.com/chihebabid/CMFRC522
 https://github.com/paguz/RPi-RFID
+https://www.instructables.com/Arduino-RFID-Lock-Tutorial/
+https://www.elec-cafe.com/easy-rfid-module-reader/
+https://tutorial45.com/arduino-rfid-project-beginners/
