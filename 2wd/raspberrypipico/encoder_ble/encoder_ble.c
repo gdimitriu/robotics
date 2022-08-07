@@ -45,11 +45,12 @@ unsigned int rightMotorPin2 = 10;
 unsigned int rightMotorEncoder = 17;
 long rightResolutionCodor = 20;
 float rightPPI;
-long countRotate90Left= 841;
-long countRotate90Right= 830;
-long countRotate1Inner = 9;
-long countRotate1Outer = 10;
+long countRotate90Left= 5;
+long countRotate90Right= 5;
 
+//sensors
+unsigned int frontSensorPin = 13;
+unsigned int backSensorPin = 12;
 /*
  * compute the PPI from the new configuration
  */
@@ -352,6 +353,8 @@ bool makeMove() {
 #ifdef SERIAL_DEBUG_MODE
 			printf("%s\n%d:%d\n",bufferReceive,moveData,rotateData);
 #endif        
+			setHumanCommand(true);
+			setHumanDirection(moveData);
 			if (moveData == 0 && rotateData == 0) {
 				go(0,0);
 			} else if (rotateData == 0) {
@@ -475,11 +478,13 @@ int main() {
 //	gpio_init(leftMotorEncoder);
 //    gpio_set_dir(leftMotorEncoder, GPIO_IN);
 //    gpio_pull_down(leftMotorEncoder);
-	gpio_set_irq_enabled_with_callback(leftMotorEncoder, GPIO_IRQ_EDGE_RISE, true, &gpio_callback_encoder);
+	gpio_set_irq_enabled_with_callback(leftMotorEncoder, GPIO_IRQ_EDGE_RISE, true, &gpio_callback);
 //	gpio_init(rightMotorEncoder);
 //    gpio_set_dir(rightMotorEncoder, GPIO_IN);
 //    gpio_pull_down(rightMotorEncoder);
-	gpio_set_irq_enabled_with_callback(rightMotorEncoder, GPIO_IRQ_EDGE_RISE, true, &gpio_callback_encoder);
+	gpio_set_irq_enabled_with_callback(rightMotorEncoder, GPIO_IRQ_EDGE_RISE, true, &gpio_callback);
+	gpio_set_irq_enabled_with_callback(frontSensorPin, GPIO_IRQ_EDGE_FALL | GPIO_IRQ_EDGE_RISE, true, &gpio_callback);
+	gpio_set_irq_enabled_with_callback(backSensorPin, GPIO_IRQ_EDGE_FALL | GPIO_IRQ_EDGE_RISE, true, &gpio_callback);
 	//read from external EEPROM configuration
 	//update configuration
 	computePPI();

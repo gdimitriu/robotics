@@ -36,6 +36,7 @@
 	extern float rightPPI;
 	extern long countRotate90Left;
 	extern long countRotate90Right;
-	extern long countRotate1Inner;
-	extern long countRotate1Outer;
+	//sensors
+	extern unsigned int frontSensorPin;
+	extern unsigned int backSensorPin;
 #endif
