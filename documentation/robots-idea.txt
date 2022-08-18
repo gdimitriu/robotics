@@ -1,4 +1,58 @@
-https://ro.pinterest.com/pin/672795631830917084/
-https://ro.pinterest.com/pin/16536723622212477/
+DIVERSE
 https://www.makeuseof.com/tag/10-best-raspberry-pi-zero-projects-far/
 https://makezine.com/2017/01/20/smooth-servo-control-with-ros/
+
+https://opensourcerover.jpl.nasa.gov/?fbclid=IwAR3B18kJuHpi9O1gymSseOU4oYPKw342Fy1BYkgVIuAbMhk35xOBfeZxm2I#!/signup
+
+//companies
+https://www.kuka.com/fr-fr/produits-et-prestations/syst%C3%A8mes-de-robots/robots-industriels/kr-agilus#
+https://www.robotlab.com/research-papers/a-mass-produced-sociable-humanoid-robot-pepper-the-first-machine-of-its-kind
+
+AUTONOMOUS/wondering
+https://www.instructables.com/Arduino-Powered-Autonomous-Vehicle/
+https://www.instructables.com/Do-it-yourself-Autonomous-Tiny-Robot/
+https://www.instructables.com/DIY-Intelligent-Autonomus-Robot-Electronic-Pet-w-A/
+https://www.instructables.com/Arduino-Wondering-Robot/
+
+LEG ROBOT
+https://www.instructables.com/Two-footed-walking-robot/
+https://www.instructables.com/ESP32-Small-Robot-Dog/
+
+LINE FOLLOWING
+https://github.com/PaulStoffregen/SerialFlash
+https://circuitdigest.com/microcontroller-projects/line-follower-robot-using-arduino
+https://www.instructables.com/How-to-Make-Line-Follower-Robot/
+https://www.instructables.com/Line-Follower-Robot-Arduino-Megauno-Very-Fast-Usin/
+https://create.arduino.cc/projecthub/16336/line-follower-robot-using-arduino-5f5698
+https://www.electronicshub.org/line-follower-robot-using-microcontroller/
+https://www.researchgate.net/publication/334123838_Design_and_Construction_of_Line_Following_Robot_using_Arduino
+
+REMOTE CONTROLL
+https://www.instructables.com/Raspberry-Pi-Remote-Controlled-Car-1/
+https://www.instructables.com/Simple-RC-car-for-beginners-Android-control-over-/
+https://www.mikronauts.com/robot-zoo/elf-2wd-pi-robot/4/
+
+MICROCONTROLLERS NOT ARM or AVR
+https://www.instructables.com/Android-Smart-Phone-Bluetooth-Remote-Control-Intel/
+
+TURET
+https://hackaday.io/project/18665-motion-tracking-airsoft-turret
+https://www.instructables.com/Motion-Following-Robot/
+https://www.instructables.com/Ultrasonic-Mapmaker-Using-Arduino-and-MatLab/
+
+LIGHT FOLLOWING
+https://www.instructables.com/id/Light-Following-Robot-Using-Arduino/
+https://www.instructables.com/id/Easy-Arduino-Light-following-Robot/
+
+ROBOTIC ARM
+https://www.instructables.com/DIY-robot-arm-/
+
+SOFT
+https://github.com/Robo4J/robo4j
+https://docs.donkeycar.com/guide/train_autopilot/
+https://github.com/futureshocked/ALSOA
+https://www.researchgate.net/publication/316664613_AUTONOMOUS_MAZE_SOLVING_ROBOT
+https://forum.arduino.cc/t/left-hand-rule-arduino-robot/381555/3
+https://en.wikipedia.org/wiki/Maze_solving_algorithm
+
+
