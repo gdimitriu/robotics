@@ -89,6 +89,8 @@ void setup() {
 }
 
 void makeCleanupBT() {
+  BTSerial.println("OK");
+  BTSerial.flush();
    for (indexBT = 0; indexBT < 20; indexBT++) {
       inDataBT[indexBT] = '\0';
    }
