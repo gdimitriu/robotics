@@ -23,6 +23,7 @@
 #include<Servo.h>
 #include <NeoSWSerial.h>
 #include <EnableInterrupt.h>
+#include "StringList.h"
 
 #define RxD 2
 #define TxD 3
@@ -30,6 +31,7 @@
 #define servoPin_Elbow 5
 #define servoPin_Shoulder 6
 #define servoPin_Waist 7
+#define SERIAL_DEBUG 1
 
 Servo servo_Gripper;
 Servo servo_Elbow;
@@ -37,55 +39,71 @@ Servo servo_Shoulder;
 Servo servo_Waist;
 //for communication
 char inDataBT[20]; // Allocate some space for the string
-char inDataSerial[20]; // Allocate some space for the string
 char inCharBT; // Where to store the character read
 byte indexBT = 0; // Index into array; where to store the character
-char inCharSerial; // Where to store the character read
-byte indexSerial = 0; // Index into array; where to store the character
 boolean cleanupBT;
-boolean cleanupSerial;
+StringList commands;
 
 NeoSWSerial BTSerial(RxD, TxD);
+const int prefixCommandNr = 5;
+const char prefixCommands[prefixCommandNr] = {'w','s','e','g','d'};
+
 
 void neoSSerial1ISR() {
     NeoSWSerial::rxISR(*portInputRegister(digitalPinToPort(RxD)));
 }
 
-boolean isValidNumber(char *data, int size) {
-  if (size == 0 ) return false;
-   boolean isNum=false;
-   if(!(data[0] == '+' || data[0] == '-' || isDigit(data[0]))) return false;
+boolean isValidNumber(char *data) {
+  if (strlen(data) == 0 ) return false;
+#ifdef SERIAL_DEBUG
+  Serial.println(data);
+#endif  
+  if(!(data[0] == '+' || data[0] == '-' || isDigit(data[0]))) return false;
 
-   for(byte i=1;i<size;i++) {
-       if(!(isDigit(data[i]) || data[i] == '.')) return false;
-   }
-   return true;
+  for(byte i=0;i<strlen(data);i++) {
+    if(!(isDigit(data[i]) || data[i] == '.')) return false;
+  }
+  return true;
 }
 
+#ifdef SERIAL_DEBUG
 void printMenu() {
+  if (!Serial)
+    return;
   Serial.println( "-----------------------------------------------------" );
-  Serial.println( "Calibration of robot arm");
+  Serial.println( "Mini Robot arm");
   Serial.println( "-----------------------------------------------------" );
   Serial.println( "MENU:" );
-  Serial.println( "wxx# servo waist x degree");
-  Serial.println( "sxx# servo shoulder x degree");
-  Serial.println( "exx# servo elbow x degree");
-  Serial.println( "gxx# gripper x degree");
+  Serial.println( "wxx# servo waist xx degree");
+  Serial.println( "sxx# servo shoulder xx degree");
+  Serial.println( "exx# servo elbow xx degree");
+  Serial.println( "gxx# gripper xx degree");
+  Serial.println( "dxx# delay of xx miliseconds");
+  Serial.println( "S[w/s/e/g/d]xx# save the command");
+  Serial.println( "Rf# run in forward order");
+  Serial.println( "Rr# run in reverse order");
+  Serial.println( "C# clear the saved commands");
   Serial.println( "-----------------------------" );
 }
+#endif
 
 void setup() {
+#ifdef SERIAL_DEBUG  
   Serial.begin(9600);
+#endif  
   BTSerial.begin(38400);  
   enableInterrupt(RxD, neoSSerial1ISR, CHANGE);
   cleanupBT = false;
-  cleanupSerial = false;
   servo_Gripper.attach(servoPin_Gripper);
   servo_Elbow.attach(servoPin_Elbow);
   servo_Shoulder.attach(servoPin_Shoulder);
   servo_Waist.attach(servoPin_Waist);
-  Serial.println("after init");
-  printMenu();
+#ifdef SERIAL_DEBUG
+  if (Serial) {
+    Serial.println("after init");
+    printMenu();
+  }
+#endif
 }
 
 void makeCleanupBT() {
@@ -99,111 +117,176 @@ void makeCleanupBT() {
    cleanupBT = false;
 }
 
-void makeCleanupSerial() {
-   for (indexSerial = 0; indexSerial < 20; indexSerial++) {
-      inDataSerial[indexSerial] = '\0';
-   }
-   inCharSerial = '0';
-   indexSerial = 0;
-   cleanupSerial = false;
-}
-
-void cleanup(bool isBT) {
-  if (isBT) {
-    makeCleanupBT();
-  } else {
-    makeCleanupSerial();
+bool isPrefixCommand(char prefix) {
+  for(int i = 0 ;i < prefixCommandNr; i++) {
+    if (prefix == prefixCommands[i])
+      return true;
   }
-}
-
-bool makeMove(char *inData,int index, bool isBT) {
-  if (inData[0] == 'w') {
-     //remove w from command
-     for (int i = 0 ; i < strlen(inData); i++) {
-       inData[i]=inData[i+1];
-     }
-     if (!isValidNumber(inData, index - 2)) {
-        cleanup(isBT);
-        return false;
-     }
-     Serial.print("move servo waist ");
-     Serial.print(atoi(inData));
-     Serial.println("degree");
-     servo_Waist.write(atoi(inData));
-     cleanup(isBT);
-     return true;
-  } else if (inData[0] == 's') {
-     //remove s from command
-     for (int i = 0 ; i < strlen(inData); i++) {
-        inData[i]=inData[i+1];
-     }
-     if (!isValidNumber(inData, index - 2)) {
-        cleanup(isBT);
-        return false;
-     }
-     Serial.print("move servo shoulder ");
-     Serial.print(atoi(inData));
-     Serial.println("degree");
-     servo_Shoulder.write(180-atoi(inData));
-     cleanup(isBT);
-     return true;
-  } else if (inData[0] == 'e') {
-     //remove e from command
-     for (int i = 0 ; i < strlen(inData); i++) {
-        inData[i]=inData[i+1];
-     }
-     if (!isValidNumber(inData, index - 2)) {
-        cleanup(isBT);
-        return false;
-     }
-     Serial.print("move servo elbow ");
-     Serial.print(atoi(inData));
-     Serial.println("degree");
-     servo_Elbow.write(atoi(inData));
-     cleanup(isBT);
-     return true;
-  } else if (inData[0] == 'g') {
-     //remove g from command
-     for (int i = 0 ; i < strlen(inData); i++) {
-        inData[i]=inData[i+1];
-     }
-     if (!isValidNumber(inData, index - 2)) {
-       cleanup(isBT);
-       return false;
-     }
-     Serial.print("move servo grabber");
-     Serial.print(atoi(inData));
-     Serial.println("degree");
-     servo_Gripper.write(atoi(inData));
-     cleanup(isBT);
-     return true;
-  }
-  cleanup(isBT);
   return false;
 }
 
-void readData() {
-  
-   while(Serial.available() > 0) // Don't read unless
-                                                 // there you know there is data
-   {
-      if(indexSerial < 19) // One less than the size of the array
-      {
-         inCharSerial = Serial.read(); // Read a character
-         if (inCharSerial == '\r' || inCharSerial == '\n' || inCharSerial == '\0' || inCharSerial < 35 || inCharSerial > 122) {
-            continue;
-         }
-         //commands start with a letter capital or small
-         if (indexSerial == 0 && !((inCharSerial > 64 && inCharSerial < 91) || (inCharSerial > 96 && inCharSerial < 123))) {
-            continue;
-         }
-         inDataSerial[indexSerial++] = inCharSerial; // Store it
-         inDataSerial[indexSerial] = '\0'; // Null terminate the string
+bool moveWaist(char *inData) {
+  //remove w from command
+  for (int i = 0 ; i < strlen(inData); i++) {
+     inData[i]=inData[i+1];
+  }
+  if (!isValidNumber(inData)) {
+     return false;
+  }
+#ifdef SERIAL_DEBUG
+  if (Serial) {
+    Serial.print("move servo waist ");
+    Serial.print(atoi(inData));
+    Serial.println("degree");
+  }
+#endif     
+  servo_Waist.write(atoi(inData));
+  return true;  
+}
+
+bool moveShoulder(char *inData) {
+  //remove s from command
+  for (int i = 0 ; i < strlen(inData); i++) {
+    inData[i]=inData[i+1];
+  }
+  if (!isValidNumber(inData)) {
+    return false;
+  }
+#ifdef SERIAL_DEBUG
+  if (Serial) {
+    Serial.print("move servo shoulder ");
+    Serial.print(atoi(inData));
+    Serial.println("degree");
+  }
+#endif     
+  servo_Shoulder.write(180-atoi(inData));
+  return true;
+}
+
+bool moveElbow(char *inData) {
+  //remove e from command
+  for (int i = 0 ; i < strlen(inData); i++) {
+     inData[i]=inData[i+1];
+  }
+  if (!isValidNumber(inData)) {
+     return false;
+  }
+#ifdef SERIAL_DEBUG
+  if (Serial) {
+    Serial.print("move servo elbow ");
+    Serial.print(atoi(inData));
+    Serial.println("degree");
+  }
+#endif     
+  servo_Elbow.write(atoi(inData));
+  return true;
+}
+
+bool moveGripper(char *inData) {
+  //remove g from command
+  for (int i = 0 ; i < strlen(inData); i++) {
+    inData[i]=inData[i+1];
+  }
+  if (!isValidNumber(inData)) {
+    return false;
+  }
+#ifdef SERIAL_DEBUG
+  if (Serial) {
+    Serial.print("move servo grabber ");
+    Serial.print(atoi(inData));
+    Serial.println("degree");
+  }
+#endif     
+  servo_Gripper.write(atoi(inData));
+  return true;
+}
+
+bool applyDelay(char *inData) {
+  //remove d from command
+  for (int i = 0 ; i < strlen(inData); i++) {
+    inData[i]=inData[i+1];
+  }
+  if (!isValidNumber(inData)) {
+    return false;
+  }
+#ifdef SERIAL_DEBUG
+  if (Serial) {
+    Serial.print("sleep ");
+    Serial.print(atol(inData));
+    Serial.println("miliseconds");
+  }
+#endif     
+  delay(atol(inData));
+  return true;
+}
+
+bool makeMove(char *inData, bool isBT) {
+  bool retValue = false;
+  if (inData[0] == 'w') {
+    retValue = moveWaist(inData);
+  } else if (inData[0] == 's') {
+    retValue = moveShoulder(inData);
+  } else if (inData[0] == 'e') {
+    retValue = moveElbow(inData);
+  } else if (inData[0] == 'g') {
+    retValue = moveGripper(inData);
+  } else if (inData[0] == 'd') {
+    retValue = applyDelay(inData);
+  } else if (inData[0] == 'S') {
+    //remove S from command
+    for (int i = 0 ; i < strlen(inData); i++) {
+       inData[i]=inData[i+1];
+    }
+    if (isPrefixCommand(inData[0])) {
+      char *temp = inData[1];
+      if (!isValidNumber(temp)) {
+        retValue = false;
       } else {
-        cleanup(false);
+        commands.addTail(inData);
+        retValue = true;
       }
-   }
-   
+    }
+  } else if (inData[0] == 'C') {
+    commands.clear();
+    retValue = true;
+  } else if (inData[0] == 'R') {
+    //remove R from command
+    for (int i = 0 ; i < strlen(inData); i++) {
+       inData[i]=inData[i+1];
+    }
+    if (inData[0] == 'f') {
+#ifdef SERIAL_DEBUG
+      if (Serial) {
+        Serial.println("Move commands in forward order");
+      }
+#endif      
+      commands.reset();
+      char *temp = commands.getForwardValue();
+      while (temp != NULL) {
+        makeMove(temp,false);
+        temp = commands.getForwardValue();
+      }
+    } else if (inData[0] == 'r') {
+#ifdef SERIAL_DEBUG
+      if (Serial) {
+        Serial.println("Move commands in reverse order");
+      }
+#endif
+      commands.reset();
+      char *temp = commands.getReverseValue();
+      while (temp != NULL) {
+        makeMove(temp,false);
+        temp = commands.getReverseValue();
+      }
+    }
+  }
+  if (isBT) {
+    makeCleanupBT();
+  }
+  return retValue;
+}
+
+void readData() {   
    while(BTSerial.available() > 0) // Don't read unless there you know there is data
    {
      if(indexBT < 19) // One less than the size of the array
@@ -222,28 +305,21 @@ void readData() {
           break;
         }
      } else {
-        cleanup(true);
+        makeCleanupBT();
      }
    }
-   if (inDataSerial[indexSerial-1] == '#') {
-      if (indexSerial > 0) {
-         inDataSerial[indexSerial-1] = '\0';
-      }
-      if (!makeMove(inDataSerial,indexSerial, false)) {        
-         printMenu();
-      }
-   } else if (inDataBT[indexBT-1] == '#') {
-      if (indexBT > 0) {
-         inDataBT[indexBT-1] = '\0';
-      }
-      if (!makeMove(inDataBT, indexBT, true)) {
-         printMenu();
-      }
+   if (indexBT > 0 && inDataBT[indexBT-1] == '#') {
+     inDataBT[indexBT-1] = '\0';
+     if (!makeMove(inDataBT, true)) {
+#ifdef SERIAL_DEBUG        
+       printMenu();
+#endif         
+     }
    }
 }
 
 void loop() {
-   while( !Serial.available() && !BTSerial.available())
+   while(!BTSerial.available())
         ; // LOOP...
    readData();
 }
