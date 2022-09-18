@@ -96,12 +96,15 @@ char *StringList::getForwardValue() {
   if (current == NULL) {
     ret = head->getValue();
     current = head->getNext();
+    if (current == NULL)
+      isAtEnd = true;
   } else {
     ret = current->getValue();
     current = current->getNext();
     if (current == NULL)
       isAtEnd = true;
   }
+  return ret;
 }
 
 char *StringList::getReverseValue() {
@@ -111,12 +114,15 @@ char *StringList::getReverseValue() {
   if (isAtEnd)
     return NULL;
   if (current == NULL) {
-    ret = head->getValue();
-    current = head->getPrevious();
+    ret = tail->getValue();
+    current = tail->getPrevious();
+    if (current == NULL)
+      isAtEnd = true;
   } else {
     ret = current->getValue();
     current = current->getPrevious();
     if (current == NULL)
       isAtEnd = true;
   }
+  return ret;
 }

@@ -55,9 +55,6 @@ void neoSSerial1ISR() {
 
 boolean isValidNumber(char *data) {
   if (strlen(data) == 0 ) return false;
-#ifdef SERIAL_DEBUG
-  Serial.println(data);
-#endif  
   if(!(data[0] == '+' || data[0] == '-' || isDigit(data[0]))) return false;
 
   for(byte i=0;i<strlen(data);i++) {
@@ -126,97 +123,92 @@ bool isPrefixCommand(char prefix) {
 }
 
 bool moveWaist(char *inData) {
-  //remove w from command
-  for (int i = 0 ; i < strlen(inData); i++) {
-     inData[i]=inData[i+1];
-  }
-  if (!isValidNumber(inData)) {
+  char *temp = inData;
+  //remove w
+  temp +=1;
+  if (!isValidNumber(temp)) {
      return false;
   }
 #ifdef SERIAL_DEBUG
   if (Serial) {
     Serial.print("move servo waist ");
-    Serial.print(atoi(inData));
+    Serial.print(atoi(temp));
     Serial.println("degree");
   }
 #endif     
-  servo_Waist.write(atoi(inData));
+  servo_Waist.write(atoi(temp));
   return true;  
 }
 
 bool moveShoulder(char *inData) {
-  //remove s from command
-  for (int i = 0 ; i < strlen(inData); i++) {
-    inData[i]=inData[i+1];
-  }
-  if (!isValidNumber(inData)) {
+  char *temp = inData;
+  //remove s
+  temp +=1;
+  if (!isValidNumber(temp)) {
     return false;
   }
 #ifdef SERIAL_DEBUG
   if (Serial) {
     Serial.print("move servo shoulder ");
-    Serial.print(atoi(inData));
+    Serial.print(atoi(temp));
     Serial.println("degree");
   }
 #endif     
-  servo_Shoulder.write(180-atoi(inData));
+  servo_Shoulder.write(180-atoi(temp));
   return true;
 }
 
 bool moveElbow(char *inData) {
-  //remove e from command
-  for (int i = 0 ; i < strlen(inData); i++) {
-     inData[i]=inData[i+1];
-  }
-  if (!isValidNumber(inData)) {
+  char *temp = inData;
+  //remove e
+  temp +=1;
+  if (!isValidNumber(temp)) {
      return false;
   }
 #ifdef SERIAL_DEBUG
   if (Serial) {
     Serial.print("move servo elbow ");
-    Serial.print(atoi(inData));
+    Serial.print(atoi(temp));
     Serial.println("degree");
   }
 #endif     
-  servo_Elbow.write(atoi(inData));
+  servo_Elbow.write(atoi(temp));
   return true;
 }
 
 bool moveGripper(char *inData) {
-  //remove g from command
-  for (int i = 0 ; i < strlen(inData); i++) {
-    inData[i]=inData[i+1];
-  }
-  if (!isValidNumber(inData)) {
+  char *temp = inData;
+  //remove g
+  temp +=1;
+  if (!isValidNumber(temp)) {
     return false;
   }
 #ifdef SERIAL_DEBUG
   if (Serial) {
     Serial.print("move servo grabber ");
-    Serial.print(atoi(inData));
+    Serial.print(atoi(temp));
     Serial.println("degree");
   }
 #endif     
-  servo_Gripper.write(atoi(inData));
+  servo_Gripper.write(atoi(temp));
   return true;
 }
 
 bool applyDelay(char *inData) {
-  //remove d from command
-  for (int i = 0 ; i < strlen(inData); i++) {
-    inData[i]=inData[i+1];
-  }
-  if (!isValidNumber(inData)) {
+  char *temp = inData;
+  //remove d
+  temp +=1;
+  if (!isValidNumber(temp)) {
     return false;
   }
 #ifdef SERIAL_DEBUG
   if (Serial) {
     Serial.print("sleep ");
-    Serial.print(atol(inData));
+    Serial.print(atol(temp));
     Serial.println("miliseconds");
   }
 #endif     
-  delay(atol(inData));
+  delay(atol(temp));
   return true;
 }
 
@@ -236,15 +228,17 @@ bool makeMove(char *inData, bool isBT) {
     //remove S from command
     for (int i = 0 ; i < strlen(inData); i++) {
        inData[i]=inData[i+1];
-    }
-    if (isPrefixCommand(inData[0])) {
-      char *temp = inData[1];
+    }   
+    if (isPrefixCommand(inData[0])) {      
+      char *temp = &inData[1];
       if (!isValidNumber(temp)) {
         retValue = false;
       } else {
         commands.addTail(inData);
         retValue = true;
       }
+    } else {
+      retValue = false;
     }
   } else if (inData[0] == 'C') {
     commands.clear();
@@ -261,11 +255,13 @@ bool makeMove(char *inData, bool isBT) {
       }
 #endif      
       commands.reset();
+      Serial.println("reset ");
       char *temp = commands.getForwardValue();
       while (temp != NULL) {
         makeMove(temp,false);
         temp = commands.getForwardValue();
       }
+      retValue = true;
     } else if (inData[0] == 'r') {
 #ifdef SERIAL_DEBUG
       if (Serial) {
@@ -273,11 +269,12 @@ bool makeMove(char *inData, bool isBT) {
       }
 #endif
       commands.reset();
-      char *temp = commands.getReverseValue();
+      char *temp = commands.getReverseValue();      
       while (temp != NULL) {
         makeMove(temp,false);
         temp = commands.getReverseValue();
       }
+      retValue = true;
     }
   }
   if (isBT) {
