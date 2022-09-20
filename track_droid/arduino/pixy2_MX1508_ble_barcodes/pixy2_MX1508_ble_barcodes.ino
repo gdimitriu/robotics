@@ -158,6 +158,18 @@ boolean isValidNumber(char *data, int size)
    return true;
 }
 
+void printMenu() {
+  BTSerial.println("s# stop/start");
+  BTSerial.println("l# lights on");
+  BTSerial.println("a# autocalibration");
+  BTSerial.println("L# left with turn90 delay");
+  BTSerial.println("R# right with turn90 delay");
+  BTSerial.println("lxxx# set turn90 left");
+  BTSerial.println("rxxx# set turn90 right");
+  BTSerial.println("sxxx,xxx# set servo up/left");
+  BTSerial.println("p# print menu");
+}
+
 void makeMove() {
   if (index > 0) {
      inData[index-1] = '\0';
@@ -185,6 +197,8 @@ void makeMove() {
     go(currentPower,-currentPower);
     delay(turn90);
     go(0,0);
+  } else if (strcmp(inData,"p") == 0) {
+    printMenu();
   }
   else if (strlen(inData) > 1) {
     if (inData[0] == 'v') {
@@ -208,6 +222,36 @@ void makeMove() {
         }
         if (atoi(inData) > 0 && atoi(inData) < 256)
           turn90 = atoi(inData);
+    } else if (inData[0] == 's') {
+      for (uint8_t i = 0 ; i < strlen(inData); i++) {
+        inData[i]=inData[i+1];
+      }
+      inData[strlen(inData)] = '\0';
+      int position;
+      for (uint8_t i = 0; i < strlen(inData); i++) {
+        if (inData[i] == ',') {
+           position = i;
+           break;
+        }
+      }
+      char buf[10];
+      for (int i = 0; i < 10; i++) {
+        buf[i] = '\0';
+      }
+      for (int i = 0 ; i < position; i++) {
+        buf[i] = inData[i];
+      }
+      int moveData = atoi(buf);
+      for (int i = 0; i < 10; i++) {
+        buf[i] = '\0';
+      }
+      int idx = 0;
+      for (int i = position + 1; i < strlen(inData); i++) {
+        buf[idx] = inData[i];
+        idx++;
+      }
+      int rotateData = atoi(buf);
+      pixy.setServos(moveData,rotateData);
     }
   }
   makeCleanup();

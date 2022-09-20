@@ -13,10 +13,23 @@ https://www.instructables.com/Arduino-Powered-Autonomous-Vehicle/
 https://www.instructables.com/Do-it-yourself-Autonomous-Tiny-Robot/
 https://www.instructables.com/DIY-Intelligent-Autonomus-Robot-Electronic-Pet-w-A/
 https://www.instructables.com/Arduino-Wondering-Robot/
+https://www.instructables.com/Autonomous-RC-Car/
+https://www.robotshop.com/community/robots/show/basic-obstacle-avoiding-robot
+https://www.instructables.com/Arduino-HC-SR04-Ultrasonic-Rover/
+https://www.instructables.com/Transformers-Baby-Arduino-Avoiding-Obstacle-Robot/
 
 LEG ROBOT
 https://www.instructables.com/Two-footed-walking-robot/
 https://www.instructables.com/ESP32-Small-Robot-Dog/
+
+SELF BALANCING
+https://www.instructables.com/Chappie-Self-Balancing-Robot/
+https://www.instructables.com/Arduino-Self-Balancing-Robot-1/
+https://www.instructables.com/Two-Wheel-Balanced-RobotPID/
+https://www.instructables.com/Upside-Up-Robot-Balancing-Revisited/
+https://circuitdigest.com/microcontroller-projects/arduino-based-self-balancing-robot
+
+
 
 LINE FOLLOWING
 https://github.com/PaulStoffregen/SerialFlash
@@ -26,11 +39,15 @@ https://www.instructables.com/Line-Follower-Robot-Arduino-Megauno-Very-Fast-Usin
 https://create.arduino.cc/projecthub/16336/line-follower-robot-using-arduino-5f5698
 https://www.electronicshub.org/line-follower-robot-using-microcontroller/
 https://www.researchgate.net/publication/334123838_Design_and_Construction_of_Line_Following_Robot_using_Arduino
+https://www.instructables.com/Arduino-Line-Follower-Robot-1/
 
 REMOTE CONTROLL
 https://www.instructables.com/Raspberry-Pi-Remote-Controlled-Car-1/
 https://www.instructables.com/Simple-RC-car-for-beginners-Android-control-over-/
 https://www.mikronauts.com/robot-zoo/elf-2wd-pi-robot/4/
+https://www.instructables.com/4WD-Security-Robot/
+https://www.instructables.com/Arduino-4WD-Car-Assembly-and-Code-With-Optional-In/
+https://www.instructables.com/Arduino-Remote-Controlled-Tank-With-WiFi-Camera-nR/
 
 MICROCONTROLLERS NOT ARM or AVR
 https://www.instructables.com/Android-Smart-Phone-Bluetooth-Remote-Control-Intel/
