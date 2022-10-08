@@ -21,7 +21,7 @@
 #include <PIDLoop.h>
 #include <Wire.h>
 #include <NeoSWSerial.h>
-#include <PinChangeInt.h>
+#include <EnableInterrupt.h>
 
 #define RxD 2
 #define TxD 3
@@ -79,7 +79,9 @@ void go(int speedLeft, int speedRight) {
     digitalWrite(RIGHT_MOTOR_PIN1,LOW);
     digitalWrite(RIGHT_MOTOR_PIN2,LOW);
 #ifdef SERIAL_DEBUG_MODE    
-    Serial.println("All on zero");
+    if (Serial) {
+      Serial.println("All on zero");
+    }
 #endif
     return;
   }
@@ -87,14 +89,18 @@ void go(int speedLeft, int speedRight) {
     analogWrite(LEFT_MOTOR_PIN1, speedLeft);
     digitalWrite(LEFT_MOTOR_PIN2,LOW);
 #ifdef SERIAL_DEBUG_MODE
-    Serial.print("Left "); Serial.print(speedLeft); Serial.print(" , "); Serial.println(0);
+    if (Serial) {
+      Serial.print("Left "); Serial.print(speedLeft); Serial.print(" , "); Serial.println(0);
+    }
 #endif
   } 
   else {
     digitalWrite(LEFT_MOTOR_PIN1,LOW);
     analogWrite(LEFT_MOTOR_PIN2, -speedLeft);
 #ifdef SERIAL_DEBUG_MODE
-    Serial.print("Left "); Serial.print(0); Serial.print(" , "); Serial.println(-speedLeft);
+    if (Serial) {
+      Serial.print("Left "); Serial.print(0); Serial.print(" , "); Serial.println(-speedLeft);
+    }
 #endif
   }
  
@@ -102,13 +108,17 @@ void go(int speedLeft, int speedRight) {
     analogWrite(RIGHT_MOTOR_PIN1, speedRight);
     digitalWrite(RIGHT_MOTOR_PIN2,LOW);
 #ifdef SERIAL_DEBUG_MODE
-    Serial.print("Right "); Serial.print(speedRight); Serial.print(" , "); Serial.println(0);
+    if (Serial) {
+      Serial.print("Right "); Serial.print(speedRight); Serial.print(" , "); Serial.println(0);
+    }
 #endif
   }else {
     digitalWrite(RIGHT_MOTOR_PIN1,LOW);
     analogWrite(RIGHT_MOTOR_PIN2, -speedRight);
 #ifdef SERIAL_DEBUG_MODE
-    Serial.print("Right "); Serial.print(0); Serial.print(" , "); Serial.println(-speedRight);
+    if (Serial) {
+      Serial.print("Right "); Serial.print(0); Serial.print(" , "); Serial.println(-speedRight);
+    }
 #endif
   }
 }
@@ -257,7 +267,10 @@ void makeMove() {
 
 void setup() 
 {
-  Serial.begin(38400);  
+#ifdef SERIAL_DEBUG_MODE
+  Serial.begin(38400);
+  Serial.println("Starting...");
+#endif
   BTSerial.begin(38400);  
   Wire.begin();
   pixy.init();
@@ -267,9 +280,10 @@ void setup()
   pinMode(RIGHT_MOTOR_PIN2, OUTPUT);
   attachPinChangeInterrupt(RxD, neoSSerial1ISR, CHANGE); 
   BTSerial.println("Starting...");
-  Serial.print("Starting...\n");
   cleanupBT = false;
+#ifdef BLE_DEBUG_MODE
   printMenuOnBLE();
+#endif
   isTracking = false;
   isLampOn = false;
   isStopped = true;

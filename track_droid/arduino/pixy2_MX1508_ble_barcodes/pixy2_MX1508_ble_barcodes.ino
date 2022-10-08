@@ -157,19 +157,19 @@ boolean isValidNumber(char *data, int size)
    }
    return true;
 }
-
+#ifdef BLE_DEBUG_MODE
 void printMenu() {
   BTSerial.println("s# stop/start");
   BTSerial.println("l# lights on");
   BTSerial.println("a# autocalibration");
   BTSerial.println("L# left with turn90 delay");
   BTSerial.println("R# right with turn90 delay");
-  BTSerial.println("lxxx# set turn90 left");
-  BTSerial.println("rxxx# set turn90 right");
+  BTSerial.println("txxx# set turn90");
   BTSerial.println("sxxx,xxx# set servo up/left");
+  BTSerial.println("vxxx# set the current power");
   BTSerial.println("p# print menu");
 }
-
+#endif
 void makeMove() {
   if (index > 0) {
      inData[index-1] = '\0';
@@ -198,7 +198,9 @@ void makeMove() {
     delay(turn90);
     go(0,0);
   } else if (strcmp(inData,"p") == 0) {
+#ifdef BLE_DEBUG_MODE    
     printMenu();
+#endif    
   }
   else if (strlen(inData) > 1) {
     if (inData[0] == 'v') {
@@ -212,7 +214,9 @@ void makeMove() {
         if (atoi(inData) > 0 && atoi(inData) < 256)
           currentPower = atoi(inData);
     } else if (inData[0] == 't') {
-        BTSerial.print("Turn90 ms");BTSerial.println(turn90);
+#ifdef BLE_DEBUG_MODE      
+        BTSerial.print("Turn90 ms");BTSerial.print(turn90);
+#endif        
         for (unsigned int i = 0 ; i < strlen(inData); i++) {
           inData[i]=inData[i+1];
         }
@@ -220,8 +224,15 @@ void makeMove() {
           makeCleanup();
           return;
         }
-        if (atoi(inData) > 0 && atoi(inData) < 256)
+        if (atoi(inData) > 0) {
           turn90 = atoi(inData);
+#ifdef BLE_DEBUG_MODE          
+          BTSerial.print(" to ");BTSerial.print(turn90);
+#endif          
+        } else {
+          makeCleanup();
+          return;
+        }
     } else if (inData[0] == 's') {
       for (uint8_t i = 0 ; i < strlen(inData); i++) {
         inData[i]=inData[i+1];
@@ -259,7 +270,6 @@ void makeMove() {
 
 void setup() 
 {
-  Serial.begin(38400);  
   BTSerial.begin(38400);
   
   Wire.begin();
@@ -269,8 +279,9 @@ void setup()
   pinMode(RIGHT_MOTOR_PIN1, OUTPUT);
   pinMode(RIGHT_MOTOR_PIN2, OUTPUT);
   attachPinChangeInterrupt(RxD, neoSSerial1ISR, CHANGE);
+#ifdef BLE_DEBUG_MODE  
   BTSerial.println("Starting...");
-  Serial.print("Starting...\n");
+#endif  
 //  pixy.setServos(380,500); //this if for barcodes in front on posts
   pixy.setServos(380,010);
   go(0,0);  
@@ -334,9 +345,10 @@ void loop()
   {
     //pixy.line.barcodes->print();
     // code==0 is our left-turn sign
-    if (pixy.line.barcodes->m_code==0)
-    {
+    if (pixy.line.barcodes->m_code==0) {
+#ifdef BLE_DEBUG_MODE      
       BTSerial.println("left");
+#endif      
       go(-currentPower,currentPower);
       delay(turn90);
       go(0,0);
@@ -351,33 +363,42 @@ void loop()
       }
     }
     // code==5 is our right-turn sign
-    else if (pixy.line.barcodes->m_code==5)
-    {
+    else if (pixy.line.barcodes->m_code==5) {
+#ifdef BLE_DEBUG_MODE      
       BTSerial.println("right");
+#endif      
       go(currentPower,-currentPower);
       delay(turn90);
       go(0,0);
       if (droidDirection == 1) {
+#ifdef BLE_DEBUG_MODE        
         BTSerial.println("resuming forward");
+#endif        
         go(currentPower,currentPower);
       } else if (droidDirection == 2) {
+#ifdef BLE_DEBUG_MODE        
         BTSerial.println("resuming backward");
+#endif        
         go(-currentPower,-currentPower);
       } else {
+#ifdef BLE_DEBUG_MODE        
         BTSerial.println(droidDirection);
+#endif        
       }
     }
     //code==6 is our stop sign for 10000 ms
-    else if (pixy.line.barcodes->m_code==6)
-    {
+    else if (pixy.line.barcodes->m_code==6) {
+#ifdef BLE_DEBUG_MODE      
       BTSerial.println("stop");
+#endif      
       go(0,0);
       delay(10000);
     }
     //code==4 is our forward sign
-    else if (pixy.line.barcodes->m_code==4)
-    {
-      Serial.println("forward");
+    else if (pixy.line.barcodes->m_code==4) {
+#ifdef BLE_DEBUG_MODE
+      BTSerial.println("forward");
+#endif      
       if (droidDirection != 1) {
         go(0,0);
       }
@@ -385,9 +406,10 @@ void loop()
       go(currentPower,currentPower);
     }
     //code==3 is our backward sign
-    else if (pixy.line.barcodes->m_code==3)
-    {
-      Serial.println("backward");
+    else if (pixy.line.barcodes->m_code==3) {
+#ifdef BLE_DEBUG_MODE
+      BTSerial.println("backward");
+#endif      
       if (droidDirection != 2) {
         go(0,0);
       }
