@@ -18,7 +18,7 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#include <CommandSubSystem.h>
+#include "CommandSubSystem.h"
 
 CommandSubSystem::CommandSubSystem(I2CSubSystem *i2cSystem)
 {

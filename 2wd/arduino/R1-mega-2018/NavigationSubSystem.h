@@ -20,9 +20,9 @@
 #pragma once
 #ifndef NavigationSubSystem_h
 #define NavigationSubSystem_h
-#include <SensorsSubSystem.h>
-#include <CommandExecutionList.h>
-#include <I2CSubSystem.h>
+#include "SensorsSubSystem.h"
+#include "CommandExecutionList.h"
+#include "I2CSubSystem.h"
 
 class NavigationSubSystem
 {

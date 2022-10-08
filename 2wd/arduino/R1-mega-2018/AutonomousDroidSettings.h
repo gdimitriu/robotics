@@ -20,9 +20,9 @@
 #pragma once
 #ifndef AutonomousDroidSettings_h
 #define AutonomousDroidSettings_h
-#include <Observer.h>
-#include <ObserverList.h>
-#include <CommandExecutionList.h>
+#include "Observer.h"
+#include "ObserverList.h"
+#include "CommandExecutionList.h"
 
 class AutonomousDroidSettings
 {

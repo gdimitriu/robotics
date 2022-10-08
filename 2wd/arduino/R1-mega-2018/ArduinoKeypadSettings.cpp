@@ -18,7 +18,7 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#include <ArduinoKeypadSettings.h>
+#include "ArduinoKeypadSettings.h"
 
 ArduinoKeypadSettings::ArduinoKeypadSettings(int rows, int cols)
 {

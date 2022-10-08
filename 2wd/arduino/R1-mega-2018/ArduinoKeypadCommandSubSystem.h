@@ -17,36 +17,34 @@
  * License along with Robotics; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
-#include <ObserverList.h>
-ObserverList::ObserverList()
-{
-	this->head = nullptr;
-	this->tail = nullptr;
-}
-void ObserverList::addObserver(Observer *obs)
-{
-	Node *tmp = new Node(obs);
-	if (head == tail && head == nullptr) {
-		head = tail = tmp;
-	}
-	else {
-		Node *iter = head;
-		while (iter != nullptr) {
-			if (iter->getObserver() == obs) {
-				return;
-			}
-			iter = iter->getNextNode();
-		}
-		tail->setNextNode(tmp);
-		tail = tmp;
-	}
-}
+#pragma once
+#ifndef ArduinoKeypadCommandSubSystem_h
+#define ArduinoKeypadCommandSubSystem_h
+#include "CommandSubSystem.h"
+#include "ArduinoKeypadSettings.h"
+#include <Keypad.h>
 
-void ObserverList::updateObservers()
+class ArduinoKeypadCommandSubSystem : public CommandSubSystem
 {
-	Node *tmp = head;
-	while (tmp != nullptr) {
-		tmp->getObserver()->update();
-		tmp = tmp->getNextNode();
-	}
-}
+public:
+	ArduinoKeypadCommandSubSystem(I2CSubSystem *i2cSystem, ArduinoKeypadSettings *settings);
+	static void enableCommandISR();
+	virtual bool isEnabledCommandISR();
+	virtual bool isReady();
+	virtual char * getCommand();
+	virtual char * getValue();
+	virtual void reset(char *command);
+	static bool interruptEnabled;
+private:
+	bool ready = false;
+	char * command;
+	char * value;
+	int indexCommand;
+	int indexValue;
+	bool hasCommand;
+	bool isFloatValueCommand = false;
+	string *messages;
+	Keypad keypad;
+	ArduinoKeypadSettings * keyPadSettings;
+};
+#endif

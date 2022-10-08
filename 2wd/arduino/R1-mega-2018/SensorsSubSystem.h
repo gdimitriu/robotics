@@ -22,9 +22,9 @@
 #define SensorsSubSystem_h
 #include <Arduino.h>
 #include <Servo.h>
-#include <AutonomousDroidSettings.h>
-#include <Observer.h>
-#include <SweepSensor.h>
+#include "AutonomousDroidSettings.h"
+#include "Observer.h"
+#include "SweepSensor.h"
 
 class SensorsSubSystem : public Observer
 {

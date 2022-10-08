@@ -21,8 +21,8 @@
 #ifndef EnginesSubSystem_h
 #define EnginesSubSystem_h
 #include <Arduino.h>
-#include <AutonomousDroidSettings.h>
-#include <SensorsSubSystem.h>
+#include "AutonomousDroidSettings.h"
+#include "SensorsSubSystem.h"
 
 class EnginesSubSystem
 {

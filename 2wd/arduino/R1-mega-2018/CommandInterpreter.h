@@ -18,35 +18,31 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 #pragma once
-#ifndef CommandSubSystem_h
-#define CommandSubSystem_h
+#ifndef CommandInterpreter_h
+#define CommandInterpreter_h
 
-#include <I2CSubSystem.h>
-#include <CommandInterpreter.h>
-#include <AutonomousDroidSettings.h>
-#include <NavigationSubSystem.h>
+#include "AutonomousDroidSettings.h"
+#include "NavigationSubSystem.h"
+#include "CommandExecutionList.h"
 
-
-class CommandSubSystem
+class CommandInterpreter
 {
 public:
-	CommandSubSystem(I2CSubSystem *i2cSystem);
-	void setI2CSubSystem(I2CSubSystem *i2cSystem);
-	I2CSubSystem * getI2CSubSystem();
-	void setAutonomousDroidSettings(AutonomousDroidSettings * settings);
-	void setNavigationSubSystem(NavigationSubSystem * settings);
-	void setCommandInterpreter(CommandInterpreter * interpreter);
-	virtual bool isEnabledCommandISR() = 0;
-	virtual bool isReady() = 0;
-	virtual char * getCommand() = 0;
-	virtual char * getValue() = 0;
-	virtual void reset(char *command)= 0;
-private:
-	I2CSubSystem *i2cSubSystem = nullptr;
+	CommandInterpreter();
+	virtual bool isCommandAvailable(char *command);
+	virtual bool isFloatValueCommand(char *command);
+	virtual bool setCommandValue(char *command, char * value);
+	virtual string *getCommandValue(char * command);
+	void setDroidSettings(AutonomousDroidSettings *settings);
+	void setNavigationSubSystem(NavigationSubSystem *navigation);
+
 protected:
+
+private:
 	AutonomousDroidSettings * droidSettings = nullptr;
 	NavigationSubSystem * navigationSubSystem = nullptr;
-	CommandInterpreter * commandInterpreter = nullptr;
+	//list of commands and setter/getter
+	CommandExecutionList < AutonomousDroidSettings, void (AutonomousDroidSettings::*)(unsigned long), unsigned long (AutonomousDroidSettings::*)(void)> *droidSettingsCommandList = nullptr;
+	CommandExecutionList < NavigationSubSystem, void (NavigationSubSystem::*)(float), float (NavigationSubSystem::*)(void)> *navigationCommandList = nullptr;
 };
-
 #endif

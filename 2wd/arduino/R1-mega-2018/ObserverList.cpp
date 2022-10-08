@@ -17,44 +17,36 @@
  * License along with Robotics; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
-#pragma once
-#ifndef ObserverList_h
-#define ObserverList_h
-#include <Observer.h>
-
-class ObserverList
+#include "ObserverList.h"
+ObserverList::ObserverList()
 {
-public:
-	ObserverList();
-	void addObserver(Observer *obs);
-	void updateObservers();
-private:
-	class Node
-	{
-	public:
-		Node(Observer *obs)
-		{
-			this->valueNode = obs;
-			this->nextNode = nullptr;
+	this->head = nullptr;
+	this->tail = nullptr;
+}
+void ObserverList::addObserver(Observer *obs)
+{
+	Node *tmp = new Node(obs);
+	if (head == tail && head == nullptr) {
+		head = tail = tmp;
+	}
+	else {
+		Node *iter = head;
+		while (iter != nullptr) {
+			if (iter->getObserver() == obs) {
+				return;
+			}
+			iter = iter->getNextNode();
 		}
-		Observer * getObserver()
-		{
-			return this->valueNode;
-		}
-		Node *getNextNode()
-		{
-			return this->nextNode;
-		}
-		void setNextNode(Node *next)
-		{
-			this->nextNode = next;
-		}
-	private:
-		Observer * valueNode = nullptr;
-		Node * nextNode = nullptr;
-	};
-	Node * head = nullptr;
-	Node * tail = nullptr;
-};
+		tail->setNextNode(tmp);
+		tail = tmp;
+	}
+}
 
-#endif
+void ObserverList::updateObservers()
+{
+	Node *tmp = head;
+	while (tmp != nullptr) {
+		tmp->getObserver()->update();
+		tmp = tmp->getNextNode();
+	}
+}

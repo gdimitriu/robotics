@@ -20,7 +20,7 @@
 #pragma once
 #ifndef ArduinoI2CSubSystem_h
 #define ArduinoI2CSubSystem_h
-#include <I2CSubSystem.h>
+#include "I2CSubSystem.h"
 #include <Arduino.h>
 #include <Wire.h>
 #include <I2Cdev.h>

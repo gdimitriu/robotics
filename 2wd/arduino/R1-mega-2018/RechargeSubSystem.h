@@ -18,31 +18,45 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 #pragma once
-#ifndef CommandInterpreter_h
-#define CommandInterpreter_h
+#ifndef RechargeSubSystem_h
+#define RechargeSubSystem_h
+#include <avr/sleep.h>
+#include "AutonomousDroidSettings.h"
+#include "EnginesSubSystem.h"
+#include "I2CSubSystem.h"
+#include "NavigationSubSystem.h"
 
-#include <AutonomousDroidSettings.h>
-#include <NavigationSubSystem.h>
-#include "CommandExecutionList.h"
-
-class CommandInterpreter
+class RechargeSubSystem
 {
 public:
-	CommandInterpreter();
-	virtual bool isCommandAvailable(char *command);
-	virtual bool isFloatValueCommand(char *command);
-	virtual bool setCommandValue(char *command, char * value);
-	virtual string *getCommandValue(char * command);
-	void setDroidSettings(AutonomousDroidSettings *settings);
+	RechargeSubSystem();
+	void setSettings(AutonomousDroidSettings *settings);
+	void setEnginesSubSystem(EnginesSubSystem *engines);
 	void setNavigationSubSystem(NavigationSubSystem *navigation);
-
-protected:
-
+	void setI2CBus(I2CSubSystem *i2c);
+	void addPhotoSensors(int leftPin, int rightPin);
+	void setWakeUpSensor(int pin, int detectState);
+	void setDebugMode(bool debug);
+	void initialize();
+	void sleepNow();
+	int goToLight();
 private:
 	AutonomousDroidSettings * droidSettings = nullptr;
+	//SubSystems
+	EnginesSubSystem * enginesSubSystem = nullptr;
 	NavigationSubSystem * navigationSubSystem = nullptr;
-	//list of commands and setter/getter
-	CommandExecutionList < AutonomousDroidSettings, void (AutonomousDroidSettings::*)(unsigned long), unsigned long (AutonomousDroidSettings::*)(void)> *droidSettingsCommandList = nullptr;
-	CommandExecutionList < NavigationSubSystem, void (NavigationSubSystem::*)(float), float (NavigationSubSystem::*)(void)> *navigationCommandList = nullptr;
+	I2CSubSystem *i2cBus = nullptr;
+	//wakeUp system
+	int pinWakeUpSensor = -1;
+	int detectWakeUpSensor = 1;
+	int stateForWakeUp = RISING;
+	//light sensors
+	int pinLeftLightSensor = -1;
+	int pinRightLightSensor = -1;
+	//light movement
+	int HAS_MOVE_TO_LEFT = 100;
+	int has_turn = 0;
+	bool debugMode = false;
+	char** bufferMessages;
 };
 #endif

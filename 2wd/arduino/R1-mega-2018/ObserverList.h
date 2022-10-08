@@ -18,33 +18,43 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 #pragma once
-#ifndef ArduinoKeypadCommandSubSystem_h
-#define ArduinoKeypadCommandSubSystem_h
-#include <CommandSubSystem.h>
-#include <ArduinoKeypadSettings.h>
-#include <Keypad.h>
+#ifndef ObserverList_h
+#define ObserverList_h
+#include "Observer.h"
 
-class ArduinoKeypadCommandSubSystem : public CommandSubSystem
+class ObserverList
 {
 public:
-	ArduinoKeypadCommandSubSystem(I2CSubSystem *i2cSystem, ArduinoKeypadSettings *settings);
-	static void enableCommandISR();
-	virtual bool isEnabledCommandISR();
-	virtual bool isReady();
-	virtual char * getCommand();
-	virtual char * getValue();
-	virtual void reset(char *command);
-	static bool interruptEnabled;
+	ObserverList();
+	void addObserver(Observer *obs);
+	void updateObservers();
 private:
-	bool ready = false;
-	char * command;
-	char * value;
-	int indexCommand;
-	int indexValue;
-	bool hasCommand;
-	bool isFloatValueCommand = false;
-	string *messages;
-	Keypad keypad;
-	ArduinoKeypadSettings * keyPadSettings;
+	class Node
+	{
+	public:
+		Node(Observer *obs)
+		{
+			this->valueNode = obs;
+			this->nextNode = nullptr;
+		}
+		Observer * getObserver()
+		{
+			return this->valueNode;
+		}
+		Node *getNextNode()
+		{
+			return this->nextNode;
+		}
+		void setNextNode(Node *next)
+		{
+			this->nextNode = next;
+		}
+	private:
+		Observer * valueNode = nullptr;
+		Node * nextNode = nullptr;
+	};
+	Node * head = nullptr;
+	Node * tail = nullptr;
 };
+
 #endif
