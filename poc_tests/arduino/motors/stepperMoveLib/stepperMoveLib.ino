@@ -24,7 +24,8 @@
 #define STEPPER_PIN_2 9
 #define STEPPER_PIN_3 10
 #define STEPPER_PIN_4 11
-#define STEPS 64
+//#define STEPS 64
+#define STEPS 4096
 
 Stepper myStepper(STEPS,STEPPER_PIN_1,STEPPER_PIN_2, STEPPER_PIN_3, STEPPER_PIN_4); 
 int pas = 0;
@@ -34,9 +35,9 @@ void setup() {
 }
 
 void loop() {
-  myStepper.step(64);
+  myStepper.step(STEPS);
   pas++;
-  if (pas>64) {
+  if (pas>STEPS) {
     pas = 0;
   }
   delay(10);
