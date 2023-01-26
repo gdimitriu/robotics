@@ -5,14 +5,6 @@ http://robocraft.ru/files/datasheet/28BYJ-48.pdf
 https://www.schmalzhaus.com/EasyDriver/
 https://knowledge.ni.com/KnowledgeArticleDetails?id=kA00Z000000P7kCSAS
 
-//i2c
-https://electronics.stackexchange.com/questions/25278/how-to-connect-multiple-i2c-interface-devices-into-a-single-pin-a4-sda-and-a5
-https://electronics.stackexchange.com/questions/106265/maximum-i2c-bus-length
-http://www.mosaic-industries.com/embedded-systems/sbc-single-board-computers/freescale-hcs12-9s12-c-language/instrument-control/i2c-bus-specifications
-https://www.raspberrypi.org/forums/viewtopic.php?t=82049
-https://forum.arduino.cc/index.php?topic=57604.0
-https://www.i2c-bus.org/multimaster/
-https://learn.sparkfun.com/tutorials/i2c
 
 //servo
 https://www.quora.com/Why-do-servo-motors-need-PWM-pins-in-Arduino-and-what-does-pulse-width-modulation-really-mean

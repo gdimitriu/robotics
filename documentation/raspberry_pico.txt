@@ -23,3 +23,5 @@ https://github.com/raspberrypi/pico-micropython-examples
 https://www.hivemq.com/blog/mqtt-raspberrypi-part03-sending-sensor-data-hivemqcloud-pico/
 
 
+#drivers
+https://bizzeh.com/native-pico-sdk-ili9341-ili9342-for-raspberry-pi-pico/

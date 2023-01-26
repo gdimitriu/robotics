@@ -1,0 +1,23 @@
+#working
+https://www.instructables.com/OV7670-Arduino-Camera-Sensor-Module-Framecapture-T/ 
+https://www.hackster.io/techmirtz/visual-capturing-with-ov7670-on-arduino-069ebb?use_route=project
+
+#troubleshooting
+http://embeddedprogrammer.blogspot.com/2012/07/hacking-ov7670-camera-module-sccb-cheat.html?m=1
+https://forum.arduino.cc/t/cannot-access-i2c-twi-on-ov7670-cmos-sensor-solved/247688/4
+https://forum.arduino.cc/t/ov7670-with-both-arduino-uno-and-now-mega/155814/3
+https://forum.arduino.cc/t/ov7670-with-both-arduino-uno-and-now-mega/155814/35
+https://forum.arduino.cc/t/solved-problem-with-camera-module-ov7670/514763
+https://arduino.stackexchange.com/questions/24645/accessing-configuration-registers-of-ov7670-cam-on-i2c
+http://www.electronics-lab.com/using-ov7670-camera-sensor-arduino/
+
+#examples
+https://github.com/ComputerNerd/arduino-camera-tft
+
+#does not working
+https://github.com/ComputerNerd
+https://github.com/ComputerNerd/ov7670-no-ram-arduino-uno
+
+
+#camera
+https://www.optimusdigital.ro/ro/senzori-senzori-optici/624-modul-camera-ov7670.html
