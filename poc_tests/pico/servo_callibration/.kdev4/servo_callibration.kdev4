@@ -1,0 +1,16 @@
+[CMake]
+Build Directory Count=1
+Current Build Directory Index-Host System=0
+
+[CMake][CMake Build Directory 0]
+Build Directory Path=/home/onion/micro/robotics/poc_tests/pico/servo_callibration/build
+Build Type=Debug
+CMake Binary=/snap/bin/cmake
+CMake Executable=/snap/bin/cmake
+Environment Profile=
+Extra Arguments=
+Install Directory=/usr/local
+Runtime=Host System
+
+[Project]
+VersionControlSupport=kdevgit

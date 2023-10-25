@@ -1,0 +1,19 @@
+[Buildset]
+BuildItems=@Variant(\x00\x00\x00\t\x00\x00\x00\x00\x01\x00\x00\x00\x0b\x00\x00\x00\x00\x01\x00\x00\x006\x00h\x00c\x00-\x00s\x00r\x000\x004\x00_\x00l\x00c\x00d\x00_\x00m\x00u\x00l\x00t\x00i\x00c\x00o\x00r\x00e\x00_\x00q\x00u\x00e\x00u\x00e)
+
+[CMake]
+Build Directory Count=1
+Current Build Directory Index-Host System=0
+
+[CMake][CMake Build Directory 0]
+Build Directory Path=/home/onion/micro/robotics/poc_tests/pico/hc-sr04_lcd_multicore_queue/build
+Build Type=Debug
+CMake Binary=/snap/bin/cmake
+CMake Executable=/snap/bin/cmake
+Environment Profile=
+Extra Arguments=
+Install Directory=
+Runtime=Host System
+
+[Project]
+VersionControlSupport=kdevgit

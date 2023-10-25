@@ -1,0 +1,19 @@
+[Buildset]
+BuildItems=@Variant(\x00\x00\x00\t\x00\x00\x00\x00\x01\x00\x00\x00\x0b\x00\x00\x00\x00\x01\x00\x00\x00\x16\x00h\x00c\x00-\x00s\x00r\x000\x004\x00_\x00l\x00c\x00d)
+
+[CMake]
+Build Directory Count=1
+Current Build Directory Index-Host System=0
+
+[CMake][CMake Build Directory 0]
+Build Directory Path=/home/onion/micro/robotics/poc_tests/pico/hc-sr04_lcd/build
+Build Type=Debug
+CMake Binary=/snap/bin/cmake
+CMake Executable=/snap/bin/cmake
+Environment Profile=
+Extra Arguments=
+Install Directory=/usr/local
+Runtime=Host System
+
+[Project]
+VersionControlSupport=kdevgit

@@ -9,6 +9,7 @@
 #include <hardware/uart.h>
 #include <hardware/gpio.h>
 #include <string.h>
+#include <pico/time.h>
 #include "FreeMono12pt7b.h"
 #include "ili934x.h"
 
@@ -28,14 +29,14 @@
 //do not use 8 and 9 is for uart1
 
 ILI934X *display = NULL;
-const uint SERIAL_BAUD = 38400;
 
 #define PICO_TIME_DEFAULT_ALARM_POOL_DISABLED 0
 
 int main() {
 	char buffer[256];
 	char lcdBuffer[256];
-
+	
+	
 	stdio_init_all();
 		
 	//initialize lcd
@@ -54,7 +55,7 @@ int main() {
 	gpio_init(ECHO_PIN);
 	gpio_set_dir(ECHO_PIN, GPIO_IN);
 
-    display = new ILI934X(SPI_PORT, PIN_CS, PIN_DC, PIN_RST, 240, 320, R90DEG);
+	display = new ILI934X(SPI_PORT, PIN_CS, PIN_DC, PIN_RST, 240, 320, R90DEG);
     display->reset();
     display->init();
 	display->clear();
@@ -67,7 +68,7 @@ int main() {
 	int16_t maxx;
 	int16_t maxy;
 	char ch;
-	char *str;
+	char *str; 
 	printf("Starting\n");
 	fflush(stdout);
 	scanf("%s", buffer);
@@ -79,13 +80,13 @@ int main() {
 	printf("Enter d# to get the value from SR04\n");
 	fflush(stdout);
 	while (1) {
-		
 		printf("Input Command\n");
 		fflush(stdout);
 		scanf("%s",buffer);
-		fflush(stdin);			
+		fflush(stdin);
 		printf("received: <<%s>>\n",buffer);
 		fflush(stdout);
+		
 		sprintf(lcdBuffer,"received: <<%s>>",buffer);
 		str = lcdBuffer;
 		x = 10;
@@ -102,30 +103,33 @@ int main() {
 			display->drawChar(x,y,ch,display->colour565(255,0,0), font);
 		}
 		if (buffer[0] == 'd' && buffer[1] == '#') {
+			uint64_t start;
 			memset(lcdBuffer, 0, sizeof(lcdBuffer));
 			long currentDistance = 4500;
-			bool timeoutOccured = false;
+			bool timeoutOccured = false;			
 			gpio_put(TRIG_PIN, false);
-			sleep_us(2);
+			busy_wait_us(2);
 			gpio_put(TRIG_PIN, true);
-			sleep_us(10);
+			busy_wait_us(10);
 			gpio_put(TRIG_PIN, false);
 			while(gpio_get(ECHO_PIN) == false);
-			absolute_time_t start = get_absolute_time();
 			while(gpio_get(ECHO_PIN) == true) {
-				if (absolute_time_diff_us(start, get_absolute_time()) > 26190) {
+				if ((time_us_64() - start) > 26190) {
 					timeoutOccured = true;
 					break;
 				}
 			}
-			if (timeoutOccured == false) {
-				absolute_time_t finish = get_absolute_time();
-				int64_t microseconds = absolute_time_diff_us(start, finish);
+			if (timeoutOccured == false) {				
+				int64_t microseconds = time_us_64() - start;
 				currentDistance = ((microseconds/2)/29.1) * 10; //cm * 10 to be mm
 			}
 			sprintf(lcdBuffer, "Distance = %ld mm", currentDistance);
+			printf("time1 = %ld %ld\n", start, time_us_64());
+			fflush(stdout);
+
 			printf("%s\n",lcdBuffer);
 			fflush(stdout);
+			
 			str = lcdBuffer;
 			x = 10;
 			y = 100 + 18;

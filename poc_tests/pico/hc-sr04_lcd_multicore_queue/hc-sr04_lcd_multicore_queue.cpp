@@ -9,6 +9,7 @@
 #include <hardware/uart.h>
 #include <hardware/gpio.h>
 #include <pico/multicore.h>
+#include <pico/util/queue.h>
 #include <string.h>
 #include "FreeMono12pt7b.h"
 #include "ili934x.h"
@@ -32,16 +33,33 @@ ILI934X *display = NULL;
 
 #define PICO_TIME_DEFAULT_ALARM_POOL_DISABLED 0
 
+queue_t call_queue;
+queue_t results_queue;
+
+typedef struct
+{
+    uint32_t (*func)();
+} queue_entry_t;
+
 void core1_entry() {
 	while(1) {
-		uint32_t (*func)() = (uint32_t(*)()) multicore_fifo_pop_blocking();
+		queue_entry_t localEntry;
+		printf("Starting core1\n");
+		fflush(stdout);
+        queue_remove_blocking(&call_queue, &localEntry);
+		uint32_t (*func)() = (uint32_t(*)())localEntry.func;
 		uint32_t result = (*func)();
-        multicore_fifo_push_blocking(result);
+		printf("result = %d\n",result);
+		fflush(stdout);
+        queue_add_blocking(&results_queue, &result);
+		printf("waiting %u  %u\n", queue_get_level(&call_queue), queue_get_level(&results_queue));
+		fflush(stdout);
 	}
 }
 
 uint32_t getDistance() {
-	absolute_time_t start;
+	printf("GetDistance\n");
+	fflush(stdout);
 	bool timeoutOccured = false;
 	uint32_t currentDistance = 4500;
 	gpio_put(TRIG_PIN, false);
@@ -50,7 +68,7 @@ uint32_t getDistance() {
 	sleep_us(10);
 	gpio_put(TRIG_PIN, false);
 	while(gpio_get(ECHO_PIN) == false);
-	start = get_absolute_time();
+	absolute_time_t start = get_absolute_time();
 	while(gpio_get(ECHO_PIN) == true) {
 		if (absolute_time_diff_us(start, get_absolute_time()) > 26190) {
 			timeoutOccured = true;
@@ -58,9 +76,10 @@ uint32_t getDistance() {
 		}
 	}
 	if (timeoutOccured == false) {
-		int64_t microseconds = absolute_time_diff_us(start, get_absolute_time());
+		absolute_time_t finish = get_absolute_time();
+		int64_t microseconds = absolute_time_diff_us(start, finish);
 		currentDistance = ((microseconds/2)/29.1) * 10; //cm * 10 to be mm
-	}
+	}	
 	return currentDistance;
 }
 int main() {
@@ -106,11 +125,31 @@ int main() {
 	printf("Receiving start command=%s\n", buffer);
 	fflush(stdout);
 	multicore_reset_core1();
+	queue_init(&call_queue, sizeof(queue_entry_t), 2);
+    queue_init(&results_queue, sizeof(uint32_t), 2);	
 	multicore_launch_core1(core1_entry);
 	printf("Starting HC-SR04_LCD\n");
 	fflush(stdout);
 	printf("Enter d# to get the value from HC-SR04\n");
 	fflush(stdout);
+	memset(lcdBuffer, 0, sizeof(lcdBuffer));
+	uint32_t currentDistance;
+	queue_entry_t entry;
+			entry.func = &getDistance;
+			queue_add_blocking(&call_queue, &entry);
+
+			// We could now do a load of stuff on core 0 and get our result later
+			printf("waiting %u  %u\n", queue_get_level(&call_queue), queue_get_level(&results_queue));
+			fflush(stdout);
+			queue_remove_blocking(&results_queue, &currentDistance);
+						entry.func = &getDistance;
+			queue_add_blocking(&call_queue, &entry);
+
+			// We could now do a load of stuff on core 0 and get our result later
+			printf("waiting %u  %u\n", queue_get_level(&call_queue), queue_get_level(&results_queue));
+			fflush(stdout);
+			queue_remove_blocking(&results_queue, &currentDistance);
+
 	while (1) {
 		
 		printf("Input Command\n");
@@ -135,9 +174,16 @@ int main() {
 			display->drawChar(x,y,ch,display->colour565(255,0,0), font);
 		}
 		if (buffer[0] == 'd' && buffer[1] == '#') {
+			uint32_t currentDistance;
 			memset(lcdBuffer, 0, sizeof(lcdBuffer));
-			multicore_fifo_push_blocking((uintptr_t) &getDistance);
-			uint32_t currentDistance = multicore_fifo_pop_blocking();
+			queue_entry_t entry;
+			entry.func = &getDistance;
+			queue_add_blocking(&call_queue, &entry);
+
+			// We could now do a load of stuff on core 0 and get our result later
+			printf("waiting %u  %u\n", queue_get_level(&call_queue), queue_get_level(&results_queue));
+			fflush(stdout);
+			queue_remove_blocking(&results_queue, &currentDistance);
 			sprintf(lcdBuffer, "Distance = %d mm", currentDistance);
 			printf("%s\n",lcdBuffer);
 			fflush(stdout);

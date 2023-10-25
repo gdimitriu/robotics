@@ -1,0 +1,4 @@
+[Project]
+CreatedFrom=CMakeLists.txt
+Manager=KDevCMakeManager
+Name=hc-sr04_lcd_multicore_queue
