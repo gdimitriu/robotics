@@ -32,3 +32,8 @@ https://randomnerdtutorials.com/esp8266-pwm-arduino-ide/
 https://www.electronicwings.com/nodemcu/nodemcu-gpio-with-arduino-ide
 https://www.electronicshub.org/wifi-controlled-robot-esp8266-arduino/
 
+#esp32-cam examples
+https://www.diyengineers.com/2023/04/13/esp32-cam-complete-guide/
+https://diyprojectslab.com/guide-to-using-the-esp32-cam-module/
+
+
