@@ -22,7 +22,8 @@
 #include<Arduino.h>
 #include<Servo.h>
 
-#define servoPin_Gripper 6
+#define servoPin_Gripper 7
+#define servoPin_Roll 6
 #define servoPin_Elbow 5
 #define servoPin_Shoulder 4
 #define DELAY 100

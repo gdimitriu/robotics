@@ -7,6 +7,7 @@ int Pin2 = 2;
 #define PIN1_MASK 0b00000010
 #define PIN2_MASK 0b00000100
 PCF8574 expander;
+//to be done with normal interrupt
 volatile bool detectedInt = false;
 void detectInterrupt(void) {
   detectedInt = true;
@@ -19,7 +20,7 @@ void setup() {
   expander.pinMode(Pin0, INPUT_PULLUP);
   expander.pinMode(Pin1, INPUT_PULLUP);
   expander.pinMode(Pin2, INPUT_PULLUP);
-  expander.enableInterrupt(2,detectInterrupt);
+  expander.enableInterrupt(7,detectInterrupt);
 }
 uint8_t sensors = 0;
 void loop() {

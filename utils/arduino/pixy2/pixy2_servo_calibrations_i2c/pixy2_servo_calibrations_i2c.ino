@@ -34,7 +34,7 @@ void printMenu() {
     Serial.println( "c# center");
     Serial.println( "vxxx# rotate vertical with absolute value");
     Serial.println( "hxxx# rotate horizontal with absolute value");
-    Serial.println("l# turnon or off lamp");
+    Serial.println("l# turn on or off lamp");
 }
 
 boolean isValidNumber(char *data, int size)

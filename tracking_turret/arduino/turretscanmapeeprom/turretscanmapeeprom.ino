@@ -88,6 +88,7 @@ void writeBytes_EEPROM(int deviceAddress, unsigned int address, byte *data, int 
     Wire.write(data[idx]);
   }
   Wire.endTransmission();
+  delay(100);
 }
 
 void setup()

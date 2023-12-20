@@ -36,8 +36,8 @@ SoftwareSerial BTSerial(RxD, TxD);
 } */
 void setup() {
   Serial.begin(9600);//115200);
-  BTSerial.begin(9600);//default for HC-06
-  //BTSerial.begin(38400);  
+  //BTSerial.begin(9600);//default for HC-06
+  BTSerial.begin(38400);  
 //  enableInterrupt(RxD, neoSSerial1ISR, CHANGE);
   Serial.println("Starting ...");
 }

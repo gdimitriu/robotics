@@ -46,6 +46,7 @@ void loop()
     Serial.print("distance=");
     Serial.print(calculateDistance(TrigPin, EchoPin));
     Serial.println("");
+    Serial.flush();
     delay(1000);                            //take a measurement every second (1000ms)
 }
 
@@ -65,9 +66,9 @@ int calculateDistance(int trigPin, int echoPin) {
   // Reads the echoPin, returns the sound wave travel time in microseconds 
   // Calculating the distance 
   unsigned long Time_Echo_us = pulseIn(echoPin, HIGH);  //calculate the pulse width at EchoPin, 
-    if((Time_Echo_us < 60000) && (Time_Echo_us > 1))     //a valid pulse width should be between (1, 60000).
+    if((Time_Echo_us < 26190) && (Time_Echo_us > 1))     //a valid pulse width should be between (1, 26190).
     {
-      return ((Time_Echo_us*34/100)/2);
+      return ((Time_Echo_us/2/29.1)*10);
     } else {
       Serial.println("err");
     }
