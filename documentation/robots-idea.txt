@@ -4,10 +4,6 @@ https://makezine.com/2017/01/20/smooth-servo-control-with-ros/
 
 https://opensourcerover.jpl.nasa.gov/?fbclid=IwAR3B18kJuHpi9O1gymSseOU4oYPKw342Fy1BYkgVIuAbMhk35xOBfeZxm2I#!/signup
 
-//companies
-https://www.kuka.com/fr-fr/produits-et-prestations/syst%C3%A8mes-de-robots/robots-industriels/kr-agilus#
-https://www.robotlab.com/research-papers/a-mass-produced-sociable-humanoid-robot-pepper-the-first-machine-of-its-kind
-
 AUTONOMOUS/wondering
 https://www.instructables.com/Arduino-Powered-Autonomous-Vehicle/
 https://www.instructables.com/Do-it-yourself-Autonomous-Tiny-Robot/
@@ -17,6 +13,7 @@ https://www.instructables.com/Autonomous-RC-Car/
 https://www.robotshop.com/community/robots/show/basic-obstacle-avoiding-robot
 https://www.instructables.com/Arduino-HC-SR04-Ultrasonic-Rover/
 https://www.instructables.com/Transformers-Baby-Arduino-Avoiding-Obstacle-Robot/
+https://www.hackster.io/avirup_basu/autonomous-navigation-and-2d-mapping-0f91d3
 
 LEG ROBOT
 https://www.instructables.com/Two-footed-walking-robot/
@@ -33,10 +30,8 @@ https://circuitdigest.com/microcontroller-projects/arduino-based-self-balancing-
 
 LINE FOLLOWING
 https://github.com/PaulStoffregen/SerialFlash
-https://circuitdigest.com/microcontroller-projects/line-follower-robot-using-arduino
 https://www.instructables.com/How-to-Make-Line-Follower-Robot/
 https://www.instructables.com/Line-Follower-Robot-Arduino-Megauno-Very-Fast-Usin/
-https://create.arduino.cc/projecthub/16336/line-follower-robot-using-arduino-5f5698
 https://www.electronicshub.org/line-follower-robot-using-microcontroller/
 https://www.researchgate.net/publication/334123838_Design_and_Construction_of_Line_Following_Robot_using_Arduino
 https://www.instructables.com/Arduino-Line-Follower-Robot-1/
@@ -53,7 +48,6 @@ MICROCONTROLLERS NOT ARM or AVR
 https://www.instructables.com/Android-Smart-Phone-Bluetooth-Remote-Control-Intel/
 
 TURET
-https://hackaday.io/project/18665-motion-tracking-airsoft-turret
 https://www.instructables.com/Motion-Following-Robot/
 https://www.instructables.com/Ultrasonic-Mapmaker-Using-Arduino-and-MatLab/
 
@@ -72,4 +66,14 @@ https://www.researchgate.net/publication/316664613_AUTONOMOUS_MAZE_SOLVING_ROBOT
 https://forum.arduino.cc/t/left-hand-rule-arduino-robot/381555/3
 https://en.wikipedia.org/wiki/Maze_solving_algorithm
 
+
+###### Companies robots
+https://www.kuka.com/fr-fr/produits-et-prestations/syst%C3%A8mes-de-robots/robots-industriels/kr-agilus#
+https://www.robotlab.com/research-papers/a-mass-produced-sociable-humanoid-robot-pepper-the-first-machine-of-its-kind
+https://www.dailymail.co.uk/sciencetech/article-3093340/The-400-home-robot-remotely-controlled-cleaners-workmen.html
+https://community.robotshop.com/robots/show/ava-v2
+http://www.koreaherald.com/view.php?ud=20200105000078
+https://yellrobot.com/qatar-robot-waitress-canaan-gardens/amp/
+https://www.businesspundit.com/8-insane-japanese-robots-that-will-take-your-job-and-possibly-your-life/
+https://www.dailymail.co.uk/sciencetech/article-6591753/Nvidias-kitchen-manipulator-robot-uses-AI-help-people-track-dirty-dishes.html
 

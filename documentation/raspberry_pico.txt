@@ -14,6 +14,8 @@ https://www.raspberrypi.org/documentation/rp2040/getting-started/#getting-starte
 https://datasheets.raspberrypi.org/pico/getting-started-with-pico.pdf
 https://datasheets.raspberrypi.org/pico/pico-datasheet.pdf
 
+#RX/TX
+https://forums.raspberrypi.com/viewtopic.php?t=333550
 
 ## PYTHON
 https://github.com/raspberrypi/pico-micropython-examples
@@ -23,5 +25,12 @@ https://github.com/raspberrypi/pico-micropython-examples
 https://www.hivemq.com/blog/mqtt-raspberrypi-part03-sending-sensor-data-hivemqcloud-pico/
 
 
-#drivers
+#drivers for LCD
 https://bizzeh.com/native-pico-sdk-ili9341-ili9342-for-raspberry-pi-pico/
+
+### did not tried
+https://www.tomshardware.com/how-to/oled-display-raspberry-pi-pico
+https://forum.arduino.cc/t/tft_espi-support-for-raspberry-pi-pico-added/702551
+https://github.com/juj/fbcp-ili9341
+https://github.com/spapadim/XPT2046
+https://www.youtube.com/watch?v=rq5yPJbX_uk

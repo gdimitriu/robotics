@@ -1,6 +1,4 @@
 http://www.pibits.net/code/raspberry-pi-mpu-6050-c-example.php
-https://github.com/bitbank2/VL53L0X
-https://github.com/mjbogusz/vl53l0x-linux
 https://elinux.org/RPi_GPIO_Interface_Circuits
 https://learn.adafruit.com/16-channel-pwm-servo-driver?view=all
 https://electronics.stackexchange.com/questions/129961/how-to-get-the-pwm-frequency-and-duration-of-each-pulse

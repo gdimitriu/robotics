@@ -4,12 +4,7 @@ http://kamilslab.com/2015/12/11/24lc256-eeprom-on-arduino/
 https://github.com/PaulStoffregen/SerialFlash
 
 //DIVERSE ON ARDUINO
-https://howtomechatronics.com/tutorials/arduino/ultrasonic-sensor-hc-sr04/
 http://forum.arduino.cc/index.php?topic=11911.0
-
-//SD card
-https://howtomechatronics.com/tutorials/arduino/arduino-sd-card-data-logging-excel-tutorial/
-https://www.safaribooksonline.com/library/view/learning-c-for/9781787120099/ch05s03.html
 
 //sensor for electronics on arduino
 http://www.instructables.com/id/How-to-use-a-photoresistor-or-photocell-Arduino-Tu/

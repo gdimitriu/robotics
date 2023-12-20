@@ -2,3 +2,5 @@ https://www.optimusdigital.ro/ro/senzori-senzori-de-distanta/1995-senzor-de-dist
 https://github.com/cassou/VL53L0X_rasp
 https://www.st.com/en/embedded-software/stsw-img015.html?ecmp=tt18332_gl_enews_oct2020#documentation
 
+https://github.com/bitbank2/VL53L0X
+https://github.com/mjbogusz/vl53l0x-linux

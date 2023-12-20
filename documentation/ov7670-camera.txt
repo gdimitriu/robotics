@@ -18,6 +18,5 @@ https://github.com/ComputerNerd/arduino-camera-tft
 https://github.com/ComputerNerd
 https://github.com/ComputerNerd/ov7670-no-ram-arduino-uno
 
-
 #camera
 https://www.optimusdigital.ro/ro/senzori-senzori-optici/624-modul-camera-ov7670.html
