@@ -24,8 +24,8 @@
 #include "configuration.h"
 #include "move_commands.h"
 
-const char* ssid     = "";
-const char* password = "";
+const char* ssid     = "xxxx";
+const char* password = "xxxx";
 
 WiFiServer server(SERVER_PORT);
 WiFiClient client;
@@ -125,6 +125,7 @@ bool makeMove() {
       client.print(buffer);
     } else if ( inData[0] == 'b' ) {  //break all engines
       Serial.println("Break all engines");
+      go(0,0);
     } else {
       sprintf(buffer,"%d\r\n",0);
       client.print(buffer);
