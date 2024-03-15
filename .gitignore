@@ -12,3 +12,4 @@ out/
 build/
 gradle/
 .gradle
+*.kdev4
