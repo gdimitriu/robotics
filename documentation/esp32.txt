@@ -1,0 +1,11 @@
+https://randomnerdtutorials.com/esp32-cam-ai-thinker-pinout/
+https://robotzero.one/esp32-camera-module/
+https://randomnerdtutorials.com/esp32-dual-core-arduino-ide/
+
+https://robotzero.one/esp32-face-door-entry/
+https://github.com/espressif/esp-who/tree/master/examples/human_face_recognition/terminal
+https://www.iotsharing.com/2020/03/demo-48-using-websocket-for-camera-live.html
+https://arduino.stackexchange.com/questions/93894/rx-and-tx-pins-on-esp32
+https://circuitdigest.com/microcontroller-projects/esp32-cam-face-recognition-door-lock-system
+https://how2electronics.com/esp32-cam-based-face-eyes-recognition-system/
+https://www.electromaker.io/project/view/how-to-make-diy-esp32-cam-surveillance-robot

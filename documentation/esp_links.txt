@@ -31,9 +31,14 @@ https://randomnerdtutorials.com/esp8266-nodemcu-digital-inputs-outputs-arduino/
 https://randomnerdtutorials.com/esp8266-pwm-arduino-ide/
 https://www.electronicwings.com/nodemcu/nodemcu-gpio-with-arduino-ide
 https://www.electronicshub.org/wifi-controlled-robot-esp8266-arduino/
+https://randomnerdtutorials.com/esp8266-nodemcu-client-server-wi-fi/
 
 #esp32-cam examples
 https://www.diyengineers.com/2023/04/13/esp32-cam-complete-guide/
 https://diyprojectslab.com/guide-to-using-the-esp32-cam-module/
-
+https://robotzero.one/esp32-camera-module/
+https://robotzero.one/esp32-face-door-entry/
+https://www.iotsharing.com/2020/03/demo-48-using-websocket-for-camera-live.html
+https://www.instructables.com/ESP32-CAM-Face-Recognition-With-MQTT-Support-AI-Th/
+https://randomnerdtutorials.com/esp32-bluetooth-low-energy-ble-arduino-ide/
 
