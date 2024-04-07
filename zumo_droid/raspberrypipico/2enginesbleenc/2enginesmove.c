@@ -80,7 +80,7 @@ void go(int speedLeft, int speedRight) {
 #endif
 	}
 	else {
-		pwm_set_gpio_level(rightMotorPin2, 0);		
+		pwm_set_gpio_level(rightMotorPin1, 0);		
 		pwm_set_gpio_level(rightMotorPin2, -speedRight);
 #ifdef SERIAL_DEBUG_MODE
 		printf("Right 0,%d\n",-speedRight);
