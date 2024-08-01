@@ -41,3 +41,7 @@ This is a test to write and read back data from EEPROM.
 ## write_serial_from_eeprom
 
 This is a test to write something that is comming from serial on EEPROM.
+
+### IOE-SR05
+
+This is a poc for reading distance from IOE-SR05 UART module
