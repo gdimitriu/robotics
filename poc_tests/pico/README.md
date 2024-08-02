@@ -48,3 +48,7 @@ Just using both core to display a timing.
 
 This is an example how to read distance from IOE-SR05 ultrasonic using pio
 
+## ioe-sr05-pio-multicore
+
+This is an example how to read distance from IOE-SR05 ultrasonic using pio, second core and mutex to guard.
+
