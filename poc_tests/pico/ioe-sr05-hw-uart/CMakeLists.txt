@@ -23,6 +23,8 @@ if (TARGET tinyusb_device)
 	pico_enable_stdio_uart(ioe-sr05-hw-uart 0)
     
 	pico_add_extra_outputs(ioe-sr05-hw-uart)
+	
+	pico_set_binary_type(ioe-sr05-hw-uart no_flash)
 
 elseif(PICO_ON_DEVICE)
     message(WARNING "not building hc-sr04 because TinyUSB submodule is not initialized in the SDK")
