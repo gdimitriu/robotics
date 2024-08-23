@@ -20,6 +20,7 @@ if (TARGET tinyusb_device)
     pico_enable_stdio_usb(servo_callibration 1)
     pico_enable_stdio_uart(servo_callibration 0)
 
+    pico_set_binary_type(servo_callibration no_flash)
 	# create map/bin/hex file etc.
 	pico_add_extra_outputs(servo_callibration)
 

@@ -52,3 +52,11 @@ This is an example how to read distance from IOE-SR05 ultrasonic using pio
 
 This is an example how to read distance from IOE-SR05 ultrasonic using pio, second core and mutex to guard.
 
+## ioe-sr05-hw-uart
+
+This is an example how to read distance from IOE-SR05 ultrasonic using harware uart
+
+## ioe-sr05-hw-uart-multicore
+
+This is an example how to read distance from IOE-SR05 ultrasonic using hardware uart, second core and mutex to guard.
+

@@ -20,7 +20,7 @@ if (TARGET tinyusb_device)
     pico_enable_stdio_uart(hc-sr04_multicore_queue 0)
 
 
-    
+    pico_set_binary_type(hc-sr04_multicore_queue no_flash)
 	# create map/bin/hex file etc.
 	pico_add_extra_outputs(hc-sr04_multicore_queue)
 

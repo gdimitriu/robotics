@@ -11,8 +11,8 @@
 #include <string.h>
 #include <inttypes.h>
 
-#define ECHO_PIN 19
-#define TRIG_PIN 18
+#define ECHO_PIN 21
+#define TRIG_PIN 20
 
 static char event_str[128];
 
