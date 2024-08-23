@@ -1,0 +1,14 @@
+### FOR SERVO
+## does not work
+https://www.i-programmer.info/programming/hardware/14849-the-pico-in-c-basic-pwm.html?start=2 
+##
+
+https://forums.raspberrypi.com/viewtopic.php?t=309632
+https://www.codeproject.com/Articles/5360397/Raspberry-Pi-Pico-Library-for-Working-with-Servos
+
+## is working
+https://www.youtube.com/watch?v=fCIFYKFNcGc
+
+center 1700, left 3200, right 400 //14.444 per degree
+350  1750  3100
+##

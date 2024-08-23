@@ -31,3 +31,6 @@ https://learn.sparkfun.com/tutorials/soil-moisture-sensor-hookup-guide/all
 http://www.electronics-lab.com/project/using-soil-moisture-sensor-arduino/
 https://maker.pro/arduino/projects/arduino-soil-moisture-sensor
 
+//LCD
+https://github.com/spapadim/XPT2046
+https://github.com/olikraus/ucglib

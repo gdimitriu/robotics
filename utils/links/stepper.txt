@@ -1,0 +1,4 @@
+https://www.instructables.com/How-to-Interface-Easy-Driver-With-Stepper-Motor-Us/
+https://electropeak.com/learn/interfacing-a3967-easydriver-stepper-motor-driver-with-arduino/
+https://lastminuteengineers.com/28byj48-stepper-motor-arduino-tutorial/
+
