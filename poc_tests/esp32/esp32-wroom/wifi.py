@@ -4,7 +4,7 @@
  wifi (the main entry point for wifi communication)
 
  Copyright 2025 Gabriel Dimitriu
-  This file is part of raspberryPicoDroids project.
+  This file is part of robotics project.
 
  robotics is free software; you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
